@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePagesTable extends Migration
+class CreateTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,9 @@ class CreatePagesTable extends Migration
      */
     public function up()
     {
-      Schema::create('pages', function (Blueprint $table) {
+      Schema::create('types', function (Blueprint $table) {
         $table->increments('id');
-        $table->string('page_name');
-        $table->text('page_desc');
-        $table->string('slug');
-        $table->string('url');
-        $table->integer('type_id')->unsigned();
-        $table->text('seo_desc');
-        $table->string('seo_keywords');
-        $table->string('seo_title');
+        $table->string('name');
         $table->boolean('is_active');
         $table->timestamps();
       });
@@ -35,6 +28,6 @@ class CreatePagesTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('pages');
+      Schema::dropIfExists('types');
     }
 }

@@ -13,11 +13,11 @@ class CreateModulesContentTable extends Migration
      */
     public function up()
     {
-        Schema::create('modules_content', function (Blueprint $table) {
-          $table->increments('id');
-          $table->integer('module_id')->unsigned();
-          $table->integer('content_id')->unsigned();
-        });
+      Schema::create('modules_content', function (Blueprint $table) {
+        $table->increments('id');
+        $table->integer('module_id')->unsigned();
+        $table->integer('content_id')->unsigned();
+      });
     }
 
     /**

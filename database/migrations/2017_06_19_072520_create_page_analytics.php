@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContentTable extends Migration
+class CreatePageAnalytics extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateContentTable extends Migration
      */
     public function up()
     {
-      Schema::create('content', function (Blueprint $table) {
+      Schema::create('page_analytics', function (Blueprint $table) {
         $table->increments('id');
-        $table->string('title');
-        $table->text('body');
-        $table->integer('type_id')->unsigned();
-        $table->boolean('is_active');
+        $table->integer('page_id')->unsigned();
+        $table->integer('total_views');
+        $table->integer('unique_views');
         $table->timestamps();
       });
     }
@@ -30,6 +29,6 @@ class CreateContentTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('content');
+      Schema::dropIfExists('page_analytics');
     }
 }
