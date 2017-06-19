@@ -1,3 +1,6 @@
+## NOTE:: this project is in a very early stage, don't download it yet.
+
+
 # lara-cms
 A cms build using the PHP framework Laravel.
 
