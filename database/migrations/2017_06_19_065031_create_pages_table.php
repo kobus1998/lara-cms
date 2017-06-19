@@ -23,7 +23,7 @@ class CreatePagesTable extends Migration
         $table->text('seo_desc');
         $table->string('seo_keywords');
         $table->string('seo_title');
-        $table->boolean('is_active');
+        $table->boolean('is_active')->default(true);
         $table->timestamps();
       });
     }

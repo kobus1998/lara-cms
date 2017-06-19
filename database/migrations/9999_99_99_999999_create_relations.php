@@ -21,18 +21,18 @@ class CreateRelations extends Migration
         $table->foreign('type_id')->references('id')->on('types');
       });
 
-      Schema::table('content', function (Blueprint $table) {
+      Schema::table('contents', function (Blueprint $table) {
         $table->foreign('type_id')->references('id')->on('types');
       });
 
       Schema::table('pages_content', function (Blueprint $table) {
         $table->foreign('page_id')->references('id')->on('pages');
-        $table->foreign('content_id')->references('id')->on('content');
+        $table->foreign('content_id')->references('id')->on('contents');
       });
 
       Schema::table('modules_content', function (Blueprint $table) {
         $table->foreign('module_id')->references('id')->on('modules');
-        $table->foreign('content_id')->references('id')->on('content');
+        $table->foreign('content_id')->references('id')->on('contents');
       });
 
       Schema::table('page_analytics', function (Blueprint $table) {
@@ -48,29 +48,29 @@ class CreateRelations extends Migration
     public function down()
     {
       Schema::table('users', function (Blueprint $table) {
-        $table->dropForeign('roles_role_id_foreign');
+        $table->dropForeign('users_role_id_foreign');
       });
 
       Schema::table('pages', function (Blueprint $table) {
-        $table->dropForeign('types_type_id_foreign');
+        $table->dropForeign('pages_type_id_foreign');
       });
 
-      Schema::table('content', function (Blueprint $table) {
-        $table->dropForeign('types_type_id_foreign');
+      Schema::table('contents', function (Blueprint $table) {
+        $table->dropForeign('contents_type_id_foreign');
       });
 
       Schema::table('pages_content', function (Blueprint $table) {
-        $table->dropForeign('pages_page_id_foreign');
-        $table->dropForeign('content_content_id_foreign');
+        $table->dropForeign('pages_content_page_id_foreign');
+        $table->dropForeign('pages_content_content_id_foreign');
       });
 
       Schema::table('modules_content', function (Blueprint $table) {
-        $table->dropForeign('modules_module_id_foreign');
-        $table->dropForeign('content_content_id_foreign');
+        $table->dropForeign('modules_content_module_id_foreign');
+        $table->dropForeign('modules_content_content_id_foreign');
       });
 
       Schema::table('page_analytics', function (Blueprint $table) {
-        $table->dropForeign('pages_page_id_foreign');
+        $table->dropForeign('page_analytics_page_id_foreign');
       });
     }
 }
