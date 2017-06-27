@@ -1,9 +1,63 @@
 
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+$body-background: #f1f1f1;
+$sidebar-width: 200px;
+// Bulma
+@import "~bulma/bulma";
 
-// Variables
-@import "variables";
 
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  .header {
+    position: fixed;
+    width: 100%;
+  }
+  .app-content {
+    margin-top: 3.25rem;
+    flex: 1;
+    width: 100%;
+    .has-sidebar {
+      margin-left: $sidebar-width + 20;
+      @include mobile {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.form {
+  &.is-small {
+    width: 500px;
+    background-color: white;
+    box-shadow: 0px 1px 5px rgba(gray, 0.4);
+    padding: 1rem;
+    margin: 1rem auto;
+    h1 {
+      border-bottom: 1px solid rgba(gray, 0.2);
+    }
+    @include mobile {
+      width: 100%;
+    }
+  }
+}
+
+
+
+.sidebar {
+  background-color: white;
+  position: fixed;
+  width: $sidebar-width;
+  height: calc(100vh - 3.25rem);
+  @include mobile {
+
+  }
+}
+
+
+.no-margin {
+  margin: 0;
+}
