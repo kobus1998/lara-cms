@@ -93,3 +93,10 @@ $sidebar-width: 200px;
 .overview {
   padding: 1rem
 }
+
+.toggle-tab {
+  display: none;
+  &.is-active {
+    display: block;
+  }
+}

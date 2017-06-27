@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
 {
+
+
   public function content () {
-    return $this->hasMany('\App\Content', 'page_content');
+    return $this->hasMany('\App\PageContent');
   }
 
   public function type () {

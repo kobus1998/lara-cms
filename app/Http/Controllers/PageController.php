@@ -40,8 +40,11 @@ class PageController extends Controller
     // back-end update
   }
 
-  public function show () {
+  public function show ($id) {
     // show single
+    $page = Page::findOrFail($id)->with('content')->with('type')->get();
+    $types = \App\Type::all();
+    return view('dashboard/pages/show', ['page' => $page[0], 'types' => $types]);
   }
 
   public function edit () {

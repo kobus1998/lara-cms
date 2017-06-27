@@ -39,7 +39,13 @@ $(document).ready(function () {
     } else {
       $('.form-checkboxes').prop('checked', false)
     }
+  })
 
+  $('*[data-toggle]').click(function () {
+    $(this).closest('.tabs').find('li').removeClass('is-active')
+    $('.toggle-tab').removeClass('is-active')
+    $(this).addClass('is-active')
+    $('.' + $(this).attr('data-toggle')).addClass('is-active')
   })
 
 })
