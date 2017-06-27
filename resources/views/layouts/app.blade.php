@@ -13,6 +13,10 @@
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
 </head>
 <body>
   <div id="app" class="wrapper">
@@ -30,6 +34,18 @@
         @else
           @include('layouts/partials/sidebar')
           <div class="has-sidebar">
+            <div class="container is-fluid">
+              @if (\Session::has('danger'))
+                <div class="notification is-danger">
+                  {{ \Session::get('danger') }}
+                </div>
+              @elseif (\Session::has('success'))
+                <div class="notification is-success">
+                  {{ \Session::get('success') }}
+                </div>
+              @endif
+            </div>
+            
             @yield('content')
           </div>
         @endif
