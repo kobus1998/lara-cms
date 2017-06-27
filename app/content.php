@@ -11,6 +11,6 @@ class content extends Model
   }
 
   public function page () {
-    return $this->belongsToMany('Page', 'pages_content');
+    return $this->belongsTo('\App\Page');
   }
 }

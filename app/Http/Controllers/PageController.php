@@ -3,20 +3,37 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Page;
 
 class PageController extends Controller
 {
 
   public function index () {
-    // list of all x
+    $pages = Page::with('type')->get();
+    return view('dashboard/pages/index', compact('pages'));
   }
 
-  public function store () {
-    // back-end create
+  public function store (Request $req) {
+    $page = new Page();
+    $page['page_name'] = $req['page-name'];
+    $page['page_desc'] = $req['page-desc'];
+    $page['type_id'] = $req['type'];
+    $page['url'] = $req['page-url'];
+
+    $this->validate($req, [
+      'page-name' => 'required',
+      'type' => 'required|integer',
+      'page-url' => 'required'
+    ]);
+
+    $page->save();
+
+    return redirect()->action('PageController@index')->with('success', 'Page is created');
   }
 
   public function create () {
-    // form create
+    $types = \App\Type::all();
+    return view('dashboard/pages/create', ['types' => $types]);
   }
 
   public function update () {
