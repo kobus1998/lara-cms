@@ -33,4 +33,13 @@ $(document).ready(function () {
     $('#page-url').val(pageName)
   })
 
+  $('.all-checkboxes').click(function () {
+    if ($(this).is(':checked')) {
+      $('.form-checkboxes').prop('checked', true)
+    } else {
+      $('.form-checkboxes').prop('checked', false)
+    }
+
+  })
+
 })

@@ -19,10 +19,13 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
 
+  Route::delete('/dashboard/multiple/page', 'PageController@destroyMultiple');
+
   Route::get('/dashboard', 'DashboardController@index');
 
-
-  Route::resource('page', 'PageController');
-  Route::resource('module', 'ModuleController');
+  Route::prefix('dashboard')->group(function () {
+    Route::resource('page', 'PageController');
+    Route::resource('module', 'ModuleController');
+  });
 
 });

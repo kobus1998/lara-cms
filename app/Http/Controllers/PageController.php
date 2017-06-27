@@ -52,4 +52,10 @@ class PageController extends Controller
     // back-end remove
   }
 
+  public function destroyMultiple (Request $req) {
+    Page::destroy($req['pages']);
+
+    return back();
+  }
+
 }
