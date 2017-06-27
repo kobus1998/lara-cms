@@ -29,6 +29,25 @@ $sidebar-width: 200px;
   }
 }
 
+.nav {
+  .brand {
+    width: 212px;
+    margin-left: -.75rem;
+    background-color: $body-background;
+    z-index: 99;
+    font-size: $size-4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #4a4a4a;
+    font-weight: 400;
+    @include mobile {
+      width: 200px;
+      margin-left: 0;
+    }
+  }
+}
+
 .form {
   &.is-small {
     width: 500px;
@@ -52,8 +71,14 @@ $sidebar-width: 200px;
   position: fixed;
   width: $sidebar-width;
   height: calc(100vh - 3.25rem);
-  @include mobile {
-
+  .menu-label {
+    padding: .25rem .5rem;
+    margin-bottom: .25rem;
+  }
+  .menu-list {
+    li a {
+      padding: .5rem 1rem;
+    }
   }
 }
 

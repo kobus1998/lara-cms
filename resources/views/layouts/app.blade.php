@@ -12,6 +12,7 @@
 
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
   <div id="app" class="wrapper">
@@ -23,12 +24,12 @@
     <div class="app-content">
 
         @if (Auth::guest())
-          <div class="container is-fluid">
+          <div class="">
             @yield('content')
           </div>
         @else
           @include('layouts/partials/sidebar')
-          <div class="has-sidebar container is-fluid">
+          <div class="has-sidebar">
             @yield('content')
           </div>
         @endif

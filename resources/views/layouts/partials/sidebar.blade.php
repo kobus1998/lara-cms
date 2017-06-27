@@ -1,17 +1,15 @@
 <div class="sidebar menu">
-  <div class="container is-fluid">
-    <p class="menu-label">Client</p>
-    <ul class="menu-list">
-      <li><a href="#">Pages</a></li>
-      <li><a href="#">Modules</a></li>
-      <li><a href="#">Content</a></li>
-      <li><a href="#">Media</a></li>
-    </ul>
-    <p class="menu-label">Developer</p>
-    <ul class="menu-list">
-      <li><a href="#">Types</a></li>
-      <li><a href="#">Users</a></li>
-      <li><a href="#">Settings</a></li>
-    </ul>
-  </div>
+  <p class="menu-label">Client</p>
+  <ul class="menu-list">
+    <li><a href="#"><span class="icon is-small"><i class="fa fa-file-text-o"></i></span> Pages</a></li>
+    <li><a href="#"><span class="icon is-small"><i class="fa fa-folder"></i></span> Modules</a></li>
+    <li><a href="#"><span class="icon is-small"><i class="fa fa-font"></i></span> Content</a></li>
+    <li><a href="#"><span class="icon is-small"><i class="fa fa-image"></i></span> Media</a></li>
+  </ul>
+  <p class="menu-label">Developer</p>
+  <ul class="menu-list">
+    <li><a href="#"><span class="icon is-small"><i class="fa fa-tag"></i></span> Types</a></li>
+    <li><a href="#"><span class="icon is-small"><i class="fa fa-user"></i></span> Users</a></li>
+    <li><a href="#"><span class="icon is-small"><i class="fa fa-cog"></i></span> Settings</a></li>
+  </ul>
 </div>
