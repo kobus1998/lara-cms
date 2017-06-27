@@ -20,3 +20,17 @@ Vue.component('example', require('./components/Example.vue'));
 const app = new Vue({
     el: '#app'
 });
+
+$(document).ready(function () {
+
+  $('.redirecter').click(function () {
+    window.location.href = $(this).attr('data-href')
+  })
+
+  $('#page-name').keyup(function () {
+    var pageName = $(this).val()
+    pageName = pageName.replace(/\s+/g, '-').toLowerCase()
+    $('#page-url').val(pageName)
+  })
+
+})
