@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class PageController extends Controller
+class ModuleController extends Controller
 {
-
   public function index () {
     // list of all x
   }
@@ -34,5 +33,4 @@ class PageController extends Controller
   public function destroy () {
     // back-end remove
   }
-
 }
