@@ -9,7 +9,7 @@ class Page extends Model
 
 
   public function content () {
-    return $this->hasMany('\App\PageContent');
+    return $this->belongsToMany('\App\Content', 'pages_content', 'page_id', 'content_id');
   }
 
   public function type () {

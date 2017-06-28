@@ -10,6 +10,11 @@ class PageContent extends Model
   protected $table = 'pages_content';
 
   public function page () {
-    return $this->belongsTo('\App\Page');
+    return $this->belongsToMany();
   }
+
+  public function content () {
+    return $this->belongsTo('\App\Content');
+  }
+
 }

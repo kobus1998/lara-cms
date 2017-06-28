@@ -15,8 +15,10 @@ class CreateContentTable extends Migration
     {
       Schema::create('contents', function (Blueprint $table) {
         $table->increments('id');
+        $table->string('name');
         $table->string('title')->nullable();
         $table->text('body');
+        $table->string('field');
         $table->integer('type_id')->unsigned()->nullable();
         $table->boolean('is_active')->default(true);
         $table->timestamps();

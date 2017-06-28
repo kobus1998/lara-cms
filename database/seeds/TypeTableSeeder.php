@@ -19,7 +19,7 @@ class TypeTableSeeder extends Seeder
           'name' => 'module',
         ], [
           'name' => 'partial',
-        ]
+        ],
       ];
 
       foreach ($roles as $index) {
