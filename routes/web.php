@@ -15,11 +15,15 @@ use \App\Page;
 
 Auth::routes();
 
+Route::pattern('int','[0-9]');
+Route::pattern('str','[a-z]');
+
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/{url}/{id?}', 'PageController@route');
+Route::get('/{url}', 'PageController@route');//->where('url', '/[!cms]/');
+Route::get('/{url}/{id}', 'PageController@route');
 
 Route::group(['middleware' => 'auth'], function () {
   Route::prefix('cms')->group(function () {

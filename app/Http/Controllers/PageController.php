@@ -107,7 +107,7 @@ class PageController extends Controller
     $page = \App\PageContent::where('page_id', $pageId)->delete();
 
     if (count($req->id) > 0) {
-    
+
       foreach ($req->id as $contentId) {
 
         $pageContent = new \App\PageContent();
@@ -129,12 +129,18 @@ class PageController extends Controller
     return back();
   }
 
-  public function route ($url) {
-    // $modules = \App\Module::all()->with('content')->get();
-    $page = Page::where('url', $url)->with('content')->get();
-    // $page = Page::all();
+  public function route ($url, $id = null) {
 
-    dd($page);
+    if ($id == null) {
+      $page = Page::where('url', $url)->with('content')->first();
+      dd($page);
+    } else {
+      $page = Page::where('url', $url)->with('content')->first();
+      $content = \App\Content::where('id', $id)->first();
+      dd($page, $content);
+    }
+
+
   }
 
 }
