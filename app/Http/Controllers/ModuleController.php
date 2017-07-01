@@ -30,6 +30,18 @@ class ModuleController extends Controller
     // form update
   }
 
+  public function addContent($moduleId, $contentId) {
+
+    $moduleContent = new \App\ModuleContent();
+
+    $moduleContent['module_id'] = $moduleId;
+    $moduleContent['content_id'] = $contenId;
+
+    $moduleContent->save();
+
+    return back();
+  }
+
   public function destroy () {
     // back-end remove
   }
