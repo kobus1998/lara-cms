@@ -1,5 +1,7 @@
 <?php
 
+use \App\Page;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,15 +19,24 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/{url}/{id?}', 'PageController@route');
+
 Route::group(['middleware' => 'auth'], function () {
+  Route::prefix('cms')->group(function () {
 
-  Route::delete('/dashboard/multiple/page', 'PageController@destroyMultiple');
+    Route::put('/multiple/content', 'ContentController@updateMultiple');
 
-  Route::get('/dashboard', 'DashboardController@index');
+    Route::post('/multiple/page/addcontent/{pageId}', 'PageController@addContent');
+    Route::post('/multiple/module/addcontent/{moduleId}', 'PageController@addContent');
 
-  Route::prefix('dashboard')->group(function () {
+    Route::delete('/multiple/page', 'PageController@destroyMultiple');
+    Route::delete('/multiple/content', 'ContentController@destroyMultiple');
+
+    Route::get('/dashboard', 'DashboardController@index');
+
     Route::resource('page', 'PageController');
     Route::resource('module', 'ModuleController');
+    Route::resource('content', 'ContentController');
   });
 
 });
