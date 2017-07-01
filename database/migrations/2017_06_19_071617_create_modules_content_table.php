@@ -15,8 +15,10 @@ class CreateModulesContentTable extends Migration
     {
       Schema::create('modules_content', function (Blueprint $table) {
         $table->increments('id');
+        $table->integer('order')->default(0);
         $table->integer('module_id')->unsigned();
         $table->integer('content_id')->unsigned();
+        $table->timestamps();
       });
     }
 

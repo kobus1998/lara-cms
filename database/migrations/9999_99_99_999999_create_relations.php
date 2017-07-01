@@ -21,6 +21,10 @@ class CreateRelations extends Migration
         $table->foreign('type_id')->references('id')->on('types');
       });
 
+      Schema::table('modules', function (Blueprint $table) {
+        $table->foreign('type_id')->references('id')->on('types');
+      });
+
       Schema::table('contents', function (Blueprint $table) {
         $table->foreign('type_id')->references('id')->on('types');
       });
@@ -53,6 +57,10 @@ class CreateRelations extends Migration
 
       Schema::table('pages', function (Blueprint $table) {
         $table->dropForeign('pages_type_id_foreign');
+      });
+
+      Schema::table('modules', function (Blueprint $table) {
+        $table->dropForeign('modules_type_id_foreign');
       });
 
       Schema::table('contents', function (Blueprint $table) {

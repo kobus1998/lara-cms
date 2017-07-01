@@ -17,6 +17,7 @@ class CreateModulesTable extends Migration
         $table->increments('id');
         $table->string('title');
         $table->text('body');
+        $table->integer('type_id')->unsigned();
         $table->timestamps();
       });
     }

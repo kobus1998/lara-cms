@@ -15,11 +15,11 @@ class CreatePagesTable extends Migration
     {
       Schema::create('pages', function (Blueprint $table) {
         $table->increments('id');
-        $table->string('page_name');
-        $table->text('page_desc')->nullable();
-        $table->string('slug')->nullable();
+        $table->string('name');
+        $table->text('desc')->nullable();
         $table->string('url');
-        $table->integer('type_id')->unsigned()->nullable();
+        $table->string('layout')->default('index');
+        $table->integer('type_id')->unsigned();
         $table->text('seo_desc')->nullable();
         $table->string('seo_keywords')->nullable();
         $table->string('seo_title')->nullable();
