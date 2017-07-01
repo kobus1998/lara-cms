@@ -54,4 +54,10 @@ $(document).ready(function () {
 
   })
 
+  // toggle modal
+  $('*[data-modal]').click(function () {
+    var dataModal = $(this).attr('data-modal')
+    $('.' + dataModal).toggleClass('is-active')
+  })
+
 })

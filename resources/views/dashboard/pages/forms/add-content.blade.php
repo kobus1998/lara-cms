@@ -1,9 +1,9 @@
-<form action="{{ action('PageController@addContent', $page->id) }}" class="modal is-active" method="post">
-  <div class="modal-background"></div>
+<form action="{{ action('PageController@addContent', $page->id) }}" class="modal add-content-modal" method="post">
+  <div class="modal-background" data-modal="add-content-modal"></div>
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">Modal title</p>
-      <button class="delete hide-modal"></button>
+      <a class="delete hide-modal" data-modal="add-content-modal"></a>
     </header>
     <section class="modal-card-body">
         {{ csrf_field() }}
@@ -15,7 +15,7 @@
     </section>
     <footer class="modal-card-foot">
       <button type="submit" class="button is-success">Save changes</button>
-      <a class="button hide-modal">Cancel</a>
+      <a class="button" data-modal="add-content-modal">Cancel</a>
     </footer>
   </div>
 </form>

@@ -5,7 +5,7 @@
 
     </div>
     <div class="level-right">
-      <a class="button">Add Content to this page</a>
+      <a class="button" data-modal="add-content-modal">Add Content to this page</a>
       <a href="{{ action('ContentController@create') }}" class="button">New Content</a>
     </div>
   </div>
