@@ -42,10 +42,16 @@ $(document).ready(function () {
   })
 
   $('*[data-toggle]').click(function () {
-    $(this).closest('.tabs').find('li').removeClass('is-active')
-    $('.toggle-tab').removeClass('is-active')
+
+    var dataToggle = $(this).attr('data-toggle')
+
+    $(this).closest('.toggle-parent').find('.btn-toggle').removeClass('is-active')
+
     $(this).addClass('is-active')
-    $('.' + $(this).attr('data-toggle')).addClass('is-active')
+
+    $('.' + dataToggle).closest('.toggle-content').find('.toggle-tab').removeClass('is-active')
+    $('.' + dataToggle).addClass('is-active')
+
   })
 
 })
