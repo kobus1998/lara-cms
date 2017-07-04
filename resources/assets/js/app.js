@@ -60,4 +60,12 @@ $(document).ready(function () {
     $('.' + dataModal).toggleClass('is-active')
   })
 
+  $('.toggle-sidebar').click(function () {
+    $('.sidebar').toggleClass('is-active')
+  })
+
+  $('.app-content').click(function () {
+    $('.sidebar').removeClass('is-active')
+  })
+
 })

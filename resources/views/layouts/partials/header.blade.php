@@ -18,4 +18,9 @@
         </form>
       @endif
     </div>
+    <span class="toggle-sidebar nav-item is-hidden-tablet">
+      <span class="icon">
+        <i class="fa fa-ellipsis-v "></i>
+      </span>
+    </span>
 </nav>
