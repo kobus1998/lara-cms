@@ -13,7 +13,7 @@ use \App\Page;
 |
 */
 
-Auth::routes();
+
 
 // Route::pattern('int','[0-9]');
 // Route::pattern('str','[a-z]');
@@ -23,8 +23,15 @@ Auth::routes();
 // Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::group(['middleware' => 'auth'], function () {
-  Route::prefix('cms')->group(function () {
+Route::prefix('cms')->group(function () {
+
+  route::get('/', function ($value='') {
+    return redirect('/cms/dashboard');
+  });
+
+  Auth::routes();
+
+  Route::group(['middleware' => 'auth'], function () {
 
     Route::put('/multiple/content', 'ContentController@updateMultiple');
 
