@@ -42,6 +42,11 @@ class CreateRelations extends Migration
       Schema::table('page_analytics', function (Blueprint $table) {
         $table->foreign('page_id')->references('id')->on('pages');
       });
+
+      Schema::table('contents_content_groups', function (Blueprint $table) {
+        $table->foreign('content_id')->references('id')->on('contents');
+        $table->foreign('content_group_id')->references('id')->on('content_groups');
+      });
     }
 
     /**
@@ -79,6 +84,11 @@ class CreateRelations extends Migration
 
       Schema::table('page_analytics', function (Blueprint $table) {
         $table->dropForeign('page_analytics_page_id_foreign');
+      });
+
+      Schema::table('contents_content_groups', function (Blueprint $table) {
+        $table->dropForeign('content_id');
+        $table->dropForeign('content_group_id');
       });
     }
 }
