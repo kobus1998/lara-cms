@@ -9,7 +9,7 @@ class ContentController extends Controller
 {
   public function index () {
 
-    $content = Content::with('type')->get();
+    $content = Content::with('type')->with('group')->get();
 
     return view('dashboard/content/index', ['content' => $content]);
 

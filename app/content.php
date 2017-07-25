@@ -17,4 +17,8 @@ class content extends Model
   public function module () {
     return $this->belongsToMany('\App\Module', 'modules_content', 'content_id', 'module_id');
   }
+
+  public function group () {
+    return $this->belongsToMany('\App\ContentGroup', 'contents_content_groups', 'content_id', 'content_group_id');
+  }
 }
