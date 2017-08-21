@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Content;
+use \App\ContentGroup;
 
 class ContentController extends Controller
 {
@@ -38,6 +39,23 @@ class ContentController extends Controller
     // form create
     $types = \App\Type::where('purpose', 'content')->get();
     return view('dashboard/content/create', ['types' => $types]);
+  }
+
+  public function createGroup () {
+    return view('dashboard/content/create-group');
+  }
+
+  public function storeGroup (Request $req) {
+    $group = new ContentGroup;
+    $group['name'] = $req['name'];
+
+    $this->validate($req, [
+      'name' => 'required'
+    ]);
+
+    $group->save();
+
+    return back();
   }
 
   public function update () {

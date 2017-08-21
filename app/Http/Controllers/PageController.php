@@ -130,15 +130,32 @@ class PageController extends Controller
   }
 
   public function route ($url, $id = null) {
+    $data = [];
+
+    $modules = \App\Module::get();
 
     if ($id == null) {
       $page = Page::where('url', $url)->with('content')->first();
-      dd($page);
+      $data['page'] = $page;
     } else {
       $page = Page::where('url', $url)->with('content')->first();
       $content = \App\Content::where('id', $id)->first();
-      dd($page, $content);
+
+      $data['page'] = $page;
+
+      $data['content'] = $content;
+
     }
+
+    dd([
+      'data' => $data,
+      'modules' => $modules
+    ]);
+
+    if ($page->layout == 'index') {
+      return view('themes/theme-name/index', $data);
+    }
+
 
 
   }

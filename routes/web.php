@@ -33,12 +33,18 @@ Route::prefix('cms')->group(function () {
 
   Route::group(['middleware' => 'auth'], function () {
 
+    Route::prefix('content')->group(function () {
+      Route::get('/create-group', 'ContentController@createGroup');
+      Route::post('/create-group', 'ContentController@storeGroup');
+    });
+
     Route::put('/multiple/content', 'ContentController@updateMultiple');
 
     Route::post('/multiple/page/addcontent/{pageId}', 'PageController@addContent');
     Route::post('/multiple/module/addcontent/{moduleId}', 'PageController@addContent');
 
     Route::delete('/multiple/page', 'PageController@destroyMultiple');
+    Route::delete('/multiple/module', 'ModuleController@destroyMultiple');
     Route::delete('/multiple/content', 'ContentController@destroyMultiple');
 
     Route::get('/dashboard', 'DashboardController@index');
