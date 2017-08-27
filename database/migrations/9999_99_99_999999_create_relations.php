@@ -134,8 +134,8 @@ class CreateRelations extends Migration
       });
 
       Schema::table('contents_content_groups', function (Blueprint $table) {
-        $table->dropForeign('content_id');
-        $table->dropForeign('content_group_id');
+        $table->dropForeign('contents_content_groups_content_group_id_foreign');
+        $table->dropForeign('contents_content_groups_content_id_foreign');
       });
     }
 }

@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
 {
-
-
   public function content () {
-    return $this->belongsToMany('\App\Content', 'pages_content', 'page_id', 'content_id');
+    return $this->belongsToMany('\App\Content', 'pages_content', 'page_id', 'content_id')
+                ->withPivot(['order', 'body']);
   }
 
   public function type () {
