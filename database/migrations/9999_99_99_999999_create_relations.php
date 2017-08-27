@@ -14,38 +14,85 @@ class CreateRelations extends Migration
     public function up()
     {
       Schema::table('users', function (Blueprint $table) {
-        $table->foreign('role_id')->references('id')->on('roles');
+        $table->foreign('role_id')
+              ->references('id')
+              ->on('roles')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
       });
 
       Schema::table('pages', function (Blueprint $table) {
-        $table->foreign('type_id')->references('id')->on('types');
+        $table->foreign('type_id')
+              ->references('id')
+              ->on('types')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
       });
 
       Schema::table('modules', function (Blueprint $table) {
-        $table->foreign('type_id')->references('id')->on('types');
+        $table->foreign('type_id')
+              ->references('id')
+              ->on('types')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
       });
 
       Schema::table('contents', function (Blueprint $table) {
-        $table->foreign('type_id')->references('id')->on('types');
+        $table->foreign('type_id')
+              ->references('id')
+              ->on('types')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
       });
 
       Schema::table('pages_content', function (Blueprint $table) {
-        $table->foreign('page_id')->references('id')->on('pages');
-        $table->foreign('content_id')->references('id')->on('contents');
+        $table->foreign('page_id')
+              ->references('id')
+              ->on('pages')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
+
+        $table->foreign('content_id')
+              ->references('id')
+              ->on('contents')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
       });
 
       Schema::table('modules_content', function (Blueprint $table) {
-        $table->foreign('module_id')->references('id')->on('modules');
-        $table->foreign('content_id')->references('id')->on('contents');
+        $table->foreign('module_id')
+              ->references('id')
+              ->on('modules')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
+
+        $table->foreign('content_id')
+              ->references('id')
+              ->on('contents')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
       });
 
       Schema::table('page_analytics', function (Blueprint $table) {
-        $table->foreign('page_id')->references('id')->on('pages');
+        $table->foreign('page_id')
+              ->references('id')
+              ->on('pages')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
       });
 
       Schema::table('contents_content_groups', function (Blueprint $table) {
-        $table->foreign('content_id')->references('id')->on('contents');
-        $table->foreign('content_group_id')->references('id')->on('content_groups');
+        $table->foreign('content_id')
+              ->references('id')
+              ->on('contents')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
+
+        $table->foreign('content_group_id')
+              ->references('id')
+              ->on('content_groups')
+              ->onDelete('cascade')
+              ->onUpdate('cascade');
       });
     }
 
