@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \App\Content;
 use \App\ContentGroup;
+use \App\Page;
 
 class ContentController extends Controller
 {
@@ -75,14 +76,12 @@ class ContentController extends Controller
   }
 
   public function updateMultiple (Request $req) {
+    // dd($req);
+    $pageId = $req['page-id'];
 
-    foreach ($req['id'] as $key => $val) {
-
-      $item = \App\Content::findOrFail($val);
-      if (strlen($req['content'][$key]) > 0) {
-        $item['body'] = $req['content'][$key];
-      }
-      $item->update();
+    foreach ($req['id'] as $key => $value) {
+      $item = Page::findOrFail($pageId)->content();
+      $item = $item->updateExistingPivot($value, ['body' => $req['content'][$key]]);
     }
 
     return back();

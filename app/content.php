@@ -11,7 +11,8 @@ class content extends Model
   }
 
   public function page () {
-    return $this->belongsToMany('\App\Page', 'pages_content', 'content_id', 'page_id');
+    return $this->belongsToMany('\App\Page', 'pages_content', 'content_id', 'page_id')
+                ->withPivot('id', 'order', 'body');
   }
 
   public function module () {
