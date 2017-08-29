@@ -140,6 +140,9 @@ $sidebar-width: 200px;
 .content-manager {
   display: flex;
   flex-direction: row;
+  @include mobile() {
+    flex-direction: column;
+  }
   .content-item {
     padding: 0.5rem;
     border: 1px solid rgba(gray, 0.2);
@@ -157,6 +160,11 @@ $sidebar-width: 200px;
     flex: 0 1 auto;
     background-color: $white;
     margin-right: 1rem;
+    @include mobile {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
     .content-list {
       margin-top: 5px;
       .content-item .delete {
@@ -165,17 +173,29 @@ $sidebar-width: 200px;
     }
   }
   .pages-manager {
-    flex: 1;
+    // flex: 1;
     background-color: $white;
     margin-left: 1rem;
-    padding: 1rem;
+    padding: 0.5rem 0;
     position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    flex: 1;
+    @include mobile {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      margin-left: 0;
+    }
     .page {
-      width: 50%;
-      float: left;
       padding: 1rem;
-      border: 1px solid rgba(gray, 0.2);
+      border: 1px solid rgba(gray, 0.4);
       position: relative;
+      flex-basis: calc(50% - 2rem);
+      margin: 0.5rem 1rem;
+      @include mobile {
+        flex-basis: calc(100% - 2rem);
+      }
       .droppable {
         min-height: 45px;
         position: relative;
@@ -186,7 +206,7 @@ $sidebar-width: 200px;
 
 .fixed-bottom {
   position: fixed;
-  bottom: 2rem;
+  bottom: 1rem;
   left: 2rem;
   &.is-right {
     left: inherit;

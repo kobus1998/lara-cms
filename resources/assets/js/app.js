@@ -22,6 +22,7 @@ function showLoader (state) {
 }
 
 function showNotification (type, message) {
+  $('.notification-success, .notification-error, .notification-warning, .notification-info').fadeOut()
   switch (type) {
     case 'error':
       $('.notification-error').fadeIn()
@@ -54,7 +55,7 @@ $(document).ready(function () {
     showNotification('success', 'Content is removed')
   })
 
-  $('.delete-content').click(function () {
+  $(document).on('click', '.delete-content', function () {
 
     showLoader(true)
 
@@ -95,6 +96,7 @@ $(document).ready(function () {
         })
 
         $(this).removeClass('is-new')
+        $(this).find('.delete').addClass('delete-content')
       })
 
       pages.push(currentPage)
