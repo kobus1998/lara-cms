@@ -197,3 +197,15 @@ $sidebar-width: 200px;
 .ui-draggable-dragging.is-new {
   width: 250px;
 }
+
+.notification {
+  &.modified {
+    display: none;
+    position: fixed;
+    bottom: 2em;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99;
+    padding: 1rem;
+  }
+}

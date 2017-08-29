@@ -7,25 +7,47 @@
 
 require('./bootstrap');
 
-window.Vue = require('vue');
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', require('./components/Example.vue'));
+function showNotification (type, message) {
+  switch (type) {
+    case 'error':
+      $('.notification-error').fadeIn()
+      $('.notification-error').find('.text').html(message)
+      break;
+    case 'success':
+      $('.notification-success').fadeIn()
+      $('.notification-success').find('.text').html(message)
+      break;
+    case 'warning':
+      $('.notification-warning').fadeIn()
+      $('.notification-warning').find('.text').html(message)
+      break;
+    case 'info':
+      $('.notification-info').fadeIn()
+      $('.notification-info').find('.text').html(message)
+      break;
+    default:
+  }
 
-const app = new Vue({
-    el: '#app'
-});
+  setTimeout(function () {
+    $('.notification-success, .notification-error, .notification-warning, .notification-info').fadeOut()
+  }, 2500);
+}
 
 $(document).ready(function () {
 
+  setTimeout(function () {
+    $('.notification-success, .notification-error, .notification-warning, .notification-info').fadeOut()
+  }, 2500);
+
   $(document).on('click', '.content-item.is-new .delete', function () {
-    console.log('remove');
     $(this).closest('.content-item').remove()
+    showNotification('success', 'Content is removed')
   })
 
   $('.delete-content').click(function () {
@@ -35,8 +57,9 @@ $(document).ready(function () {
     window.axios.delete('/api/cms/page-methods/delete-content/' + pageId + '/' + contentId)
       .then(function (response) {
         contentItem.remove()
+        showNotification('success', 'Content is removed')
       }).then(function (err) {
-        console.log(err)
+        if (err) showNotification('error', 'Something went wrong')
       })
   })
 
@@ -67,16 +90,12 @@ $(document).ready(function () {
       pages.push(currentPage)
     })
 
-    console.log(pages)
-
-
-
     window.axios.post('/api/cms/page-methods/save-content-manager', {
       pages: pages
     }).then(function (response) {
-      console.log(response)
+      showNotification('success', 'Pages are saved')
     }).catch(function (err) {
-      console.log(err)
+      if (err) showNotification('error', 'Something went wrong')
     })
 
   })
@@ -99,7 +118,6 @@ $(document).ready(function () {
       var startOrder = 0
 
       contentItems.each(function () {
-        console.log(startOrder);
         $(this).find('input[name="order"]').val(startOrder)
         startOrder++
       })
