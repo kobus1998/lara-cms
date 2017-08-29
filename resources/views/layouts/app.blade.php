@@ -53,6 +53,13 @@
         </div>
       </div>
 
+      <div class="notification notification-loading modified">
+        <div class="content">
+          <span class="text">Loading</span>
+          <span class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
+        </div>
+      </div>
+
       @if (Auth::guest())
         @include('layouts/partials/sidebar')
         <div class="overview">

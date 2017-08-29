@@ -13,6 +13,14 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+function showLoader (state) {
+  if (state) {
+    $('.notification-loading').show()
+  } else if (!state) {
+    $('.notification-loading').hide()
+  }
+}
+
 function showNotification (type, message) {
   switch (type) {
     case 'error':
@@ -35,15 +43,11 @@ function showNotification (type, message) {
   }
 
   setTimeout(function () {
-    $('.notification-success, .notification-error, .notification-warning, .notification-info').fadeOut()
+    $('.notification-success, .notification-error, .notification-warning, .notification-info, .notification-loading').fadeOut()
   }, 2500);
 }
 
 $(document).ready(function () {
-
-  setTimeout(function () {
-    $('.notification-success, .notification-error, .notification-warning, .notification-info').fadeOut()
-  }, 2500);
 
   $(document).on('click', '.content-item.is-new .delete', function () {
     $(this).closest('.content-item').remove()
@@ -51,6 +55,9 @@ $(document).ready(function () {
   })
 
   $('.delete-content').click(function () {
+
+    showLoader(true)
+
     var contentItem = $(this).closest('.content-item')
     var contentId = contentItem.find('input[name="content-id"]').val()
     var pageId = contentItem.closest('.page').find('input[name="page-id"]').val()
@@ -58,12 +65,15 @@ $(document).ready(function () {
       .then(function (response) {
         contentItem.remove()
         showNotification('success', 'Content is removed')
+        showLoader(false)
       }).then(function (err) {
+        showLoader(false)
         if (err) showNotification('error', 'Something went wrong')
       })
   })
 
   $('.save-content-manager').click(function () {
+    showLoader(true)
     var pages = []
     $('.page').each(function () {
       var currentPage = {
@@ -94,7 +104,9 @@ $(document).ready(function () {
       pages: pages
     }).then(function (response) {
       showNotification('success', 'Pages are saved')
+      showLoader(false)
     }).catch(function (err) {
+      showLoader(false)
       if (err) showNotification('error', 'Something went wrong')
     })
 
