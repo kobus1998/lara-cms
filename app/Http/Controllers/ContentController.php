@@ -12,8 +12,8 @@ class ContentController extends Controller
   public function index () {
 
     $content = Content::with('type')->with('group')->get();
-
-    return view('dashboard/content/index', ['content' => $content]);
+    $pages = Page::with('content')->get();
+    return view('dashboard/content/index', ['content' => $content, 'pages' => $pages]);
 
   }
 

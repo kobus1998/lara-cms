@@ -23,6 +23,97 @@ const app = new Vue({
 
 $(document).ready(function () {
 
+  $(document).on('click', '.content-item.is-new .delete', function () {
+    console.log('remove');
+    $(this).closest('.content-item').remove()
+  })
+
+  $('.delete-content').click(function () {
+    var contentItem = $(this).closest('.content-item')
+    var contentId = contentItem.find('input[name="content-id"]').val()
+    var pageId = contentItem.closest('.page').find('input[name="page-id"]').val()
+    window.axios.delete('/api/cms/page-methods/delete-content/' + pageId + '/' + contentId)
+      .then(function (response) {
+        contentItem.remove()
+      }).then(function (err) {
+        console.log(err)
+      })
+  })
+
+  $('.save-content-manager').click(function () {
+    var pages = []
+    $('.page').each(function () {
+      var currentPage = {
+        'page-id': $(this).find('input[name="page-id"]').val(),
+        'content': []
+      }
+
+      $(this).find('.content-item').each(function () {
+        var isNew = false
+
+        if ($(this).hasClass('is-new')) {
+          isNew = true
+        }
+
+        currentPage.content.push({
+          id: $(this).find('input[name="content-id"]').val(),
+          order: $(this).find('input[name="order"]').val(),
+          isNew: isNew,
+        })
+
+        $(this).removeClass('is-new')
+      })
+
+      pages.push(currentPage)
+    })
+
+    console.log(pages)
+
+
+
+    window.axios.post('/api/cms/page-methods/save-content-manager', {
+      pages: pages
+    }).then(function (response) {
+      console.log(response)
+    }).catch(function (err) {
+      console.log(err)
+    })
+
+  })
+
+  $('.draggable').draggable({
+    connectToSortable: '.sortable',
+    greedy: true,
+    helper: 'clone',
+    stop: function (ev, ui) {
+
+    }
+  })
+
+  $('.sortable').sortable({
+    stop: function (ev, ui) {
+      var page = $(ui.item).closest('.page')
+      var pageId = page.find('input[name="page-id"]').val()
+      var contentItems = page.find('.content-item')
+
+      var startOrder = 0
+
+      contentItems.each(function () {
+        console.log(startOrder);
+        $(this).find('input[name="order"]').val(startOrder)
+        startOrder++
+      })
+    },
+  })
+
+  $('.droppable').droppable({
+    tolerance: "intersect",
+    drop: function(ev, ui) {
+      $(ui.draggable).detach().css({top: 0,left: 0, width: 'auto', height: 'auto'}).appendTo(this);
+
+    }
+  })
+
   $('.redirecter').click(function () {
     window.location.href = $(this).attr('data-href')
   })

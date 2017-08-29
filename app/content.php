@@ -12,7 +12,7 @@ class content extends Model
 
   public function page () {
     return $this->belongsToMany('\App\Page', 'pages_content', 'content_id', 'page_id')
-                ->withPivot('id', 'order', 'body');
+                ->withPivot('id', 'order', 'body')->orderBy('order', 'asc');
   }
 
   public function module () {

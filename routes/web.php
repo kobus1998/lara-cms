@@ -22,6 +22,20 @@ use \App\Page;
 //
 // Route::get('/home', 'HomeController@index')->name('home');
 
+Route::group(['middleware' => 'auth'], function () {
+
+  Route::prefix('api')->group(function () {
+
+    Route::prefix('cms')->group(function () {
+
+      Route::prefix('page-methods')->group(function () {
+
+        Route::post('/save-content-manager', 'PageController@saveContentManager');
+        Route::delete('/delete-content/{pageId}/{contentId}', 'PageController@destroyContent');
+      });
+    });
+  });
+});
 
 Route::prefix('cms')->group(function () {
 
@@ -36,6 +50,12 @@ Route::prefix('cms')->group(function () {
     Route::prefix('content')->group(function () {
       Route::get('/create-group', 'ContentController@createGroup');
       Route::post('/create-group', 'ContentController@storeGroup');
+    });
+
+    Route::prefix('page-methods')->group(function () {
+
+
+      // Route::delete('/delete-content/{pageId}', 'PageController@destroyContent');
     });
 
     Route::put('/multiple/content', 'ContentController@updateMultiple');

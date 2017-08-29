@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Page;
+use Carbon\Carbon;
 
 class PageController extends Controller
 {
@@ -102,31 +103,38 @@ class PageController extends Controller
 
   public function addContent(Request $req, $pageId) {
 
-    // dd(['req' => $req, 'page' => $pageId]);
+    return back();
+  }
 
-    $page = \App\PageContent::where('page_id', $pageId)->delete();
-
-    if (count($req->id) > 0) {
-
-      foreach ($req->id as $contentId) {
-
-        $pageContent = new \App\PageContent();
-
-        $pageContent->content_id = $contentId;
-        $pageContent->page_id = $pageId;
-        $pageContent->order = 1;
-
-        $pageContent->save();
+  public function saveContentManager(Request $req) {
+    foreach ($req->pages as $page) {
+      $currentPage = Page::findOrFail($page['page-id'])->content();
+      foreach ($page['content'] as $pageContent) {
+        if ($pageContent['isNew'] == true) {
+          $currentPage->attach($pageContent['id'], [
+            'order' => $pageContent['order'],
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon:: now()
+          ]);
+        } else {
+          $currentPage->updateExistingPivot($pageContent['id'], [
+            'order' => $pageContent['order'],
+            'updated_at' => Carbon:: now()
+          ]);
+        }
       }
     }
-
-    return back();
   }
 
   public function destroyMultiple (Request $req) {
     Page::destroy($req['pages']);
 
     return back();
+  }
+
+  public function destroyContent (Request $req, $pageId, $contentId) {
+    $page = Page::findOrFail($pageId)->content();
+    $page->detach($contentId);
   }
 
   public function route ($url, $id = null) {

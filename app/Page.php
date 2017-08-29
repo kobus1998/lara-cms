@@ -8,7 +8,7 @@ class Page extends Model
 {
   public function content () {
     return $this->belongsToMany('\App\Content', 'pages_content', 'page_id', 'content_id')
-                ->withPivot('id', 'order', 'body');
+                ->withPivot('id', 'order', 'body')->orderBy('order', 'asc');
   }
 
   public function type () {
