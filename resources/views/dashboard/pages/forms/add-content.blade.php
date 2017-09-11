@@ -1,4 +1,5 @@
 <form action="{{ action('PageController@addContent', $page->id) }}" class="modal add-content-modal" method="post">
+  {{ $page->id }}
   <div class="modal-background" data-modal="add-content-modal"></div>
   <div class="modal-card">
     <header class="modal-card-head">

@@ -10,18 +10,7 @@
     </div>
     <div class="level-right">
       <div class="level-item">
-        {{-- <a href="{{ action('ContentController@createGroup') }}" class="button has-margin-right">New group</a> --}}
         <a href="{{ action('ContentController@create') }}" class="button has-margin-right">New content</a>
-        {{-- <form class="" action="index.html" method="post">
-          <div class="field has-addons">
-            <p class="control">
-              <input type="text" name="search" value="{{ old('search') }}" class="input search" placeholder="Search page">
-            </p>
-            <p class="control">
-              <button type="submit" class="button"><span class="icon is-small"><i class="fa fa-search"></i></span></button>
-            </p>
-          </div>
-        </form> --}}
       </div>
     </div>
   </div>

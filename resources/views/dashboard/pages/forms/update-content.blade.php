@@ -5,7 +5,7 @@
 
     </div>
     <div class="level-right">
-      <a class="button" data-modal="add-content-modal">Add Content to this page</a>
+      {{-- <a class="button" data-modal="add-content-modal">Add Content to this page</a> --}}
       <a href="{{ action('ContentController@create') }}" class="button">New Content</a>
     </div>
   </div>
@@ -28,8 +28,9 @@
       <input type="hidden" name="_method" value="put">
 
       @foreach ($page->content as $content)
-
+        <input type="hidden" name="page-id" value="{{ $page->id }}">
         <input type="hidden" name="id[]" value="{{ $content->id }}">
+        <input type="hidden" name="pivot-id[]" value="{{ $content->pivot->id }}">
         <input type="hidden" name="name[]" value="{{ $content->name }}">
         <input type="hidden" name="title[]" value="{{ $content->title }}">
 
@@ -41,13 +42,13 @@
             <div class="field">
               <div class="control">
                 @if ($content->type->name == 'textfield')
-                  <input class="input" type="text" name="content[]" value="{{ $content->body }}">
+                  <input class="input" type="text" name="content[]" value="{{ $content->pivot->body }}">
                 @elseif ($content->type->name == 'textarea')
-                  <textarea class="textarea" name="content[]" rows="8" cols="80">{{ $content->body }}</textarea>
+                  <textarea class="textarea" name="content[]" rows="8" cols="80">{{ $content->pivot->body }}</textarea>
                 @elseif ($content->type->name == 'media')
-                  <input type="file" name="content[]" value="{{ $content->body }}">
+                  <input class="file" type="file" name="content[]" value="{{ $content->pivot->body }}">
                 @elseif ($content->type->name == 'checkbox')
-                  <input class="checkbox" type="checkbox" name="content[]" value="{{ $content->body }}">
+                  <input class="checkbox" type="checkbox" name="content[]" value="{{ $content->pivot->body }}">
                 @endif
               </div>
             </div>
