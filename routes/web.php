@@ -45,6 +45,17 @@ Route::prefix('cms')->group(function () {
 
   Auth::routes();
 
+  Route::prefix('media')->group(function () {
+    Route::group(['middleware' => 'auth'], function () {
+      Route::get('/', 'MediaController@index');
+      Route::post('/store', 'MediaController@store');
+      Route::get('/upload', 'MediaController@upload');
+    });
+
+    Route::get('/{id}', 'MediaController@show');
+
+  });
+
   Route::group(['middleware' => 'auth'], function () {
 
     Route::prefix('content')->group(function () {
