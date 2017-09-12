@@ -10,44 +10,14 @@ class MediaController extends Controller
 {
 
   public function index () {
-    $medias = Media::get();
+    $medias = Media::orderBy('created_at', 'desc')->paginate(15);
     $images = [];
-    // dd($medias);
     foreach ($medias as $media) {
       $image = Storage::disk('local')->url($media->path);
-      array_push($images, [
-        'id' => $media['id'],
-        'name' => $media['name'],
-        'url' => $image
-      ]);
+      $media->url = $image;
     }
 
-    // dd($images);
-    return view('dashboard/media/index', ['images' => $images]);
-  }
-
-  public function store (Request $req) {
-    $this->validate($req, [
-      // 'name' => 'required',
-      // 'media' => 'required'
-    ]);
-
-    $files = $req['media'];
-// dd($files);
-    foreach ($files as $file) {
-
-      $currentFile = $file->store('public');
-      // dd($file);
-      // $file = $file[0];
-      // dd($file);
-      $media = new Media;
-      $media['name'] = $file->getClientOriginalName();
-      $media['path'] = $currentFile;
-      $media['slug'] = $file->hashName();
-      $media->save();
-    }
-
-    return back();
+    return view('dashboard/media/index', ['images' => $medias]);
   }
 
   public function upload () {
@@ -59,6 +29,44 @@ class MediaController extends Controller
     $image = Storage::disk('local')->url($media['path']);
     $media['url'] = $image;
     return view('dashboard/media/show', ['media' => $media]);
+  }
+
+  public function store (Request $req) {
+    $this->validate($req, [
+      // 'name' => 'required',
+      // 'media' => 'required'
+    ]);
+
+    $files = $req['media'];
+    foreach ($files as $file) {
+
+      $currentFile = $file->store('public');
+      $media = new Media;
+      $media['name'] = $file->getClientOriginalName();
+      $media['path'] = $currentFile;
+      $media['slug'] = $file->hashName();
+      $media->save();
+    }
+
+    return back();
+  }
+
+  public function delete (Request $req) {
+
+    $this->validate($req, [
+      'images' => 'required'
+    ]);
+
+    $medias = Media::find($req->images);
+    // dd($media);
+    foreach ($medias as $image) {
+      Storage::disk('local')->delete($image->path);
+    }
+
+    Media::destroy($req->images);
+
+    return back();
+
   }
 
 }

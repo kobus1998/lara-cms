@@ -50,6 +50,7 @@ Route::prefix('cms')->group(function () {
       Route::get('/', 'MediaController@index');
       Route::post('/store', 'MediaController@store');
       Route::get('/upload', 'MediaController@upload');
+      Route::delete('/delete', 'MediaController@delete');
     });
 
     Route::get('/{id}', 'MediaController@show');

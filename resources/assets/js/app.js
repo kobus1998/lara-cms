@@ -177,6 +177,17 @@ $(document).ready(function () {
 
   })
 
+  $('.media-manager img').on('click', function () {
+    $('.media-manager').find('.modal').addClass('is-active')
+    var src = $(this).attr('src')
+    var modal = $('.media-manager').find('.modal .image')
+    modal.attr('src', src)
+  })
+
+  $('.modal .modal-background, .modal .modal-close').on('click', function () {
+    $(this).closest('.modal').removeClass('is-active')
+  })
+
   // toggle modal
   $('*[data-modal]').click(function () {
     var dataModal = $(this).attr('data-modal')
@@ -189,6 +200,52 @@ $(document).ready(function () {
 
   $('.app-content').click(function () {
     $('.sidebar').removeClass('is-active')
+  })
+
+  $('#media').on('change', function (e) {
+    var media = $(this)
+    var fileInfo = media.closest('.media-form').find('.files-info')
+    var files = e.target.files
+    fileInfo.html(' ')
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i]
+      fileInfo.append(`<li>${i+1} | ${file.name}</li>`)
+    }
+  })
+
+  $('.show-image-sidebar').on('click', function () {
+    var tableMedia = $(this).closest('.table-media')
+    var mediaEnlarged = tableMedia.find('.media-enlarged')
+    var imageName = tableMedia.find('.image-name')
+    var imageId = tableMedia.find('.image-id')
+    var remove = tableMedia.find('.btn-remove-media')
+
+    var modal = tableMedia.find('.modal')
+    var modalBg = modal.find('.modal-background')
+    modal.addClass('is-active')
+    tableMedia.find('tr').removeClass('is-selected')
+
+
+
+    var src = $(this).attr('src')
+    var name = $(this).attr('name')
+    var id = $(this).attr('img-id')
+    var url = $(this).attr('url')
+
+    $(this).closest('tr').addClass('is-selected')
+
+    mediaEnlarged.attr('src', src)
+    imageName.text(name)
+    imageName.attr('href', url)
+    imageId.val(id)
+    remove.show()
+  })
+
+  $('.delete-selected-media').on('click', function () {
+
+    var form = $(this).closest('.media-controller').find('.media-manager').find('.delete-media-form').submit()
+
+
   })
 
 })

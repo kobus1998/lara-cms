@@ -4,6 +4,11 @@
 @import '~font-awesome/scss/font-awesome.scss';
 $body-background: #f1f1f1;
 $sidebar-width: 200px;
+$header-height: 3.25rem;
+$column-gap: 0.25rem;
+$primary: #0099CC;
+$red: #f4645f;
+$info: #64B5F6;
 // Bulma
 @import "~bulma/bulma";
 
@@ -17,6 +22,7 @@ $sidebar-width: 200px;
     position: fixed;
     width: 100%;
     z-index: 99;
+    height: $header-height;
   }
   .app-content {
     margin-top: 3.25rem;
@@ -232,4 +238,91 @@ $sidebar-width: 200px;
 
 .hidden {
   display: none;
+}
+
+.image {
+  &.is-small {
+    width: auto;
+    height: 150px;
+  }
+}
+
+.content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.has-pointer {
+  cursor: pointer;
+}
+
+.width-auto {
+  width: auto;
+}
+
+.has-margin-sidebar {
+  margin-left: $sidebar-width;
+  @include mobile {
+    margin-left: 0;
+  }
+}
+
+.has-margin-header {
+  margin-top: $header-height;
+}
+
+.modal {
+  .modal-content {
+    max-width: 75%;
+    max-height: 75%;
+    &.has-overflow-hidden {
+      overflow: hidden;
+    }
+  }
+  &.is-mobile-only {
+    position: static;
+    display: block;
+    @include mobile {
+      display: none;
+      position: fixed;
+      &.is-active {
+        display: flex;
+      }
+    }
+    .modal-content {
+      width: 100%;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      @include mobile {
+        max-width: 75%;
+        max-height: 75%;
+        margin: 1rem;
+        .box {
+          margin-bottom: 0;
+        }
+      }
+    }
+    .model-close {
+      display: none;
+      @include mobile {
+        display: inherit;
+      }
+    }
+    .modal-background {
+      display: none;
+      @include mobile {
+        display: inherit;
+      }
+    }
+  }
+}
+
+.box:nth-last-child(1) {
+  margin-bottom: 1.5rem;
+}
+
+.break-all {
+  word-break: break-all;
 }
