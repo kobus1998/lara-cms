@@ -3,21 +3,17 @@
 @section('content')
 
   @php
-    $currentPage = app('request')->input('page');
     $getView = app('request')->input('view');
+    $searchQuery = app('request')->input('s');
+    $totalItems =  $images->total();
+
+    if ($searchQuery == null) {
+      $searchQuery = '';
+    }
 
     if (empty($getView)) {
       $getView = 'table';
     }
-
-    if (empty($currentPage)) {
-      $currentPage = 1;
-    }
-
-    $totalItems =  $images->total();
-    $itemsPerPage = $images->perPage();;
-
-    $totalPages = ceil($totalItems / $itemsPerPage);
   @endphp
 
 
@@ -35,9 +31,9 @@
         <div class="level-item">
           <a
             @if ($getView == 'columns')
-              href="{{ action('MediaController@index', ['view' => 'table']) }}"
+              href="{{ action('MediaController@index', ['view' => 'table', 's' => $searchQuery]) }}"
             @else
-              href="{{ action('MediaController@index', ['view' => 'columns']) }}"
+              href="{{ action('MediaController@index', ['view' => 'columns', 's' => $searchQuery]) }}"
             @endif
 
             class="button has-margin-right is-link">
@@ -52,35 +48,28 @@
     </div>
 
     <div class="level">
-      <div class="level-left">
-        <div class="media-upload">
-
-          <form class="has-margin-top media-form" action="{{ action('MediaController@store') }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
-            <div class="field is-grouped" style="margin-bottom: 0">
-              <label for="media" class="label has-pointer" aria-label="Click to select files">Select File(s) <span class="icon"><i class="fa fa-upload"></i></span></label>
-              <div class="control">
-                <input class="is-hidden" type="file" id="media" name="media[]" multiple/>
-              </div>
-              <div class="control">
-                <button type="submit" class="button is-primary is-small">Upload</button>
-              </div>
-            </div>
-            <ul class="files-info help"></ul>
-          </form>
-
-        </div>
+      <div class="level-left has-margin-top">
+        @component('dashboard/components/_upload') @endcomponent
       </div>
-      <div class="level-right">
+      @component('dashboard/components/_search', [
+        'model' => $images,
+        'searchQuery' => $searchQuery,
+        'extraQueries' => ['view' => $getView]
+      ])
         @if ($getView == 'table')
           <button type="button" name="button" class="button is-danger delete-selected-media">delete Selected</button>
         @endif
-      </div>
+      @endcomponent
     </div>
 
 
     <hr>
-    @if (count($images) == 0)
+
+    @component('dashboard/components/minis/_no-search-result', ['model' => $images])
+
+    @endcomponent
+
+    @if (count($images) == 0 && app('request')->input('s') == null)
 
       <div class="notification">
         <div class="content">
@@ -91,7 +80,7 @@
         </div>
       </div>
 
-    @else
+    @elseif(count($images) != 0)
 
     <div class="media-manager">
       @if ($getView == 'columns')
@@ -138,7 +127,7 @@
                       <td><input type="checkbox" class="form-checkboxes has-pointer" name="images[]" value="{{ $image->id }}"></td>
                       <td class=""><a href="{{ action('MediaController@show', $image['id']) }}">{{ $image['name'] }}</a></td>
                       <td class="is-hidden-mobile">{{ $image['created_at'] }}</td>
-                      <td ><span class="icon"><i class="fa fa-search"></i></span></td>
+                      <td><span class="icon"><i class="fa fa-arrow-right"></i></span></td>
                     </tr>
                   @endforeach
                 </tbody>
@@ -176,7 +165,7 @@
 
       @endif
 
-      @component('dashboard/components/_pagination', ['model' => $images, 'queries' => ['view' => $getView]])@endcomponent
+      @component('dashboard/components/_pagination', ['model' => $images, 'queries' => ['view' => $getView, 's' => $searchQuery]])@endcomponent
 
     @endif
     </div>
