@@ -165,7 +165,12 @@
 
       @endif
 
-      @component('dashboard/components/_pagination', ['model' => $images, 'queries' => ['view' => $getView, 's' => $searchQuery]])@endcomponent
+      @component('dashboard/components/_pagination', [
+        'model' => $images,
+        'controller' => 'MediaController',
+        'method' => 'index',
+        'queries' => ['view' => $getView, 's' => $searchQuery]
+      ])@endcomponent
 
     @endif
     </div>

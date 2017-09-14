@@ -83,6 +83,13 @@
 
     @endif
 
+    @component('dashboard/components/_pagination', [
+      'model' => $pages,
+      'controller' => 'PageController',
+      'method' => 'index'
+    ])
+
+    @endcomponent
 
   </div>
 
