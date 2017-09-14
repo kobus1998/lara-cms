@@ -11,7 +11,7 @@ class PageController extends Controller
 
   public function index () {
 
-    $pages = Page::with('type')->get();
+    $pages = Page::with('type')->paginate(2);
 
     return view('dashboard/pages/index', compact('pages'));
   }
