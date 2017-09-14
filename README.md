@@ -23,7 +23,7 @@ Your client will have less power over the cms, that way they can't fuck up their
 - Edit the .env file
 - Run npm install
 - Run composer install
-- Migrate the database
+- run php artisan migrate --seed
 - run npm run watch for client side
-- run php artisan serve for back-end
+- Simply serve the back-end with apache, either make a virtual host or go to the path of index.php in the base folder
 - You're done with the setup! :tada: :rocket:
