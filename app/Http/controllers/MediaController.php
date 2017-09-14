@@ -9,11 +9,20 @@ use Illuminate\Http\Request;
 class MediaController extends Controller
 {
 
-  public function index () {
-    $medias = Media::orderBy('created_at', 'desc')->paginate(15);
-    $images = [];
+  public function index (Request $req) {
+    $search = app('request')->input('s');
+
+    $medias = new Media;
+
+    if ($search != null) {
+      $medias = $medias::where('name', 'LIKE', '%'.$search.'%')->orderBy('created_at', 'desc');
+    } else {
+      $medias = $medias::orderBy('created_at', 'desc');
+    }
+    $medias = $medias->paginate(15);
+    // dd($medias);
     foreach ($medias as $media) {
-      $image = Storage::disk('local')->url($media->path);
+      $image = '/public'.Storage::disk('local')->url($media->path);
       $media->url = $image;
     }
 

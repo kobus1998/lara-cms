@@ -1,7 +1,7 @@
 
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-@import '~font-awesome/scss/font-awesome.scss';
+$font-family: 'Raleway';
 $body-background: #f1f1f1;
 $sidebar-width: 200px;
 $header-height: 3.25rem;
@@ -9,6 +9,7 @@ $column-gap: 0.25rem;
 $primary: #0099CC;
 $red: #f4645f;
 $info: #64B5F6;
+
 // Bulma
 @import "~bulma/bulma";
 
