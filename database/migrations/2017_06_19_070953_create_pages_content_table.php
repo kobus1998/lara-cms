@@ -13,12 +13,12 @@ class CreatePagesContentTable extends Migration
      */
     public function up()
     {
-      Schema::create('pages_content', function (Blueprint $table) {
+      Schema::create('contents_pages', function (Blueprint $table) {
         $table->increments('id');
-        $table->integer('order')->default(0);
-        $table->string('body')->nullable();
         $table->integer('page_id')->unsigned();
         $table->integer('content_id')->unsigned();
+        $table->string('body')->nullable();
+        $table->integer('order')->default(0);
         $table->timestamps();
       });
     }
@@ -30,6 +30,6 @@ class CreatePagesContentTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('pages_content');
+      Schema::dropIfExists('contents_pages');
     }
 }

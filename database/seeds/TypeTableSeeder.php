@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use \App\Type as Type;
+use Illuminate\Support\Facades\DB;
 
 class TypeTableSeeder extends Seeder
 {
@@ -41,15 +41,10 @@ class TypeTableSeeder extends Seeder
           'name' => 'blog',
           'desc' =>  'A page for your blog post. For instance: blog/1 to get your first blog post.',
           'purpose' => 'page'
-        ], [
-          'name' => 'blog-item',
-          'desc' => 'A blog post for your blog.',
-          'purpose' => 'content'
         ]
       ];
 
-      foreach ($types as $type) {
-        Type::insert($type);
-      }
+      DB::table('types')->insert($types);
+
     }
 }

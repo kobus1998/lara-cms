@@ -17,6 +17,7 @@ class ContentsContentsGroups extends Migration
         $table->increments('id');
         $table->integer('content_id')->unsigned();
         $table->integer('content_group_id')->unsigned();
+        $table->integer('order')->default(0);
         $table->timestamps();
       });
     }

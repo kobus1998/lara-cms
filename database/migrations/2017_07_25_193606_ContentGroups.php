@@ -16,6 +16,7 @@ class ContentGroups extends Migration
       Schema::create('content_groups', function (Blueprint $table) {
         $table->increments('id');
         $table->string('name');
+        $table->text('desc');
         $table->timestamps();
       });
     }
