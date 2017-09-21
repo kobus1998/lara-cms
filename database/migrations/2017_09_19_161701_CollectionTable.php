@@ -17,6 +17,7 @@ class CollectionTable extends Migration
         $table->increments('id');
         $table->string('name');
         $table->text('desc')->nullable();
+        $table->boolean('all_pages')->default(false);
         $table->timestamps();
       });
     }

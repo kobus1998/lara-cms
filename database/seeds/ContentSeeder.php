@@ -13,13 +13,11 @@ class ContentSeeder extends Seeder
     public function run()
     {
 
-      $contents = [
+      DB::table('contents')->insert([
         [ 'name' => 'title', 'type_id' => 1 ],
         [ 'name' => 'content', 'type_id' => 2 ],
         [ 'name' => 'image', 'type_id' => 3 ],
-      ];
-
-      DB::table('contents')->insert($contents);
+      ]);
 
     }
 }

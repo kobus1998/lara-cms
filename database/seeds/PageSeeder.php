@@ -13,14 +13,28 @@ class PageSeeder extends Seeder
     public function run()
     {
 
-      DB::table('pages')->insert(
+      DB::table('pages')->insert([
         [
           'name' => 'home',
           'desc' => 'home',
-          'url' => 'home',
-          'type_id' => 5
+          'url' => 'home'
+        ],
+        [
+          'name' => 'about',
+          'desc' => 'about',
+          'url' => 'about'
+        ],
+        [
+          'name' => 'portfolio',
+          'desc' => 'portfolio',
+          'url' => 'portfolio'
+        ],
+        [
+          'name' => 'blog',
+          'desc' => 'blog',
+          'url' => 'blog'
         ]
-      );
+      ]);
 
     }
 }

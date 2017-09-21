@@ -13,9 +13,10 @@ class CollectionSeeder extends Seeder
     public function run()
     {
 
-      DB::table('collections')->insert(
-        ['name' => 'blog']
-      );
+      DB::table('collections')->insert([
+        ['name' => 'blog', 'desc' => 'Welcome to my blog!'],
+        ['name' => 'portfolio', 'desc' => 'I hope you like my work!']
+      ]);
 
     }
 }

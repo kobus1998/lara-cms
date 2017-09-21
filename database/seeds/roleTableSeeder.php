@@ -13,7 +13,7 @@ class roleTableSeeder extends Seeder
     public function run()
     {
 
-      $roles = [
+      DB::table('roles')->insert([
         [
           'name' => 'admin',
           'desc' => 'Has access to everything.',
@@ -27,9 +27,7 @@ class roleTableSeeder extends Seeder
           'desc' => 'Only has access to the content.',
           'priority' => 3
         ]
-      ];
-
-      DB::table('roles')->insert($roles);
+      ]);
 
     }
 }

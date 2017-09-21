@@ -16,9 +16,8 @@ class CreateTypesTable extends Migration
       Schema::create('types', function (Blueprint $table) {
         $table->increments('id');
         $table->string('name');
-        $table->enum('purpose', ['content', 'page', 'module', 'all']);
+        $table->enum('purpose', ['content', 'page', 'collection', 'all']);
         $table->text('desc')->nullable();
-        $table->boolean('is_active')->default(true);
         $table->timestamps();
       });
     }

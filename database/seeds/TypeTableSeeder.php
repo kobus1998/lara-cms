@@ -12,7 +12,8 @@ class TypeTableSeeder extends Seeder
      */
     public function run()
     {
-      $types = [
+
+      DB::table('types')->insert([
         [
           'name' => 'textfield',
           'desc' => 'A textfield for words or a single sentence.',
@@ -29,22 +30,8 @@ class TypeTableSeeder extends Seeder
           'name' => 'checkbox',
           'desc' => 'A checkbox to let a user turn something on and off.',
           'purpose' => 'content'
-        ], [
-          'name' => 'page',
-          'desc' => 'A normal page, can be used for the home page.',
-          'purpose' => 'page'
-        ], [
-          'name' => 'module',
-          'desc' => 'A module.',
-          'purpose' => 'module'
-        ], [
-          'name' => 'blog',
-          'desc' =>  'A page for your blog post. For instance: blog/1 to get your first blog post.',
-          'purpose' => 'page'
         ]
-      ];
-
-      DB::table('types')->insert($types);
+      ]);
 
     }
 }

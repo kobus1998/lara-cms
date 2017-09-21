@@ -12,8 +12,9 @@ class CollectionPageSeeder extends Seeder
      */
     public function run()
     {
-      DB::table('collections_pages')->insert(
-        ['collection_id' => 1, 'page_id' => 1]
-      );
+      DB::table('collections_pages')->insert([
+        ['collection_id' => 1, 'page_id' => 4],
+        ['collection_id' => 2, 'page_id' => 3]
+      ]);
     }
 }

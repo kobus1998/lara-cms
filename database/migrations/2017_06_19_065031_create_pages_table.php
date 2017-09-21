@@ -19,11 +19,9 @@ class CreatePagesTable extends Migration
         $table->text('desc')->nullable();
         $table->string('url');
         $table->string('layout')->default('index');
-        $table->integer('type_id')->unsigned();
         $table->text('seo_desc')->nullable();
         $table->string('seo_keywords')->nullable();
         $table->string('seo_title')->nullable();
-        $table->boolean('is_active')->default(true);
         $table->timestamps();
       });
     }
