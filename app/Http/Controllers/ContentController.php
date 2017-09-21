@@ -6,14 +6,34 @@ use Illuminate\Http\Request;
 use \App\Content;
 use \App\ContentGroup;
 use \App\Page;
+use \App\Module;
 
 class ContentController extends Controller
 {
   public function index () {
+    $search = app('request')->input('s');
+
+    $pages = new Page;
+
+    if ($search != null) {
+      $pages = $pages::where('name', 'LIKE', '%'.$search.'%')->orderBy('created_at', 'desc');
+    } else {
+      $pages = $pages::orderBy('created_at', 'desc');
+    }
+
+    $pages = $pages->whereHas('type', function ($query) {
+      $query->whereIn('name', ['page']);
+    })->with('content')->paginate(15);
 
     $content = Content::with('type')->with('group')->get();
-    $pages = Page::with('content')->get();
-    return view('dashboard/content/index', ['content' => $content, 'pages' => $pages]);
+    $types = \App\Type::where('purpose', 'content')->get();
+    $contentGroups = ContentGroup::all();
+    return view('dashboard/content/index', [
+      'content' => $content,
+      'viewContents' => $pages,
+      'types' => $types,
+      'groups' => $contentGroups
+    ]);
 
   }
 
@@ -22,7 +42,6 @@ class ContentController extends Controller
     $content = new Content;
 
     $content['name'] = $req['name'];
-    $content['body'] = '';
     $content['type_id'] = $req['type'];
 
     $this->validate($req, [
@@ -37,7 +56,6 @@ class ContentController extends Controller
   }
 
   public function create () {
-    // form create
     $types = \App\Type::where('purpose', 'content')->get();
     return view('dashboard/content/create', ['types' => $types]);
   }
@@ -76,7 +94,6 @@ class ContentController extends Controller
   }
 
   public function updateMultiple (Request $req) {
-    // dd($req);
     $pageId = $req['page-id'];
 
     foreach ($req['id'] as $key => $value) {
