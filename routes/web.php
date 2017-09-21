@@ -29,17 +29,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::prefix('cms')->group(function () {
 
       Route::prefix('page-methods')->group(function () {
-
+        Route::post('/save-content-body/{pageId}', 'PageController@saveContentBody');
         Route::post('/save-content-manager', 'PageController@saveContentManager');
         Route::delete('/delete-content/{pageId}/{contentId}', 'PageController@destroyContent');
       });
+
     });
   });
 });
 
 Route::prefix('cms')->group(function () {
 
-  route::get('/', function ($value='') {
+  route::get('/', function () {
     return redirect('/cms/dashboard');
   });
 
@@ -73,17 +74,15 @@ Route::prefix('cms')->group(function () {
     Route::put('/multiple/content', 'ContentController@updateMultiple');
 
     Route::post('/multiple/page/addcontent/{pageId}', 'PageController@addContent');
-    Route::post('/multiple/module/addcontent/{moduleId}', 'PageController@addContent');
 
     Route::delete('/multiple/page', 'PageController@destroyMultiple');
-    Route::delete('/multiple/module', 'ModuleController@destroyMultiple');
     Route::delete('/multiple/content', 'ContentController@destroyMultiple');
 
     Route::get('/dashboard', 'DashboardController@index');
 
     Route::resource('page', 'PageController');
-    Route::resource('module', 'ModuleController');
     Route::resource('content', 'ContentController');
+    Route::resource('collection', 'CollectionController');
   });
 
 });
