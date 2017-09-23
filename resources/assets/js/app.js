@@ -13,6 +13,18 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+function updateContentManager (pages) {
+  $('.page').each(function (pageIndex) {
+    $(this).find('.content-item').each(function (contentIndex) {
+      var pivot = pages[pageIndex][contentIndex]['pivot']
+      $(this).find('input[name="content-id"]').val(pivot['content_id'])
+      $(this).find('input[name="page-content-id"]').val(pivot['id'])
+      $(this).find('input[name="order"]').val(pivot['order'])
+      $(this).find('input[name="repeating"]').val(pivot['repeating'])
+    })
+  })
+}
+
 function showLoader (state) {
   if (state) {
     $('.notification-loading').show()
@@ -50,6 +62,111 @@ function showNotification (type, message) {
 
 $(document).ready(function () {
 
+  $('.toggle-modal-create-collection').click(function () {
+    $('.toggle-create-collection').toggleClass('is-active')
+  })
+
+  $('.toggle-modal-create-post').click(function () {
+    $('.toggle-create-post').toggleClass('is-active')
+  })
+
+  $('.toggle-modal-add-collection-content').click(function () {
+    $('.toggle-add-collection-content').toggleClass('is-active')
+  })
+
+  $('#update-order-form').submit(function (e) {
+    e.preventDefault()
+    showLoader(true)
+    let content = $(this).serialize()
+    let url = $(this).attr('action')
+    window.axios.put(url, content).then(response => {
+      showLoader(false)
+      showNotification('success', 'Order is updated!')
+    }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'something went horribly wrong.')
+    })
+  })
+
+  $('#create-post-form').submit(function (e) {
+    e.preventDefault()
+    showLoader(true)
+    let content = $(this).serialize()
+    console.log(content);
+    window.axios.post('/cms/post', content).then(response => {
+      showLoader(false)
+      showNotification('success', 'Collection is created')
+    }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'Something went wrong')
+    })
+  })
+
+  $(document).on('click', '.delete-content-field', function (e) {
+    e.preventDefault()
+    let root = $(this).closest('.draggable-field')
+    let collectionId = $(this).closest('.draggable-field').find('input[name="collection-id"]').val();
+    let id = root.find('input[name="id[]"]').val();
+    window.axios.delete(`/cms/collection/${collectionId}/remove-content/${id}`).then(response => {
+      showLoader(false)
+      showNotification('success', 'Field is removed')
+      root.remove()
+    }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'Something went wrong')
+    })
+  })
+
+  $('#add-content-field-form').submit(function (e) {
+    e.preventDefault()
+    showLoader(true)
+    let collectionId = $(this).find('input[name="collection-id"]').val();
+    console.log(collectionId);
+
+    let content = $(this).serialize()
+    let url = $(this).attr('action')
+    window.axios.post(url, content).then(response => {
+      showLoader(false)
+      showNotification('success', 'Field is created')
+
+      $('.sortable-field').append(`
+        <div class="box draggable-field has-pointer">
+          <input type="hidden" name="collection-id" value="${response.data.collection_id}">
+          <input type="hidden" name="order[]" value="${response.data.order}">
+          <input type="hidden" name="name" value="${response.data.name}">
+          <input type="hidden" name="id[]" value="${response.data.id}">
+          <p>
+            ${response.data.name} |
+            ${response.data.type.name}
+            <button class="delete-content-field button is-danger is-pulled-right is-small"><span class="icon is-small"><i class="fa fa-times"></i></span></button>
+          </p>
+        </div>
+      `)
+
+    }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'Something went wrong')
+    })
+  })
+
+  $('#create-collection-form').submit(function (e) {
+
+    e.preventDefault()
+
+    showLoader(true)
+
+    let content = $(this).serialize()
+    let url = $(this).attr('url')
+    window.axios.post(url, content).then(response => {
+      showLoader(false)
+      showNotification('success', 'Collection is created')
+    }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'Something went wrong')
+    })
+
+  })
+
   $(document).on('click', '.content-item.is-new .delete', function () {
     $(this).closest('.content-item').remove()
     showNotification('success', 'Content is removed')
@@ -60,9 +177,10 @@ $(document).ready(function () {
     showLoader(true)
 
     var contentItem = $(this).closest('.content-item')
-    var contentId = contentItem.find('input[name="content-id"]').val()
+    var contentId = contentItem.find('input[name="page-content-id"]').val()
     var pageId = contentItem.closest('.page').find('input[name="page-id"]').val()
-    window.axios.delete('/api/cms/page-methods/delete-content/' + pageId + '/' + contentId)
+    var url = contentItem.closest('.pages-manager').find('input[name="delete-url"]').val()
+    window.axios.delete(url + '/' + pageId + '/' + contentId)
       .then(function (response) {
         contentItem.remove()
         showNotification('success', 'Content is removed')
@@ -76,35 +194,45 @@ $(document).ready(function () {
   $('.save-content-manager').click(function () {
     showLoader(true)
     var pages = []
+
     $('.page').each(function () {
-      var currentPage = {
-        'page-id': $(this).find('input[name="page-id"]').val(),
+      var newPage = {
+        'id': $(this).find('input[name="page-id"]').val(),
         'content': []
       }
 
       $(this).find('.content-item').each(function () {
+        var contentId = $(this).find('input[name="content-id"]').val()
+        var order = $(this).find('input[name="order"]').val()
+        var repeating = $(this).find('input[name="repeating"]')
+        var repeatVal = 0
         var isNew = false
 
-        if ($(this).hasClass('is-new')) {
-          isNew = true
-        }
+        if (repeating.is(':checked')) repeatVal = 1
+        else repeatVal = 0
 
-        currentPage.content.push({
-          id: $(this).find('input[name="content-id"]').val(),
-          order: $(this).find('input[name="order"]').val(),
-          isNew: isNew,
+        if ($(this).hasClass('is-new')) { isNew = true }
+
+        newPage.content.push({
+          'id': contentId,
+          'order': order,
+          'repeating': repeatVal,
+          'isNew': isNew
         })
 
         $(this).removeClass('is-new')
         $(this).find('.delete').addClass('delete-content')
       })
+      pages.push(newPage)
 
-      pages.push(currentPage)
     })
 
-    window.axios.post('/api/cms/page-methods/save-content-manager', {
-      pages: pages
+    var url = $('.pages-manager').find('input[name="save-url"]').val()
+
+    window.axios.post(url, {
+      pages: pages,
     }).then(function (response) {
+      updateContentManager(response.data)
       showNotification('success', 'Pages are saved')
       showLoader(false)
     }).catch(function (err) {
@@ -121,6 +249,24 @@ $(document).ready(function () {
     stop: function (ev, ui) {
 
     }
+  })
+
+  $('.draggable-field').draggable({
+    connectToSortable: '.sortable-field',
+    greedy: true,
+  })
+
+  $('.sortable-field').sortable({
+    stop: function (ev, ui) {
+      var wrapper = $(ui.item).closest('.sortable-field')
+      var contentItems = wrapper.find('.draggable-field')
+      var startOrder = 0
+
+      contentItems.each(function () {
+        $(this).find('input[name="order[]"]').val(startOrder)
+        startOrder++
+      })
+    },
   })
 
   $('.sortable').sortable({
@@ -142,7 +288,6 @@ $(document).ready(function () {
     tolerance: "intersect",
     drop: function(ev, ui) {
       $(ui.draggable).detach().css({top: 0,left: 0, width: 'auto', height: 'auto'}).appendTo(this);
-
     }
   })
 

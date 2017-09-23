@@ -24,6 +24,6 @@ class Content extends Model
   }
 
   public function contents_posts() {
-    return $this->belongsToMany('\App\ContentPosts',)
+    return $this->belongsToMany('\App\ContentPosts');
   }
 }

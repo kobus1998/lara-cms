@@ -35,51 +35,62 @@
       <div class="content-sidebar">
 
         <div class="content-list">
+          <h4 class="title is-4">Content</h4>
           @foreach ($content as $contentItem)
             <div class="draggable content-item is-clearfix is-new">
               <input type="hidden" name="content-id" value="{{ $contentItem->id }}">
+              <input type="hidden" name="type" value="content">
               <input type="hidden" name="order" value="">
-              <p>
-                <span class="is-pulled-left">
+              <input type="hidden" name="page-content-id" value="">
+              <div class="level">
+
+                <div class="level-left">
                   {{ $contentItem->name }}
-                </span>
-                <small class="is-pulled-right delete"></small>
-              </p>
+                </div>
+
+                <div class="level-right">
+                  <a class="tooltip left">
+                    <input class="checkbox" type="checkbox" name="repeating" value="1">
+                    <span class="tooltip-content">repeating group</span>
+                  </a>
+                  <a class="has-margin-left delete delete-content"></a>
+                </div>
+
+              </div>
+            </div>
+          @endforeach
+          <hr>
+          <h4 class="title is-4">Groups</h4>
+          @foreach ($groups as $group)
+            <div class="draggable content-item is-clearfix is-new">
+              <input type="hidden" name="content-id" value="{{ $group->id }}">
+              <input type="hidden" name="type" value="group">
+              <input type="hidden" name="order" value="">
+              <input type="hidden" name="page-content-id" value="">
+              <div class="level">
+
+                <div class="level-left">
+                  {{ $group->name }}
+                </div>
+
+                <div class="level-right">
+                  <a class="tooltip left">
+                    <input class="checkbox" type="checkbox" name="repeating" value="1">
+                    <span class="tooltip-content">repeating group</span>
+                  </a>
+                  <a class="has-margin-left delete delete-content"></a>
+                </div>
+
+              </div>
             </div>
           @endforeach
         </div>
 
       </div>
-
-      <div class="pages-manager">
-        @foreach ($pages as $page)
-          <div class="page update-order">
-            <input type="hidden" name="page-name" value="{{ $page->name }}">
-            <h4 class="title is-4"><a href="{{ action('PageController@show', $page->id) }}">{{ $page->name }}</a></h4>
-            <hr>
-            <div class="droppable sortable">
-              <input type="hidden" name="_method" value="put">
-              <input type="hidden" name="page-id" value="{{ $page->id }}">
-              {{ csrf_field() }}
-
-              @foreach ($page->content as $contentItem)
-                <div class="content-item is-clearfix">
-                  <input type="hidden" name="content-id" value="{{ $contentItem->id }}">
-                  <input type="hidden" name="order" value="{{ $contentItem->pivot->order }}">
-                  <p>
-                    <span class="is-pulled-left">
-                      {{ $contentItem->name }}
-                    </span>
-                    <small class="is-pulled-right">
-                      <button type="submit" class="delete delete-content"></button>
-                    </small>
-                  </p>
-                </div>
-              @endforeach
-            </div>
-          </div>
-        @endforeach
-        <button class="save-content-manager button is-primary has-margin-top is-pulled-right fixed-bottom is-right">save</button>
-      </div>
+        @component('dashboard/components/_content-dashboard', [
+          'viewContents' => $viewContents,
+          'view' => app('request')->input('view') ])
+          <button class="save-content-manager button is-primary has-margin-top is-pulled-right fixed-bottom is-right">save</button>
+        @endcomponent
     @endif
 @endsection

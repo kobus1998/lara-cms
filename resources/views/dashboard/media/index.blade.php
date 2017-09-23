@@ -16,57 +16,58 @@
     }
   @endphp
 
+  <div class="level">
+    <div class="level-left">
+      <div class="level-item">
+        @component('dashboard/components/_bread-crumb', ['navs' => [
+            ['name' => 'Media', 'action' => action('MediaController@index'), 'active' => true]
+          ]])
 
-  <div class="media-controller">
-
-
-
-    <div class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <h4 class="title is-4 has-text-left">Media ({{$totalItems}})</h4>
-        </div>
-      </div>
-      <div class="level-right">
-        <div class="level-item">
-          <a
-            @if ($getView == 'columns')
-              href="{{ action('MediaController@index', ['view' => 'table', 's' => $searchQuery]) }}"
-            @else
-              href="{{ action('MediaController@index', ['view' => 'columns', 's' => $searchQuery]) }}"
-            @endif
-
-            class="button has-margin-right is-link">
-            @if ($getView == 'table')
-              Show images
-            @else
-              Show info
-            @endif
-          </a>
-        </div>
+        @endcomponent
+        {{-- <h4 class="title is-4 has-text-left">Media ({{$totalItems}})</h4> --}}
       </div>
     </div>
+    <div class="level-right">
+      <div class="level-item">
+        <a
+          @if ($getView == 'columns')
+            href="{{ action('MediaController@index', ['view' => 'table', 's' => $searchQuery]) }}"
+          @else
+            href="{{ action('MediaController@index', ['view' => 'columns', 's' => $searchQuery]) }}"
+          @endif
 
-    <div class="level">
-      <div class="level-left has-margin-top">
-        @component('dashboard/components/_upload') @endcomponent
+          class="button has-margin-right is-link">
+          @if ($getView == 'table')
+            Show images
+          @else
+            Show info
+          @endif
+        </a>
       </div>
+    </div>
+  </div>
+
+  <div class="level">
+    <div class="level-left has-margin-top">
+      @component('dashboard/components/_upload') @endcomponent
+    </div>
+    <div class="level-right">
       @component('dashboard/components/_search', [
         'model' => $images,
         'searchQuery' => $searchQuery,
-        'extraQueries' => ['view' => $getView]
+        'queries' => ['view' => $getView]
       ])
-        @if ($getView == 'table')
-          <button type="button" name="button" class="button is-danger delete-selected-media">delete Selected</button>
-        @endif
       @endcomponent
+      @if ($getView == 'table')
+        <button type="button" name="button" class="button is-danger delete-selected-media">delete Selected</button>
+      @endif
     </div>
+  </div>
 
+  <hr>
 
-    <hr>
-
+  <div class="page-content">
     @component('dashboard/components/minis/_no-search-result', ['model' => $images])
-
     @endcomponent
 
     @if (count($images) == 0 && app('request')->input('s') == null)
@@ -84,6 +85,9 @@
 
     <div class="media-manager">
       @if ($getView == 'columns')
+
+        <!-- // -->
+
         <div class="columns is-multiline is-variable">
           @foreach ($images as $image)
             <div class="card box column is-one-third gap">
@@ -98,6 +102,8 @@
           @endforeach
         </div>
 
+        <!-- // -->
+
         <div class="modal has-margin-sidebar has-margin-header">
           <div class="modal-background"></div>
           <div class="modal-content width-auto">
@@ -106,9 +112,14 @@
           <button class="modal-close is-large has-margin-header" aria-label="close"></button>
         </div>
 
+        <!-- // -->
+
       @elseif ($getView == 'table')
 
         <div class="columns table-media">
+
+          <!-- // -->
+
           <form class="delete-media-form column is-9" action="{{ action('MediaController@delete') }}" method="post">
             {{ method_field('DELETE') }}
             {{ csrf_field() }}
@@ -134,6 +145,8 @@
               </table>
           </form>
 
+          <!-- // -->
+
           <div class="column">
             <form class="" action="{{ action('MediaController@delete') }}" method="post">
               <input type="hidden" name="_method" value="delete">
@@ -156,23 +169,29 @@
                   </div>
                 </div>
               </div>
-
             </form>
-
           </div>
+
+          <!-- // -->
 
         </div>
 
       @endif
 
-      @component('dashboard/components/_pagination', [
-        'model' => $images,
-        'controller' => 'MediaController',
-        'method' => 'index',
-        'queries' => ['view' => $getView, 's' => $searchQuery]
-      ])@endcomponent
+      </div>
+
+    </div>
+
+    <!-- // -->
+
+    @component('dashboard/components/_pagination', [
+      'model' => $images,
+      'controller' => 'MediaController',
+      'method' => 'index',
+      'queries' => ['view' => $getView, 's' => $searchQuery]
+    ])@endcomponent
+
+    <!-- // -->
 
     @endif
-    </div>
-  </div>
 @endsection

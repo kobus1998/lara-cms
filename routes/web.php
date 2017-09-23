@@ -13,31 +13,6 @@ use \App\Page;
 |
 */
 
-
-
-// Route::pattern('int','[0-9]');
-// Route::pattern('str','[a-z]');
-
-// Route::get('/', 'HomeController@index')->name('home');
-//
-// Route::get('/home', 'HomeController@index')->name('home');
-
-Route::group(['middleware' => 'auth'], function () {
-
-  Route::prefix('api')->group(function () {
-
-    Route::prefix('cms')->group(function () {
-
-      Route::prefix('page-methods')->group(function () {
-        Route::post('/save-content-body/{pageId}', 'PageController@saveContentBody');
-        Route::post('/save-content-manager', 'PageController@saveContentManager');
-        Route::delete('/delete-content/{pageId}/{contentId}', 'PageController@destroyContent');
-      });
-
-    });
-  });
-});
-
 Route::prefix('cms')->group(function () {
 
   route::get('/', function () {
@@ -60,29 +35,19 @@ Route::prefix('cms')->group(function () {
 
   Route::group(['middleware' => 'auth'], function () {
 
-    Route::prefix('content')->group(function () {
-      Route::get('/create-group', 'ContentController@createGroup');
-      Route::post('/create-group', 'ContentController@storeGroup');
-    });
-
-    Route::prefix('page-methods')->group(function () {
-
-
-      // Route::delete('/delete-content/{pageId}', 'PageController@destroyContent');
-    });
-
-    Route::put('/multiple/content', 'ContentController@updateMultiple');
-
-    Route::post('/multiple/page/addcontent/{pageId}', 'PageController@addContent');
-
-    Route::delete('/multiple/page', 'PageController@destroyMultiple');
-    Route::delete('/multiple/content', 'ContentController@destroyMultiple');
-
     Route::get('/dashboard', 'DashboardController@index');
 
     Route::resource('page', 'PageController');
     Route::resource('content', 'ContentController');
     Route::resource('collection', 'CollectionController');
+    
+    Route::get('/collection/{collectionId}/post/{postId}', 'CollectionController@showPost');
+    Route::post('/collection/{collectionId}/add-content', 'CollectionController@addContent');
+    Route::put('/collection/{collectionId}/update-order', 'CollectionController@updateOrder');
+    Route::delete('/collection/{collectionId}/remove-content/{contentId}', 'CollectionController@removeContent');
+
+    Route::resource('post', 'PostController');
+
   });
 
 });

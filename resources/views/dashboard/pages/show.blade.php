@@ -23,7 +23,7 @@
       @include('dashboard/pages/forms/update-general')
       @include('dashboard/pages/forms/update-content')
       @include('dashboard/pages/forms/update-seo')
-      @include('dashboard/pages/forms/add-content')
+      {{-- @include('dashboard/pages/forms/add-content') --}}
 
     </div>
   </div>

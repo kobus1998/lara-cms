@@ -8,6 +8,7 @@ class CollectionContent extends Model
 {
 
   protected $table = 'collections_contents';
+  public $timestamps = false;
 
   public function content () {
     return $this->hasMany('\App\CollectionPost', 'collection_content_id', 'id');

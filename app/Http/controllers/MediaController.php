@@ -26,7 +26,7 @@ class MediaController extends Controller
       $media->url = $image;
     }
 
-    return view('dashboard/media/index', ['images' => $medias]);
+    return view('dashboard/media/index', ['images' => $medias, 'title' => 'Media']);
   }
 
   public function upload () {
@@ -37,7 +37,7 @@ class MediaController extends Controller
     $media = Media::find($id);
     $image = Storage::disk('local')->url($media['path']);
     $media['url'] = $image;
-    return view('dashboard/media/show', ['media' => $media]);
+    return view('dashboard/media/show', ['media' => $media, 'title' => 'Media']);
   }
 
   public function store (Request $req) {

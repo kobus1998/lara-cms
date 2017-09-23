@@ -16,20 +16,25 @@ class Collection extends Model
   }
 
   public function contents () {
-    return $this->hasMany('\App\CollectionContent');
+    return $this->hasMany('\App\CollectionContent')->orderBy('order');
   }
 
-  public function withContent () {
-    return $this->with(['posts' => function ($q) {
+  static function withContent () {
+    return Collection::with(['posts' => function ($q) {
       $q->with(['content' => function ($q) {
         $q->with('type');
       }]);
     }]);
   }
 
-  static function getAllCollections () {
-    $result = Collection::paginate(15)->toArray();
+  public function countPosts () {
+    return $this->with(['posts' => function ($q) {
+      $q->count();
+    }]);
+  }
 
+  static function getAllCollections () {
+    $result = Collection::with('posts')->paginate(15);
     return $result;
   }
 
@@ -38,27 +43,25 @@ class Collection extends Model
       $q->with(['content' => function ($q) {
         $q->with('type');
       }]);
-    }])->paginate(15)->toArray();
+    }])->paginate(15);
 
     return $result;
   }
 
   static function getCollection ($id) {
-    $result = Collection::findOrFail($id)->get()->toArray();
-    $result = reset($result);
-
+    $result = Collection::findOrFail($id)->first();
     return $result;
   }
 
   static function getCollectionWithContent ($id) {
-    $result = Collection::findOrFail($id)->withContent()->get()->toArray();
-    $result = reset($result);
-
+    $result = Collection::withContent()->with(['contents' => function ($q) {
+      $q->with('type');
+    }])->where('id', $id)->first();
     return $result;
   }
 
   static function searchCollection ($q) {
-    $result = Collection::where('name', 'LIKE', '%'.$q.'%')->paginate(15)->toArray();
+    $result = Collection::with('posts')->where('name', 'LIKE', '%'.$q.'%')->paginate(15);
     return $result;
   }
 

@@ -2,6 +2,7 @@
 
     <div class="nav-left">
       <a href="" class="brand">Brand</a>
+      <span class="nav-item">{{ $title or '' }}</span>
     </div>
     <div class="nav-right nav-menu">
       @if (Auth::guest())

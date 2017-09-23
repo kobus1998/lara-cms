@@ -16,6 +16,7 @@ class CollectionsContentsTable extends Migration
       Schema::create('collections_contents', function (Blueprint $table) {
         $table->increments('id');
         $table->integer('collection_id')->unsigned();
+        $table->string('name');
         $table->integer('type_id')->unsigned();
         $table->boolean('order')->default(0)->nullable();
       });
