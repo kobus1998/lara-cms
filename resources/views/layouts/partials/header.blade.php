@@ -1,7 +1,7 @@
 <nav class="nav has-shadow">
 
     <div class="nav-left">
-      <a href="" class="brand">Brand</a>
+      <a href="/cms" class="brand">Brand</a>
       <span class="nav-item">{{ $title or '' }}</span>
     </div>
     <div class="nav-right nav-menu">
@@ -19,7 +19,7 @@
         </form>
       @endif
     </div>
-    <span class="toggle-sidebar nav-item is-hidden-tablet">
+    <span class="toggle-sidebar nav-item is-hidden-tablet has-pointer">
       <span class="icon">
         <i class="fa fa-ellipsis-v "></i>
       </span>

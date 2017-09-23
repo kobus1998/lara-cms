@@ -63,7 +63,7 @@ $shadow: rgba(205,210,214,.8);
     color: #4a4a4a;
     font-weight: 400;
     @include mobile {
-      width: 200px;
+      width: $sidebar-width / 100 * 75;
       margin-left: 0;
     }
   }
@@ -101,6 +101,7 @@ $shadow: rgba(205,210,214,.8);
   }
   @include mobile {
     transform: translateX(-100%);
+    width: $sidebar-width / 100 * 75;
     &.is-active {
       transform: none;
     }
