@@ -48,7 +48,9 @@ Route::prefix('cms')->group(function () {
     Route::delete('/collection-content/{id}/remove-content', 'CollectionController@removeContent');
     Route::get('/collection/{collectionId}/posts', 'CollectionController@collectionPosts');
 
+    Route::post('/multiple/collection/delete', 'CollectionController@deleteMultiple');
     Route::post('/multiple/post/delete', 'PostController@deleteMultiple');
+
     Route::put('/post/{postId}/update-content', 'PostController@updateContent');
     Route::resource('post', 'PostController');
 

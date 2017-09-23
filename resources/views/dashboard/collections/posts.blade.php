@@ -57,7 +57,6 @@
                 <th><input class="all-checkboxes" type="checkbox"></th>
                 <th>Name</th>
                 <th>Created at</th>
-                <th>Updated at</th>
                 <th><button type="submit" class="is-danger button is-small"><span class="icon is-small"><i class="fa fa-trash"></i></span></button></th>
               </thead>
               <tbody>
@@ -66,7 +65,6 @@
                     <td><input class="form-checkboxes" type="checkbox" name="ids[]" value="{{ $post['id'] }}"></td>
                     <td><a href="{{ action('CollectionController@showPost',['collectionId' => $collection['id'], 'postId' => $post['id']]) }}">{{ $post['name'] }}</a></td>
                     <td>{{ $post['created_at'] }}</td>
-                    <td>{{ $post['updated_at'] }}</td>
                     <td></td>
                   </tr>
                 @endforeach

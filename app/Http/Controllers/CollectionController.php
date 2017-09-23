@@ -95,6 +95,8 @@ class CollectionController extends Controller
 
     if (!$req->ajax()) {
       return back();
+    } else {
+      return response()->json($collection);
     }
 
   }
@@ -119,6 +121,17 @@ class CollectionController extends Controller
 
     if (!$req->ajax()) {
       return back();
+    }
+  }
+
+  public function deleteMultiple (Request $req) {
+    $collection = Collection::findMany($req->ids)->toArray();
+    DB::table('collections')->whereIn('id', $req->ids)->delete();
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($collection);
     }
   }
 

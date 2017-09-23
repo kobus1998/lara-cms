@@ -88,6 +88,25 @@ $(document).ready(function () {
     })
   })
 
+  $('#delete-multiple-collections-form').submit(function (e) {
+    e.preventDefault()
+    showLoader(true)
+    let content = $(this).serialize()
+    let url = $(this).attr('action')
+    window.axios.post(url, content).then(response => {
+      showLoader(false)
+      showNotification('success', 'Collection(s) removed')
+      $(this).find('input[name="ids[]"]').each(function () {
+        if ($(this).is(':checked')) {
+          $(this).closest('tr').remove()
+        }
+      })
+    }).catch(err => {
+      showNotification('error', 'Something went wrong')
+      showLoader(false)
+    })
+  })
+
   $('#delete-multiple-posts-form').submit(function (e) {
     e.preventDefault()
     let content = $(this).serialize()
@@ -119,7 +138,6 @@ $(document).ready(function () {
           <td><input class="form-checkboxes" type="checkbox" name="ids[]" value="${response.data.id}"></td>
           <td><a href="/cms/collection/${$(this).find('input[name="collection-id"]').val()}/post/${response.data.id}">${response.data.name}</a></td>
           <td>${response.data.created_at}</td>
-          <td>${response.data.updated_at}</td>
           <td></td>
         </tr>
       `
@@ -193,17 +211,16 @@ $(document).ready(function () {
   })
 
   $('#create-collection-form').submit(function (e) {
-
     e.preventDefault()
-
     showLoader(true)
-
     let content = $(this).serialize()
-    let url = $(this).attr('url')
+    let url = $(this).attr('action')
+
     window.axios.post(url, content).then(response => {
       showLoader(false)
       showNotification('success', 'Collection is created')
     }).catch(err => {
+      console.log(err);
       showLoader(false)
       showNotification('error', 'Something went wrong')
     })

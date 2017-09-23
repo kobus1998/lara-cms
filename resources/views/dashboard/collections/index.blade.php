@@ -32,29 +32,42 @@
   <div class="columns page-content">
 
     <div class="column">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th><input type="checkbox"></th>
-            <th>Name</th>
-            <th>Posts</th>
-            <th>Created at</th>
-            <th>All pages</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($collections as $collection)
-            <tr class="has-pointer show-box-data">
-              <td><input type="checkbox" name="id[]" value="{{ $collection['id'] }}"></td>
-              <td><a href="{{ action('CollectionController@show', $collection['id']) }}">{{ $collection['name'] }}</a></td>
-              <td>{{ count($collection['posts']) }}</td>
-              <td>{{ $collection['created_at'] }}</td>
-              <td><input @if ($collection['all-pages'] == 1) checked @endif type="checkbox" name="all-pages" value="{{ $collection['all-pages'] }}"></td>
+
+      <form id="delete-multiple-collections-form" action="{{ action('CollectionController@deleteMultiple') }}" method="post">
+        {{ csrf_field() }}
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><input class="all-checkboxes" type="checkbox"></th>
+              <th>Name</th>
+              <th>Created At</th>
+              <th><button class="button is-danger"><span class="icon is-small"><i class="fa fa-trash"></i></span></button></th>
             </tr>
-          @endforeach
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            @foreach ($collections as $collection)
+              <tr class="has-pointer show-box-data">
+                <td><input class="form-checkboxes" type="checkbox" name="ids[]" value="{{ $collection['id'] }}"></td>
+                <td><a href="{{ action('CollectionController@show', $collection['id']) }}">{{ $collection['name'] }}</a></td>
+                <td>{{ $collection['created_at'] }}</td>
+                <td></td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+      </form>
+
     </div>
+
+    @component('dashboard/components/minis/_modal', [
+      'switchClass' => 'toggle-create-collection',
+      'position' => 'is-top'
+    ])
+      @component('dashboard/collections/forms/create-collection')
+      @endcomponent
+    @endcomponent
+
   </div>
 
   @component('dashboard/components/_pagination', [
@@ -64,14 +77,6 @@
     'queries' => ['s' => app('request')->input('s')]
   ])
 
-  @endcomponent
-
-  @component('dashboard/components/minis/_modal', [
-    'switchClass' => 'toggle-create-collection',
-    'position' => 'is-top'
-  ])
-    @component('dashboard/collections/forms/create-collection')
-    @endcomponent
   @endcomponent
 
 
