@@ -34,7 +34,7 @@ function showLoader (state) {
 }
 
 function showNotification (type, message) {
-  $('.notification-success, .notification-error, .notification-warning, .notification-info').fadeOut()
+  $('.notification-success, .notification-error, .notification-warning, .notification-info, .notification-loading').hide()
   switch (type) {
     case 'error':
       $('.notification-error').fadeIn()
@@ -88,14 +88,42 @@ $(document).ready(function () {
     })
   })
 
+  $('#delete-multiple-posts-form').submit(function (e) {
+    e.preventDefault()
+    let content = $(this).serialize()
+    let url = $(this).attr('action')
+    window.axios.post(url, content).then(response => {
+      $(this).find('input[name="ids[]"]').each(function () {
+        if ($(this).is(':checked')) {
+          $(this).closest('tr').remove()
+        }
+      })
+    }).catch(err => {
+      console.log(err);
+    })
+  })
+
   $('#create-post-form').submit(function (e) {
     e.preventDefault()
     showLoader(true)
     let content = $(this).serialize()
-    console.log(content);
-    window.axios.post('/cms/post', content).then(response => {
+    let url = $(this).attr('action')
+
+    window.axios.post(url, content).then(response => {
       showLoader(false)
       showNotification('success', 'Collection is created')
+      let pageContent = $(this).closest('.page-content')
+      let table = pageContent.find('#delete-multiple-posts-form')
+      let htmlContent = `
+        <tr>
+          <td><input class="form-checkboxes" type="checkbox" name="ids[]" value="${response.data.id}"></td>
+          <td><a href="/cms/collection/${$(this).find('input[name="collection-id"]').val()}/post/${response.data.id}">${response.data.name}</a></td>
+          <td>${response.data.created_at}</td>
+          <td>${response.data.updated_at}</td>
+          <td></td>
+        </tr>
+      `
+      table.find('tbody').append(htmlContent)
     }).catch(err => {
       showLoader(false)
       showNotification('error', 'Something went wrong')
@@ -105,13 +133,29 @@ $(document).ready(function () {
   $(document).on('click', '.delete-content-field', function (e) {
     e.preventDefault()
     let root = $(this).closest('.draggable-field')
-    let collectionId = $(this).closest('.draggable-field').find('input[name="collection-id"]').val();
-    let id = root.find('input[name="id[]"]').val();
-    window.axios.delete(`/cms/collection/${collectionId}/remove-content/${id}`).then(response => {
+    let id = $(this).attr('content-id')
+
+    window.axios.delete(`/cms/collection-content/${id}/remove-content`).then(response => {
       showLoader(false)
       showNotification('success', 'Field is removed')
+
       root.remove()
     }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'Something went wrong')
+    })
+  })
+
+  $('#update-collection-form').submit(function (e) {
+    e.preventDefault()
+    showLoader(true)
+    let url = $(this).attr('action')
+    let content = $(this).serialize()
+
+    window.axios.put(url, content).then(function () {
+      showLoader(false)
+      showNotification('success', 'Collection is updated!')
+    }).catch(function () {
       showLoader(false)
       showNotification('error', 'Something went wrong')
     })
@@ -121,7 +165,6 @@ $(document).ready(function () {
     e.preventDefault()
     showLoader(true)
     let collectionId = $(this).find('input[name="collection-id"]').val();
-    console.log(collectionId);
 
     let content = $(this).serialize()
     let url = $(this).attr('action')

@@ -40,12 +40,16 @@ Route::prefix('cms')->group(function () {
     Route::resource('page', 'PageController');
     Route::resource('content', 'ContentController');
     Route::resource('collection', 'CollectionController');
-    
+
     Route::get('/collection/{collectionId}/post/{postId}', 'CollectionController@showPost');
+    Route::get('/collection/{collectionId}/post/{postId}/content', 'CollectionController@postContent');
     Route::post('/collection/{collectionId}/add-content', 'CollectionController@addContent');
     Route::put('/collection/{collectionId}/update-order', 'CollectionController@updateOrder');
-    Route::delete('/collection/{collectionId}/remove-content/{contentId}', 'CollectionController@removeContent');
+    Route::delete('/collection-content/{id}/remove-content', 'CollectionController@removeContent');
+    Route::get('/collection/{collectionId}/posts', 'CollectionController@collectionPosts');
 
+    Route::post('/multiple/post/delete', 'PostController@deleteMultiple');
+    Route::put('/post/{postId}/update-content', 'PostController@updateContent');
     Route::resource('post', 'PostController');
 
   });

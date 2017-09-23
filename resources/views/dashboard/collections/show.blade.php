@@ -23,7 +23,7 @@
       </div>
       <div class="level-right">
         <div class="level-item">
-          <a class="button has-margin-right toggle-modal-create-post">New Post</a>
+          {{-- <a class="button has-margin-right toggle-modal-create-post">New Post</a> --}}
         </div>
       </div>
     </div>
@@ -34,22 +34,19 @@
 
       <div class="columns">
 
-        <div class="column is-3">
-          @component('dashboard/collections/components/post-list', ['posts' => $posts, 'collection' => $collection])
-
-          @endcomponent
-        </div>
-
         <div class="column">
 
           <div class="tabs">
             <ul>
               <li class="is-active"><a href="{{ action('CollectionController@show', $collection['id']) }}">General</a></li>
+              <li><a href="{{ action('CollectionController@collectionPosts', $collection['id']) }}">Posts</a></li>
               <li><a href="{{ action('CollectionController@edit', $collection['id']) }}">Manage fields</a></li>
             </ul>
           </div>
 
-          <form class="has-padding" action="" method="post" style="background: white;">
+          <form id="update-collection-form" class="has-padding" action="{{ action('CollectionController@update', $collection['id']) }}" method="post" style="background: white;">
+            {{ csrf_field() }}
+            <input type="hidden" name="_method" value="put">
 
             <h3 class="title">General</h3>
 
@@ -88,7 +85,7 @@
               <div class="field-body">
                 <div class="field">
                   <div class="control">
-                    <input @if($collection['all-pages'] == 1) checked @endif type="checkbox" name="all-pages" value="{{ $collection['all-pages'] }}" class="checkbox">
+                    <input @if($collection['all_pages'] == 1) checked @endif type="checkbox" name="all-pages" value="{{ $collection['all_pages'] }}" class="checkbox">
                   </div>
                 </div>
               </div>
@@ -116,12 +113,5 @@
     </div>
 
   </div>
-
-  @component('dashboard/components/minis/_modal', [
-    'switchClass' => 'toggle-create-post',
-    'position' => 'is-top'
-  ])
-    @component('dashboard/collections/forms/create-post', ['collection' => $collection])@endcomponent
-  @endcomponent
 
 @endsection

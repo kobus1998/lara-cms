@@ -15,7 +15,11 @@
               ], [
                 'name' => $collection['name'],
                 'action' => action('CollectionController@show', $collection['id']),
-                'active' => true,
+                'active' => false,
+              ], [
+                'name' => 'Manage Fields',
+                'action' => app('request')->url(),
+                'active' => true
               ]
             ]])
           @endcomponent
@@ -23,7 +27,7 @@
       </div>
       <div class="level-right">
         <div class="level-item">
-          <a class="button has-margin-right toggle-modal-create-post">New Post</a>
+          {{-- <a class="button has-margin-right toggle-modal-create-post">New Post</a> --}}
         </div>
       </div>
     </div>
@@ -34,17 +38,12 @@
 
       <div class="columns">
 
-        <div class="column is-3">
-          @component('dashboard/collections/components/post-list', ['posts' => $posts, 'collection' => $collection])
-
-          @endcomponent
-        </div>
-
         <div class="column">
 
           <div class="tabs">
             <ul>
               <li><a href="{{ action('CollectionController@show', $collection['id']) }}">General</a></li>
+              <li><a href="{{ action('CollectionController@collectionPosts', $collection['id']) }}">Posts</a></li>
               <li class="is-active"><a href="{{ action('CollectionController@edit', $collection['id']) }}">Manage fields</a></li>
             </ul>
           </div>
@@ -73,7 +72,7 @@
                   <p>
                     {{ $content->name }} |
                     {{ $content->type->name }}
-                    <a class="delete-content-field button is-danger is-pulled-right is-small"><span class="icon is-small"><i class="fa fa-times"></i></span></a>
+                    <a content-id="{{ $content->id }}" class="delete-content-field button is-danger is-pulled-right is-small"><span class="icon is-small"><i class="fa fa-times"></i></span></a>
                   </p>
                 </div>
 
@@ -96,13 +95,6 @@
     'switchClass' => 'toggle-add-collection-content',
     'position' => 'is-top'])
     @component('dashboard/collections/forms/add-collection-field', ['collection' => $collection, 'types' => $types])@endcomponent
-  @endcomponent
-
-  @component('dashboard/components/minis/_modal', [
-    'switchClass' => 'toggle-create-post',
-    'position' => 'is-top'
-  ])
-    @component('dashboard/collections/forms/create-post', ['collection' => $collection])@endcomponent
   @endcomponent
 
 @endsection

@@ -32,6 +32,13 @@ class CollectionController extends Controller
     return view('dashboard/collections/show', ['title' => 'Collections', 'collection' => $collection, 'posts' => $posts]);
   }
 
+  public function collectionPosts($id) {
+    $collection = Collection::getCollectionWithContent($id);
+    $posts = \App\Post::where('collection_id', $id)->paginate(15);
+
+    return view('dashboard/collections/posts', ['title' => 'Collections', 'collection' => $collection, 'posts' => $posts]);
+  }
+
   public function edit ($id) {
     $collection = Collection::getCollectionWithContent($id);
     $posts = \App\Post::where('collection_id', $id)->paginate(15);
@@ -50,6 +57,18 @@ class CollectionController extends Controller
     }])->first();
 
     return view('dashboard/collections/post', ['title' => 'Collections', 'collection' => $collection, 'currentPost' => $post, 'posts' => $posts]);
+  }
+
+  public function postContent ($collectionId, $postId) {
+    $collection = Collection::getCollectionWithContent($collectionId);
+
+    $posts = \App\Post::where('collection_id', $collectionId)->paginate(15);
+
+    $post = \App\Post::where('id', $postId)->with(['content' => function ($q) {
+      $q->with('type');
+    }])->first();
+
+    return view('dashboard/collections/post-content', ['title' => 'Collections', 'collection' => $collection, 'currentPost' => $post, 'posts' => $posts]);
   }
 
   public function store (Request $req) {
@@ -74,17 +93,40 @@ class CollectionController extends Controller
 
     $collection->save();
 
-    if (!$request->ajax()) {
+    if (!$req->ajax()) {
       return back();
     }
 
   }
 
-  public function removeContent (Request $req, $id, $contentId) {
-    \App\CollectionContent::destroy($contentId);
-    \App\CollectionPost::where('collection_content_id', $contentId)->delete();
+  public function update (Request $req, $id) {
+    $this->validate($req, [
+      'name' => 'required'
+    ]);
 
-    if (!$request->ajax()) {
+    $allPages = 1;
+
+    if (!isset($req['all-pages'])) {
+      $allPages = 0;
+    }
+
+    $collection = Collection::where('id', $id);
+    $collection->update([
+      'name' => $req['name'],
+      'all_pages' => $allPages,
+      'desc' => $req['desc']
+    ]);
+
+    if (!$req->ajax()) {
+      return back();
+    }
+  }
+
+  public function removeContent (Request $req, $id) {
+    \App\CollectionContent::where('id', $id)->delete($id);
+    \App\CollectionPost::where('collection_content_id', $id)->delete();
+
+    if (!$req->ajax()) {
       return back();
     }
   }
@@ -103,7 +145,12 @@ class CollectionController extends Controller
 
     $getContent = \App\CollectionContent::where('id', $content->id)->with('type')->first()->toArray();
 
-    return response()->json($getContent);
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($getContent);
+    }
+
   }
 
   public function updateOrder (Request $req, $id) {

@@ -19,6 +19,10 @@
               ], [
                 'name' => $currentPost['name'],
                 'action' => action('CollectionController@showPost', ['collectionId' => $collection['id'], 'postId' => $currentPost['id']]),
+                'active' => false
+              ], [
+                'name' => 'Content',
+                'action' => action('CollectionController@postContent', ['collectionId' => $collection['id'], 'postId' => $currentPost['id']]),
                 'active' => true
               ]
             ]])
@@ -42,31 +46,43 @@
 
           <div class="tabs">
             <ul>
-              <li class="is-active"><a href="{{ action('CollectionController@showPost', ['collectionId' => $collection['id'], 'postId' => $currentPost['id']]) }}">General</a></li>
-              <li><a href="{{ action('CollectionController@postContent', ['collectionId' => $collection['id'], 'postId' => $currentPost['id']]) }}">Content</a></li>
+              <li><a href="{{ action('CollectionController@showPost', ['collectionId' => $collection['id'], 'postId' => $currentPost['id']]) }}">General</a></li>
+              <li class="is-active"><a href="{{ action('CollectionController@postContent', ['collectionId' => $collection['id'], 'postId' => $currentPost['id']]) }}">Content</a></li>
             </ul>
           </div>
 
-          <form class="has-padding" style="background: white;" action="{{ action('PostController@update', $currentPost['id']) }}" method="post">
+          <form class="has-padding" style="background: white;" action="{{ action('PostController@updateContent', $currentPost['id']) }}" method="post">
             {{ csrf_field() }}
             <input type="hidden" name="_method" value="PUT">
 
-            <h3 class="title">General</h3>
+            <h3 class="title">Update</h3>
 
             <hr>
 
-            <div class="field is-horizontal">
-              <div class="field-label">
-                <label for="name">Name</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control">
-                    <input type="text" name="name" value="{{ $currentPost['name'] }}" class="input">
+            @foreach ($currentPost['content'] as $content)
+              <input type="hidden" name="content-id[]" value="{{ $content->id }}">
+              @php
+                $type = $content->type->type['name'];
+              @endphp
+              <div class="field is-horizontal">
+                <div class="field-label">
+                  <label for="">{{ $content->type->name }}</label>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control">
+                      @if ($type == 'textfield')
+                        <input class="input" type="text" name="content[]" value="{{ $content->content }}">
+                      @elseif ($type == 'textarea')
+                        <textarea class="textarea" name="content[]" rows="8" cols="80">{{ $content->content }}</textarea>
+                      @elseif ($type == 'media')
+                        <input class="input" type="text" name="content[]" value="{{ $content->content }}">
+                      @endif
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            @endforeach
 
             <div class="field is-horizontal">
               <div class="field-label">
