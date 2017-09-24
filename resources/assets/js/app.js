@@ -93,14 +93,27 @@ $(document).ready(function () {
     showLoader(true)
     let content = $(this).serialize()
     let url = $(this).attr('action')
-    window.axios.post(url, content).then(response => {
+
+    let confirm = window.confirm('Are you sure?')
+    if (!confirm) return
+    else showLoader(false)
+
+    window.axios.put(url, content).then(response => {
       showLoader(false)
       showNotification('success', 'Collection(s) removed')
+
       $(this).find('input[name="ids[]"]').each(function () {
         if ($(this).is(':checked')) {
           $(this).closest('tr').remove()
         }
       })
+
+      let trs = $(this).find('tbody tr')
+
+      if (trs.length === 0) {
+        window.location.reload()
+      }
+
     }).catch(err => {
       showNotification('error', 'Something went wrong')
       showLoader(false)
@@ -111,12 +124,24 @@ $(document).ready(function () {
     e.preventDefault()
     let content = $(this).serialize()
     let url = $(this).attr('action')
+
+    let confirm = window.confirm('Are you sure?')
+    if (!confirm) return
+    else showLoader(false)
+
     window.axios.post(url, content).then(response => {
       $(this).find('input[name="ids[]"]').each(function () {
         if ($(this).is(':checked')) {
           $(this).closest('tr').remove()
         }
       })
+
+      let trs = $(this).find('tbody tr')
+
+      if (trs.length === 0) {
+        window.location.reload()
+      }
+
     }).catch(err => {
       console.log(err);
     })
@@ -132,6 +157,11 @@ $(document).ready(function () {
       showLoader(false)
       showNotification('success', 'Collection is created')
       let pageContent = $(this).closest('.page-content')
+
+      if ($('.no-result').length > 0) {
+        window.location.reload()
+      }
+
       let table = pageContent.find('#delete-multiple-posts-form')
       let htmlContent = `
         <tr>
@@ -142,6 +172,7 @@ $(document).ready(function () {
         </tr>
       `
       table.find('tbody').append(htmlContent)
+
     }).catch(err => {
       showLoader(false)
       showNotification('error', 'Something went wrong')
@@ -153,10 +184,16 @@ $(document).ready(function () {
     let root = $(this).closest('.draggable-field')
     let id = $(this).attr('content-id')
 
+    let confirm = window.confirm('Are you sure?')
+    if (!confirm) {
+      return
+    } else {
+      showLoader(false)
+    }
+
     window.axios.delete(`/cms/collection-content/${id}/remove-content`).then(response => {
       showLoader(false)
       showNotification('success', 'Field is removed')
-
       root.remove()
     }).catch(err => {
       showLoader(false)
@@ -216,7 +253,14 @@ $(document).ready(function () {
     let content = $(this).serialize()
     let url = $(this).attr('action')
 
+    let pageContent = $(this).closest('.page-content')
+
     window.axios.post(url, content).then(response => {
+
+      if ($('.no-result').length > 0) {
+        window.location.reload()
+      }
+
       showLoader(false)
       showNotification('success', 'Collection is created')
     }).catch(err => {
