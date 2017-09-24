@@ -20,7 +20,7 @@ class Collection extends Model
   }
 
   static function withContent () {
-    return Collection::with(['posts' => function ($q) {
+    return Collection::where('is_active', '=', 1)->with(['posts' => function ($q) {
       $q->with(['content' => function ($q) {
         $q->with('type');
       }]);
@@ -34,12 +34,12 @@ class Collection extends Model
   }
 
   static function getAllCollections () {
-    $result = Collection::with('posts')->paginate(15);
+    $result = Collection::where('is_active', '=', 1)->with('posts')->paginate(15);
     return $result;
   }
 
   static function getAllWithContent () {
-    $result = Collection::with(['posts' => function ($q) {
+    $result = Collection::where('is_active', '=', 1)->with(['posts' => function ($q) {
       $q->with(['content' => function ($q) {
         $q->with('type');
       }]);
@@ -49,19 +49,19 @@ class Collection extends Model
   }
 
   static function getCollection ($id) {
-    $result = Collection::findOrFail($id)->first();
+    $result = Collection::findOrFail($id)->where('is_active', '=', 1)->first();
     return $result;
   }
 
   static function getCollectionWithContent ($id) {
-    $result = Collection::withContent()->with(['contents' => function ($q) {
+    $result = Collection::withContent()->where('is_active', '=', 1)->with(['contents' => function ($q) {
       $q->with('type');
     }])->where('id', $id)->first();
     return $result;
   }
 
   static function searchCollection ($q) {
-    $result = Collection::with('posts')->where('name', 'LIKE', '%'.$q.'%')->paginate(15);
+    $result = Collection::with('posts')->where('name', 'LIKE', '%'.$q.'%')->where('is_active', '=', 1)->paginate(15);
     return $result;
   }
 

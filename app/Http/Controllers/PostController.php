@@ -72,6 +72,17 @@ class PostController extends Controller
     }
   }
 
+  public function setInactiveMultiple (Request $req) {
+    $post = Post::whereIn('id', $req->ids);
+    $post->update(['is_active' => 0]);
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($post);
+    }
+  }
+
   public function deleteMultiple (Request $req) {
     $post = Post::findMany($req->ids)->toArray();
     DB::table('posts')->whereIn('id', $req->ids)->delete();

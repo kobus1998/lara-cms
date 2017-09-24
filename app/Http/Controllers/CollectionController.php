@@ -27,21 +27,28 @@ class CollectionController extends Controller
   public function show ($id) {
 
     $collection = Collection::getCollectionWithContent($id);
-    $posts = \App\Post::where('collection_id', $id)->paginate(15);
+    $posts = \App\Post::where('collection_id', $id)->where('is_active', '=', 1)->paginate(15);
 
     return view('dashboard/collections/show', ['title' => 'Collections', 'collection' => $collection, 'posts' => $posts]);
   }
 
   public function collectionPosts($id) {
+    $searchQuery = app('request')->input('s');
+
     $collection = Collection::getCollectionWithContent($id);
-    $posts = \App\Post::where('collection_id', $id)->paginate(15);
+    $posts = \App\Post::where('collection_id', $id)->where('is_active', '=', 1);
+
+    if (count($searchQuery) > 0) {
+      $posts = $posts->where('name', 'like', '%'.$searchQuery.'%');
+    }
+    $posts = $posts->paginate(15);
 
     return view('dashboard/collections/posts', ['title' => 'Collections', 'collection' => $collection, 'posts' => $posts]);
   }
 
   public function edit ($id) {
     $collection = Collection::getCollectionWithContent($id);
-    $posts = \App\Post::where('collection_id', $id)->paginate(15);
+    $posts = \App\Post::where('collection_id', $id)->where('is_active', '=', 1)->paginate(15);
     $types = \App\Type::all();
 
     return view('dashboard/collections/manage-fields', ['title' => 'Collections', 'collection' => $collection, 'posts' => $posts, 'types' => $types]);
@@ -50,9 +57,9 @@ class CollectionController extends Controller
   public function showPost ($collectionId, $postId) {
     $collection = Collection::getCollectionWithContent($collectionId);
 
-    $posts = \App\Post::where('collection_id', $collectionId)->paginate(15);
+    $posts = \App\Post::where('collection_id', $collectionId)->where('is_active', '=', 1)->paginate(15);
 
-    $post = \App\Post::where('id', $postId)->with(['content' => function ($q) {
+    $post = \App\Post::where('id', $postId)->where('is_active', '=', 1)->with(['content' => function ($q) {
       $q->with('type');
     }])->first();
 
@@ -62,9 +69,9 @@ class CollectionController extends Controller
   public function postContent ($collectionId, $postId) {
     $collection = Collection::getCollectionWithContent($collectionId);
 
-    $posts = \App\Post::where('collection_id', $collectionId)->paginate(15);
+    $posts = \App\Post::where('collection_id', $collectionId)->where('is_active', '=', 1)->paginate(15);
 
-    $post = \App\Post::where('id', $postId)->with(['content' => function ($q) {
+    $post = \App\Post::where('id', $postId)->where('is_active', '=', 1)->with(['content' => function ($q) {
       $q->with('type');
     }])->first();
 
@@ -92,6 +99,20 @@ class CollectionController extends Controller
     $collection['all_pages'] = $allPages;
 
     $collection->save();
+
+    DB::table('collections_contents')->insert([
+      [
+        'collection_id' => $collection->id,
+        'name' => 'Title',
+        'type_id' => 1,
+        'order' => 0
+      ],[
+        'collection_id' => $collection->id,
+        'name' => 'Content',
+        'type_id' => 2,
+        'order' => 1
+      ],
+    ]);
 
     if (!$req->ajax()) {
       return back();
@@ -122,6 +143,18 @@ class CollectionController extends Controller
     if (!$req->ajax()) {
       return back();
     }
+  }
+
+  public function setInactiveMultiple (Request $req) {
+    $collection = Collection::whereIn('id', $req->ids);
+    $collection->update(['is_active' => 0]);
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($collection);
+    }
+
   }
 
   public function deleteMultiple (Request $req) {
