@@ -18,6 +18,7 @@ class CollectionTable extends Migration
         $table->string('name');
         $table->text('desc')->nullable();
         $table->boolean('all_pages')->default(false);
+        $table->boolean('is_active')->default(1);
         $table->timestamps();
       });
     }

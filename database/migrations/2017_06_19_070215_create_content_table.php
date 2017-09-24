@@ -18,6 +18,7 @@ class CreateContentTable extends Migration
         $table->string('name');
         $table->text('desc')->nullable();
         $table->integer('type_id')->unsigned();
+        $table->boolean('is_active')->default(1);
         $table->timestamps();
       });
     }

@@ -17,6 +17,7 @@ class Posts extends Migration
         $table->increments('id');
         $table->integer('collection_id')->unsigned();
         $table->string('name');
+        $table->boolean('is_active')->default(1);
         $table->timestamps();
       });
     }
