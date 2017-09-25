@@ -2,7 +2,12 @@
 
     <div class="nav-left">
       <a href="/cms" class="brand">Brand</a>
-      <span class="nav-item">{{ $title or '' }}</span>
+      <span class="nav-item">
+        @isset($navs)
+          @component('dashboard/components/_bread-crumb', ['navs' => $navs])
+          @endcomponent
+        @endisset
+      </span>
     </div>
     <div class="nav-right nav-menu">
       @if (Auth::guest())

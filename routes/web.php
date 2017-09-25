@@ -38,6 +38,8 @@ Route::prefix('cms')->group(function () {
     Route::get('/dashboard', 'DashboardController@index');
 
     Route::resource('page', 'PageController');
+    Route::get('/page/{pageId}/content', 'PageController@showContent');
+    Route::get('/page/{pageId}/seo', 'PageController@showSeo');
 
     Route::post('/multiple/page/set-inactive', 'PageController@setInactiveMultiple');
 

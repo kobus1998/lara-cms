@@ -2,27 +2,21 @@
 
 @section('content')
 
-  <div class="level">
-    <div class="level-left">
-      <div class="level-item">
-        @component('dashboard/components/_bread-crumb', ['navs' => [
-            ['name' => 'Pages', 'action' => action('PageController@index'), 'active' => true]
-          ]])
-        @endcomponent
-      </div>
-    </div>
-    <div class="level-right">
-      <div class="level-item">
-        <a class="button is-primary toggle-modal-create-page has-margin-right">New page</a>
-        @component('dashboard/components/_search', [
-          'model' => $pages,
-          'searchQuery' => app('request')->input('s'),
-        ])@endcomponent
-      </div>
+  <div class="has-margin-bottom">
+    <div class="tabs">
+      <ul class="is-right">
+        <li><a class="button toggle-modal-create-page">New page</a></li>
+        <li>
+          <a class="no-link">@component('dashboard/components/_search', [
+            'model' => $pages,
+            'searchQuery' => app('request')->input('s'),
+            ])@endcomponent
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 
-  <hr>
   <div class="page-content">
     @component('dashboard/components/minis/_no-results', ['items' => $pages, 'name' => 'pages'])
       <form id="delete-pages-form" action="{{ action('PageController@setInactiveMultiple') }}" method="post">

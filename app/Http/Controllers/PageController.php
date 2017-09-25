@@ -23,7 +23,12 @@ class PageController extends Controller
 
     $pages = $pages->where('is_active', '=', '1')->with('type')->paginate(15);
 
-    return view('dashboard/pages/index', ['pages' => $pages, 'title' => 'Pages']);
+    return view('dashboard/pages/index', [
+      'pages' => $pages, 'title' => 'Pages',
+      'navs' => [
+        ['name' => 'Pages', 'action' => action('PageController@index'), 'active' => true],
+      ],
+    ]);
   }
 
   public function store (Request $req) {
@@ -120,7 +125,37 @@ class PageController extends Controller
     $page = Page::where('id', '=', $id)->with('content')->first();
 
     return view('dashboard/pages/show', [
-      'page' => $page
+      'page' => $page,
+      'navs' => [
+        ['name' => 'Pages', 'action' => action('PageController@index'), 'active' => false],
+        ['name' => $page->name, 'action' => action('PageController@show', $page->id), 'active' => true]
+      ],
+    ]);
+  }
+
+  public function showContent ($id) {
+    $page = Page::where('id', '=', $id)->with('content')->first();
+
+    return view('dashboard/pages/content', [
+      'page' => $page,
+      'navs' => [
+        ['name' => 'Pages', 'action' => action('PageController@index'), 'active' => false],
+        ['name' => $page->name, 'action' => action('PageController@show', $page->id), 'active' => false],
+        ['name' => 'Content', 'action' => action('PageController@showContent', $page->id), 'active' => true]
+      ],
+    ]);
+  }
+
+  public function showSeo ($id) {
+    $page = Page::where('id', '=', $id)->with('content')->first();
+
+    return view('dashboard/pages/seo', [
+      'page' => $page,
+      'navs' => [
+        ['name' => 'Pages', 'action' => action('PageController@index'), 'active' => false],
+        ['name' => $page->name, 'action' => action('PageController@show', $page->id), 'active' => false],
+        ['name' => 'SEO', 'action' => action('PageController@showSeo', $page->id), 'active' => true]
+      ],
     ]);
   }
 

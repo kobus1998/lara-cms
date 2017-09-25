@@ -16,20 +16,10 @@
     }
   @endphp
 
-  <div class="level">
-    <div class="level-left">
-      <div class="level-item">
-        @component('dashboard/components/_bread-crumb', ['navs' => [
-            ['name' => 'Media', 'action' => action('MediaController@index'), 'active' => true]
-          ]])
-
-        @endcomponent
-        {{-- <h4 class="title is-4 has-text-left">Media ({{$totalItems}})</h4> --}}
-      </div>
-    </div>
-    <div class="level-right">
-      <div class="level-item">
-        <a
+  <div class="has-margin-bottom">
+    <div class="tabs">
+      <ul>
+        <li><a
           @if ($getView == 'columns')
             href="{{ action('MediaController@index', ['view' => 'table', 's' => $searchQuery]) }}"
           @else
@@ -42,31 +32,22 @@
           @else
             Show info
           @endif
-        </a>
-      </div>
+        </a></li>
+      </ul>
+      <ul class="is-right">
+        <li>
+          <a class="no-link">@component('dashboard/components/_search', [
+            'model' => $images,
+            'searchQuery' => $searchQuery,
+            'queries' => ['view' => $getView]
+          ])@endcomponent</a>
+        </li>
+      </ul>
     </div>
   </div>
-
-  <div class="level">
-    <div class="level-left has-margin-top">
-      @component('dashboard/components/_upload') @endcomponent
-    </div>
-    <div class="level-right">
-      @component('dashboard/components/_search', [
-        'model' => $images,
-        'searchQuery' => $searchQuery,
-        'queries' => ['view' => $getView]
-      ])
-      @endcomponent
-      @if ($getView == 'table')
-        <button type="button" name="button" class="button is-danger delete-selected-media">delete Selected</button>
-      @endif
-    </div>
-  </div>
-
-  <hr>
-
+  
   <div class="page-content">
+    @component('dashboard/components/_upload') @endcomponent
     @component('dashboard/components/minis/_no-search-result', ['model' => $images])
     @endcomponent
 
@@ -129,7 +110,7 @@
                     <th><input type="checkbox" class="all-checkboxes has-pointer"></th>
                     <th>name</th>
                     <th class="is-hidden-mobile">created at</th>
-                    <th></th>
+                    <th><button type="submit" class="button is-danger delete-selected-media is-small"><span class="icon is-small"><i class="fa fa-trash"></i></span></button></th>
                   </tr>
                 </thead>
                 <tbody>

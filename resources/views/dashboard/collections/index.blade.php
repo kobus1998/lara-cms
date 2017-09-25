@@ -2,32 +2,23 @@
 
 @section('content')
 
-  <div class="level no-margin">
-    <div class="level-left">
-      <div class="level-item">
-        @component('dashboard/components/_bread-crumb', ['navs' => [
-            [
-              'name' => 'Collections',
-              'action' => action('CollectionController@index'),
-              'active' => true
-            ]
-          ]])
-
-        @endcomponent
-      </div>
-    </div>
-    <div class="level-right">
-      <div class="level-item">
-        <a class="button has-margin-right toggle-modal-create-collection">New Collection</a>
-        @component('dashboard/components/_search', [
-          'model' => $collections,
-          'searchQuery' => app('request')->input('s'),
-        ])@endcomponent
-      </div>
+  <div class="has-margin-bottom">
+    <div class="tabs">
+      <ul class="is-right">
+        <li>
+          <a class="button toggle-modal-create-collection">New Collection</a>
+        </li>
+        <li>
+          <a class="no-link">
+            @component('dashboard/components/_search', [
+              'model' => $collections,
+              'searchQuery' => app('request')->input('s'),
+              ])@endcomponent
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
-
-  <hr>
 
   <div class="columns page-content">
 

@@ -21,7 +21,12 @@ class CollectionController extends Controller
     }
 
 
-    return view('dashboard/collections/index', ['title' => 'Collections', 'collections' => $collections]);
+    return view('dashboard/collections/index', [
+      'collections' => $collections,
+      'navs' => [
+        ['name' => 'Collections', 'action' => action('CollectionController@index'), 'active' => true],
+      ],
+    ]);
   }
 
   public function show ($id) {
@@ -29,7 +34,14 @@ class CollectionController extends Controller
     $collection = Collection::getCollectionWithContent($id);
     $posts = \App\Post::where('collection_id', $id)->where('is_active', '=', 1)->paginate(15);
 
-    return view('dashboard/collections/show', ['title' => 'Collections', 'collection' => $collection, 'posts' => $posts]);
+    return view('dashboard/collections/show', [
+      'collection' => $collection,
+      'posts' => $posts,
+      'navs' => [
+        ['name' => 'Collections', 'action' => action('CollectionController@index'), 'active' => false],
+        ['name' => $collection->name, 'action' => action('CollectionController@show', $collection->id), 'active' => true]
+      ],
+    ]);
   }
 
   public function collectionPosts($id) {
@@ -43,7 +55,15 @@ class CollectionController extends Controller
     }
     $posts = $posts->paginate(15);
 
-    return view('dashboard/collections/posts', ['title' => 'Collections', 'collection' => $collection, 'posts' => $posts]);
+    return view('dashboard/collections/posts', [
+      'collection' => $collection,
+      'posts' => $posts,
+      'navs' => [
+        ['name' => 'Collections', 'action' => action('CollectionController@index'), 'active' => false],
+        ['name' => $collection->name, 'action' => action('CollectionController@show', $collection->id), 'active' => false],
+        ['name' => 'Posts', 'action' => action('CollectionController@collectionPosts', $collection->id), 'active' => true]
+      ],
+    ]);
   }
 
   public function edit ($id) {
@@ -63,7 +83,17 @@ class CollectionController extends Controller
       $q->with('type');
     }])->first();
 
-    return view('dashboard/collections/post', ['title' => 'Collections', 'collection' => $collection, 'currentPost' => $post, 'posts' => $posts]);
+    return view('dashboard/collections/post', [
+      'collection' => $collection,
+      'currentPost' => $post,
+      'posts' => $posts,
+      'navs' => [
+        ['name' => 'Collections', 'action' => action('CollectionController@index'), 'active' => false],
+        ['name' => $collection->name, 'action' => action('CollectionController@show', $collection->id), 'active' => false],
+        ['name' => 'Posts', 'action' => action('CollectionController@collectionPosts', $collection->id), 'active' => false],
+        ['name' => $post->name, 'action' => action('CollectionController@showPost', ['postId' => $post->id, 'collectionId' => $collection->id]), 'active' => true]
+      ],
+    ]);
   }
 
   public function postContent ($collectionId, $postId) {
@@ -75,7 +105,18 @@ class CollectionController extends Controller
       $q->with('type');
     }])->first();
 
-    return view('dashboard/collections/post-content', ['title' => 'Collections', 'collection' => $collection, 'currentPost' => $post, 'posts' => $posts]);
+    return view('dashboard/collections/post-content', [
+      'collection' => $collection,
+      'currentPost' => $post,
+      'posts' => $posts,
+      'navs' => [
+        ['name' => 'Collections', 'action' => action('CollectionController@index'), 'active' => false],
+        ['name' => $collection->name, 'action' => action('CollectionController@show', $collection->id), 'active' => false],
+        ['name' => 'Posts', 'action' => action('CollectionController@collectionPosts', $collection->id), 'active' => false],
+        ['name' => $post->name, 'action' => action('CollectionController@showPost', ['postId' => $post->id, 'collectionId' => $collection->id]), 'active' => false],
+        ['name' => 'Content', 'action' => action('CollectionController@postContent', ['postId' => $post->id, 'collectionId' => $collection->id]), 'active' => true]
+      ],
+    ]);
   }
 
   public function store (Request $req) {
