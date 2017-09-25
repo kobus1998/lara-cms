@@ -21,11 +21,7 @@ class PageController extends Controller
       $pages = $pages::orderBy('created_at', 'desc');
     }
 
-    $pages = $pages->with('type')->paginate(15);
-
-    // dd($pages);
-
-    // $pages = Page::with('type')->paginate(2);
+    $pages = $pages->where('is_active', '=', '1')->with('type')->paginate(15);
 
     return view('dashboard/pages/index', ['pages' => $pages, 'title' => 'Pages']);
   }
@@ -33,20 +29,23 @@ class PageController extends Controller
   public function store (Request $req) {
 
     $this->validate($req, [
-      'name' => 'required|unique:pages,url',
-      'type' => 'required|integer',
+      'name' => 'required|unique:pages,name',
       'url' => 'required|unique:pages,url|not_in:cms,/cms',
     ]);
 
     $page = new Page();
     $page['name'] = $req['name'];
     $page['desc'] = $req['page-desc'];
-    $page['type_id'] = $req['type'];
     $page['url'] = $req['url'];
 
     $page->save();
 
-    return redirect()->action('PageController@index');
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($page);
+    }
+
   }
 
   public function create () {
@@ -118,42 +117,10 @@ class PageController extends Controller
   }
 
   public function show ($id) {
-
-    // $contents = \App\Content::all();
-
-    $page = Page::find($id)->with('content')->with('contentGroup')->with('type')->first();
-    $contentGroups = \App\ContentGroup::find($page->contentGroup[0]->pivot->content_group_id)->with('content')->get();
-
-    //
-    // foreach ($page->content as $item) {
-    //   array_push($pageContent, $item->id);
-    // }
-    //
-    // $page['contentIds'] = $pageContent;
-    //
-    // dd($page['contentIds']);
-
-    $pageContent = [];
-
-    foreach ($page->content as $content) {
-      $content['group'] = false;
-      array_push($pageContent, $content);
-    }
-
-    foreach ($contentGroups as $contentGroup) {
-      $contentGroup['group'] = true;
-      array_push($pageContent, $contentGroup);
-    }
-
-    // dd($pageContent);
-
-    $types = \App\Type::where('purpose', 'page')->get();
+    $page = Page::where('id', '=', $id)->with('content')->first();
 
     return view('dashboard/pages/show', [
-      'page' => $page,
-      'types' => $types,
-      'pageContents' => $pageContent,
-      'contentGroups' => $contentGroups
+      'page' => $page
     ]);
   }
 
@@ -192,6 +159,17 @@ class PageController extends Controller
     }
 
     return response()->json($response);
+  }
+
+  public function setInactiveMultiple (Request $req) {
+    $pages = Page::whereIn('id', $req->ids);
+    $pages->update(['is_active' => 0]);
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($pages);
+    }
   }
 
   public function destroyMultiple (Request $req) {

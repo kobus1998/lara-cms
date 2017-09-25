@@ -57,29 +57,6 @@
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <label for="type">Type</label>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control">
-          <span class="select {{ $errors->has('type') ? 'is-danger' : '' }}">
-            <select name="type">
-              <option></option>
-              @foreach ($types as $type)
-                <option value="{{ $type->id }}">{{ $type->name }}</option>
-              @endforeach
-            </select>
-          </span>
-        </div>
-        @if ($errors->has('type'))
-          <p class="help is-danger">{{ $errors->first('type') }}</p>
-        @endif
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label">
       <label></label>
     </div>
     <div class="field-body">

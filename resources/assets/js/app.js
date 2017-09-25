@@ -74,6 +74,74 @@ $(document).ready(function () {
     $('.toggle-add-collection-content').toggleClass('is-active')
   })
 
+  $('.toggle-modal-create-page').click(function () {
+    $('.toggle-create-page').toggleClass('is-active')
+  })
+
+  $('#delete-pages-form').submit(function (e) {
+    e.preventDefault()
+    showLoader(true)
+    let content = $(this).serialize()
+    let url = $(this).attr('action')
+
+    window.axios.post(url, content).then(response => {
+      showLoader(false)
+      showNotification('success', 'Pages(s) removed')
+
+      $(this).find('input[name="ids[]"]').each(function () {
+        if ($(this).is(':checked')) {
+          $(this).closest('tr').remove()
+        }
+      })
+
+      let trs = $(this).find('tbody tr')
+
+      if (trs.length === 0) {
+        window.location.reload()
+      }
+
+    }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'Something went wrong')
+    })
+  })
+
+  $('#create-page-form').submit(function (e) {
+    e.preventDefault()
+    showLoader(true)
+    let content = $(this).serialize()
+    let url = $(this).attr('action')
+
+    window.axios.post(url, content).then(response => {
+      showLoader(false)
+
+      if ($('.no-result').length > 0) {
+        window.location.reload()
+      }
+
+      showNotification('success', 'Page is created!')
+
+      let html = `
+        <tr>
+          <td><span class="checkbox"><input class="form-checkboxes" type="checkbox" name="ids[]" value="${response.data.id}"></span></td>
+          <td><a href="/cms/page/${response.data.id}">${response.data.name}</a></td>
+          <td><a target="_blank" href="/${response.data.url}">${response.data.url}</a></td>
+          <td>${response.data.created_at}</td>
+          <td></td>
+        </tr>
+      `
+
+      let root = $(this).closest('.page-content')
+      let tableBody = root.find('table tbody')
+      tableBody.append(html)
+
+    }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'Something went wrong')
+    })
+
+  })
+
   $('#update-order-form').submit(function (e) {
     e.preventDefault()
     showLoader(true)

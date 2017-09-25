@@ -10,131 +10,6 @@
     </div>
   </div>
 
-  @if (count($page->content) == 0)
-
-    <div class="notification">
-      <div class="content">
-        <h4 class="title is-4">
-          This page has no content yet.
-          {{-- <a class="button is-primary is-pulled-right" href="{{ action('PageController@create') }}">Create a page</a> --}}
-        </h4>
-      </div>
-    </div>
-
-  @else
-    <input type="hidden" name="page-id" value="{{ $page->id }}">
-
-    @foreach ($pageContents as $pageContent)
-      <div class="page-content">
-        @if ($pageContent['group'] == true)
-          <hr>
-        @endif
-        @if ($pageContent['group'] == true)
-
-          @foreach ($pageContent['content'] as $content)
-            <div class="field is-horizontal">
-              <div class="field-label">
-                <label for="content">{{ $content->name }}</label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <div class="control has-margin-bottom">
-                    @component('dashboard/pages/forms/minis/_input-type-switcher', [
-                      'name' => 'content',
-                      'value' => $content->pivot->body,
-                      'type' => $content->type->name,
-                      'classes' => ''
-                    ]) @endcomponent
-                  </div>
-                </div>
-              </div>
-            </div>
-          @endforeach
-
-        @else
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <label for="content">{{ $pageContent->name }}</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control has-margin-bottom">
-                @component('dashboard/pages/forms/minis/_input-type-switcher', [
-                  'name' => 'content',
-                  'value' => $pageContent->pivot->body,
-                  'type' => $pageContent->type->name,
-                  'classes' => ''
-                ]) @endcomponent
-              </div>
-            </div>
-          </div>
-        </div>
-      @endif
-    </div>
-    @endforeach
-
-    {{-- @foreach ($page->content as $content)
-      <div class="page-content">
-        <input type="hidden" name="content-id" value="{{ $content->pivot->id }}">
-        <input type="hidden" name="name" value="{{ $content->name }}">
-        <input type="hidden" name="repeating" value="{{ $content->pivot->repeating }}">
-
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <label for="content">{{ $content->name }}</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              @if ($content->pivot->repeating == 1)
-                <span class="copy-field">
-                  <div class="control has-margin-bottom is-new">
-                    <div class="align-center">
-                      @component('dashboard/pages/forms/minis/_input-type-switcher', [
-                        'name' => 'content',
-                        'value' => $content->pivot->body,
-                        'type' => $content->type->name,
-                        'classes' => ''
-                      ]) @endcomponent
-                      <a class=" has-margin-left button is-danger"><span class="icon is-small"><i class="fa fa-times"></i></span></a>
-                    </div>
-                  </div>
-                </span>
-
-                @foreach ($content->repeatingContent as $repeatingContent)
-                  <div class="control has-margin-bottom">
-                    <div class="align-center">
-                      @component('dashboard/pages/forms/minis/_input-type-switcher', [
-                        'name' => 'content',
-                        'value' => $content->pivot->body,
-                        'type' => $content->type->name,
-                        'classes' => ''
-                      ]) @endcomponent
-                      <a class=" has-margin-left button is-danger"><span class="icon is-small"><i class="fa fa-times"></i></span></a>
-                    </div>
-                  </div>
-                @endforeach
-
-                <div class="control has-button">
-                  <a class="button add-repeating-group"><span>Add row</span><span class="icon is-small"><i class="fa fa-plus"></i></span></a>
-                </div>
-              @else
-                <div class="control has-margin-bottom">
-                  @if ($content->type->name == 'textfield')
-                    <input class="input" type="text" name="content" value="{{ $content->pivot->body }}">
-                  @elseif ($content->type->name == 'textarea')
-                    <textarea class="textarea" name="content" rows="8" cols="80">{{ $content->pivot->body }}</textarea>
-                  @elseif ($content->type->name == 'media')
-                    <input class="file" type="file" name="content" value="{{ $content->pivot->body }}">
-                  @elseif ($content->type->name == 'checkbox')
-                    <input class="checkbox" type="checkbox" name="content" value="{{ $content->pivot->body }}">
-                  @endif
-                </div>
-              @endif
-            </div>
-          </div>
-        </div>
-      </div>
-    @endforeach --}}
   <div class="field is-horizontal has-margin-top">
     <div class="field-label">
       <label></label>
@@ -143,7 +18,6 @@
       <button type="submit" class="button is-primary update">Update</button>
     </div>
   </div>
-  @endif
 
   <script>
     $(document).on('click', '.add-repeating-group', function () {

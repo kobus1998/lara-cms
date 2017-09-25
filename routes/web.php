@@ -38,7 +38,11 @@ Route::prefix('cms')->group(function () {
     Route::get('/dashboard', 'DashboardController@index');
 
     Route::resource('page', 'PageController');
+
+    Route::post('/multiple/page/set-inactive', 'PageController@setInactiveMultiple');
+
     Route::resource('content', 'ContentController');
+
     Route::resource('collection', 'CollectionController');
 
     Route::get('/collection/{collectionId}/post/{postId}', 'CollectionController@showPost');
@@ -51,11 +55,13 @@ Route::prefix('cms')->group(function () {
     Route::put('/multiple/collection/set-inactive', 'CollectionController@setInactiveMultiple');
     Route::post('/multiple/collection/delete', 'CollectionController@deleteMultiple');
 
+    Route::resource('post', 'PostController');
+
+    Route::put('/post/{postId}/update-content', 'PostController@updateContent');
+
     Route::put('/multiple/post/set-inactive', 'PostController@setInactiveMultiple');
     Route::post('/multiple/post/delete', 'PostController@deleteMultiple');
 
-    Route::put('/post/{postId}/update-content', 'PostController@updateContent');
-    Route::resource('post', 'PostController');
 
   });
 
