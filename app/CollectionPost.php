@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CollectionPost extends Model
 {
-  protected $table = 'collections_contents_posts';
+  protected $table = 'collections_content_posts';
 
   public function type () {
     $result = $this->belongsTo('\App\CollectionContent', 'collection_content_id', 'id')->with('type');

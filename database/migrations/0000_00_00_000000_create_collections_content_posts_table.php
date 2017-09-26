@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCollectionsContentsPostsTable extends Migration
+class CreateCollectionsContentPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCollectionsContentsPostsTable extends Migration
      */
     public function up()
     {
-      Schema::create('collections_contents_posts', function (Blueprint $table) {
+      Schema::create('collections_content_posts', function (Blueprint $table) {
         $table->increments('id');
         $table->integer('post_id')->unsigned();
         $table->integer('collection_content_id')->unsigned();

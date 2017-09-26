@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CollectionContent extends Model
 {
 
-  protected $table = 'collections_contents';
+  protected $table = 'collections_content';
   public $timestamps = false;
 
   public function content () {

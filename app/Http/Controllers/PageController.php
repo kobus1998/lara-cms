@@ -58,36 +58,6 @@ class PageController extends Controller
     return view('dashboard/pages/create', ['types' => $types]);
   }
 
-  public function saveContentBody (Request $req, $pageId) {
-    $page = Page::findOrFail($pageId);
-    // return $req['content'];
-    foreach ($req['content'] as $content) {
-      if ($content['repeating'] == 0) {
-        $page->content()->updateExistingPivot($content['id'], ['body' => $content['body']]);
-      } else {
-        // return $content;
-        $contentId = $content['id'];
-        foreach ($content['body'] as $body) {
-          // return $body;
-          if ($body['isNew'] == true) {
-            $repeatingContent = new RepeatingContent();
-            $repeatingContent['page_id'] = $contentId;
-            $repeatingContent['body'] = $body['content'];
-            $repeatingContent['created_at'] = Carbon::now();
-            $repeatingContent['updated_at'] = Carbon::now();
-            $repeatingContent->save();
-          } else {
-
-          }
-        }
-
-      }
-    }
-
-    return response()->json($page->with('content')->get());
-
-  }
-
   public function update (Request $req, $id) {
 
     $page = Page::where('id', '=', $id);
@@ -152,7 +122,7 @@ class PageController extends Controller
   }
 
   public function showSeo ($id) {
-    $page = Page::where('id', '=', $id)->with('content')->first();
+    $page = Page::where('id', '=', $id)->first();
 
     return view('dashboard/pages/seo', [
       'page' => $page,
@@ -165,7 +135,7 @@ class PageController extends Controller
   }
 
   public function showSettings ($id) {
-    $page = Page::where('id', '=', $id)->with('content')->first();
+    $page = Page::where('id', '=', $id)->first();
 
     return view('dashboard/pages/settings', [
       'page' => $page,
@@ -190,30 +160,6 @@ class PageController extends Controller
     return back();
   }
 
-  public function saveContentManager(Request $req) {
-    $response = [];
-    foreach ($req->pages as $page) {
-      $currentPage = Page::findOrFail($page['id'])->content();
-      foreach ($page['content'] as $pageContent) {
-        if ($pageContent['isNew'] == true) {
-          $currentPage->attach($pageContent['id'], [
-            'order' => $pageContent['order'],
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon:: now()
-          ]);
-        } else {
-          $currentPage->updateExistingPivot($pageContent['id'], [
-            'order' => $pageContent['order'],
-            'updated_at' => Carbon::now()
-          ]);
-        }
-      }
-      array_push($response, $currentPage->get());
-    }
-
-    return response()->json($response);
-  }
-
   public function setInactiveMultiple (Request $req) {
     $pages = Page::whereIn('id', $req->ids);
     $pages->update(['is_active' => 0]);
@@ -231,12 +177,6 @@ class PageController extends Controller
     return back();
   }
 
-  public function destroyContent (Request $req, $pageId, $contentId) {
-    // $page = Page::findOrFail($pageId)->content();
-    // $page->detach($contentId);
-    \App\PageContent::findOrFail($contentId)->delete();
-  }
-
   public function route ($url, $id = null) {
     $data = [];
 
@@ -247,7 +187,6 @@ class PageController extends Controller
       $data['page'] = $page;
     } else {
       $page = Page::where('url', $url)->with('content')->first();
-      $content = \App\Content::where('id', $id)->first();
 
       $data['page'] = $page;
 

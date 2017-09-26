@@ -12,7 +12,7 @@ class CollectionContentSeeder extends Seeder
      */
     public function run()
     {
-      DB::table('collections_contents')->insert([
+      DB::table('collections_content')->insert([
         ['collection_id' => 1, 'type_id' => 1, 'name' => 'title'],
         ['collection_id' => 1, 'type_id' => 2, 'name' => 'content'],
         ['collection_id' => 2, 'type_id' => 1, 'name' => 'title'],

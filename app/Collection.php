@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use \App\Collection;
-use \App\Content;
 use \App\Page;
 
 class Collection extends Model
