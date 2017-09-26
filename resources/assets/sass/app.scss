@@ -7,6 +7,7 @@ $sidebar-width: 200px;
 $header-height: 3.25rem;
 $column-gap: 0.25rem;
 $primary: #0099CC;
+// $primary: #FF3333;
 $red: #f4645f;
 $info: #64B5F6;
 $shadow: rgba(205,210,214,.8);
@@ -118,12 +119,20 @@ $shadow: rgba(205,210,214,.8);
 }
 
 .breadcrumb {
+  li {
+    &.is-active {
+      a {
+        color: $primary;
+      }
+    }
+  }
   & li:first-child a {
     padding-left: 0;
   }
 }
 
 .tabs {
+  background: $white;
   @include mobile {
     flex-direction: column;
   }
