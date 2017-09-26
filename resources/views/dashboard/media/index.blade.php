@@ -17,22 +17,8 @@
   @endphp
 
   <div class="has-margin-bottom">
-    <div class="tabs">
+    <div class="tabs is-white">
       <ul>
-        <li><a
-          @if ($getView == 'columns')
-            href="{{ action('MediaController@index', ['view' => 'table', 's' => $searchQuery]) }}"
-          @else
-            href="{{ action('MediaController@index', ['view' => 'columns', 's' => $searchQuery]) }}"
-          @endif
-
-          class="button has-margin-right is-link">
-          @if ($getView == 'table')
-            Show images
-          @else
-            Show info
-          @endif
-        </a></li>
       </ul>
       <ul class="is-right">
         <li>
@@ -45,89 +31,45 @@
       </ul>
     </div>
   </div>
-  
-  <div class="page-content">
+
+  <div class="has-padding is-white has-margin-bottom">
     @component('dashboard/components/_upload') @endcomponent
-    @component('dashboard/components/minis/_no-search-result', ['model' => $images])
-    @endcomponent
+  </div>
 
-    @if (count($images) == 0 && app('request')->input('s') == null)
-
-      <div class="notification">
-        <div class="content">
-          <h4 class="title is-4">
-            You don't have uploaded any media yet
-            <a class="button is-primary is-pulled-right" href="{{ action('MediaController@upload') }}">Upload media</a>
-          </h4>
-        </div>
-      </div>
-
-    @elseif(count($images) != 0)
-
-    <div class="media-manager">
-      @if ($getView == 'columns')
-
+  <!-- // -->
+  @component('dashboard/components/minis/_no-results', ['items' => $images, 'name' => 'medias'])
+    <div class="page-content">
+      <!-- // -->
+      <div class="media-manager">
         <!-- // -->
-
-        <div class="columns is-multiline is-variable">
-          @foreach ($images as $image)
-            <div class="card box column is-one-third gap">
-              <div class="card-image content-center">
-                <img class="is-small image has-pointer" src="{{ $image['url'] }}" alt="">
-              </div>
-              <div class="card-content">
-                <hr>
-                <p><a href="{{ action('MediaController@show', $image['id']) }}">{{ $image['name'] }}</a></p>
-              </div>
-            </div>
-          @endforeach
-        </div>
-
-        <!-- // -->
-
-        <div class="modal has-margin-sidebar has-margin-header">
-          <div class="modal-background"></div>
-          <div class="modal-content width-auto">
-            <img src="" class="image">
-          </div>
-          <button class="modal-close is-large has-margin-header" aria-label="close"></button>
-        </div>
-
-        <!-- // -->
-
-      @elseif ($getView == 'table')
-
         <div class="columns table-media">
-
-          <!-- // -->
-
-          <form class="delete-media-form column is-9" action="{{ action('MediaController@delete') }}" method="post">
-            {{ method_field('DELETE') }}
-            {{ csrf_field() }}
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th><input type="checkbox" class="all-checkboxes has-pointer"></th>
-                    <th>name</th>
-                    <th class="is-hidden-mobile">created at</th>
-                    <th><button type="submit" class="button is-danger delete-selected-media is-small"><span class="icon is-small"><i class="fa fa-trash"></i></span></button></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($images as $image)
-                    <tr class="has-pointer show-image-sidebar" url="{{ action('MediaController@show', $image['id']) }}" src="{{ $image['url'] }}" name="{{ $image['name'] }}" img-id="{{ $image['id'] }}">
-                      <td><input type="checkbox" class="form-checkboxes has-pointer" name="images[]" value="{{ $image->id }}"></td>
-                      <td class=""><a href="{{ action('MediaController@show', $image['id']) }}">{{ $image['name'] }}</a></td>
-                      <td class="is-hidden-mobile">{{ $image['created_at'] }}</td>
-                      <td><span class="icon"><i class="fa fa-arrow-right"></i></span></td>
+          <div class="column is-9">
+            <form class="delete-media-form" action="{{ action('MediaController@delete') }}" method="post">
+              {{ method_field('DELETE') }}
+              {{ csrf_field() }}
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th><input type="checkbox" class="all-checkboxes has-pointer"></th>
+                      <th>name</th>
+                      <th class="is-hidden-mobile">created at</th>
+                      <th><button type="submit" class="button is-danger delete-selected-media is-small"><span class="icon is-small"><i class="fa fa-trash"></i></span></button></th>
                     </tr>
-                  @endforeach
-                </tbody>
-              </table>
-          </form>
-
+                  </thead>
+                  <tbody>
+                    @foreach ($images as $image)
+                      <tr class="has-pointer show-image-sidebar" url="{{ action('MediaController@show', $image['id']) }}" src="{{ $image['url'] }}" name="{{ $image['name'] }}" img-id="{{ $image['id'] }}">
+                        <td><input type="checkbox" class="form-checkboxes has-pointer" name="images[]" value="{{ $image->id }}"></td>
+                        <td class=""><a href="{{ action('MediaController@show', $image['id']) }}">{{ $image['name'] }}</a></td>
+                        <td class="is-hidden-mobile">{{ $image['created_at'] }}</td>
+                        <td><span class="icon"><i class="fa fa-arrow-right"></i></span></td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+            </form>
+          </div>
           <!-- // -->
-
           <div class="column">
             <form class="" action="{{ action('MediaController@delete') }}" method="post">
               <input type="hidden" name="_method" value="delete">
@@ -157,8 +99,6 @@
 
         </div>
 
-      @endif
-
       </div>
 
     </div>
@@ -172,7 +112,6 @@
       'queries' => ['view' => $getView, 's' => $searchQuery]
     ])@endcomponent
 
-    <!-- // -->
+  @endcomponent
 
-    @endif
 @endsection

@@ -2,6 +2,10 @@
   {{ csrf_field() }}
   <input type="hidden" name="_method" value="put">
 
+  <h3 class="title">General</h3>
+
+  <hr>
+
   <div class="field is-horizontal">
     <div class="field-label">
       <label for="name">Name</label>
