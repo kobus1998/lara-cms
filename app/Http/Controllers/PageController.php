@@ -164,6 +164,19 @@ class PageController extends Controller
     ]);
   }
 
+  public function showSettings ($id) {
+    $page = Page::where('id', '=', $id)->with('content')->first();
+
+    return view('dashboard/pages/settings', [
+      'page' => $page,
+      'navs' => [
+        ['name' => 'Pages', 'action' => action('PageController@index'), 'active' => false],
+        ['name' => $page->name, 'action' => action('PageController@show', $page->id), 'active' => false],
+        ['name' => 'Settings', 'action' => action('PageController@showSettings', $page->id), 'active' => true]
+      ],
+    ]);
+  }
+
   public function edit () {
     // form update
   }
