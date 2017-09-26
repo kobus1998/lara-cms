@@ -34,7 +34,7 @@ class PageController extends Controller
   public function store (Request $req) {
 
     $this->validate($req, [
-      'name' => 'required|unique:pages,name',
+      'name' => 'required',
       'url' => 'required|unique:pages,url|not_in:cms,/cms',
     ]);
 
@@ -90,35 +90,40 @@ class PageController extends Controller
 
   public function update (Request $req, $id) {
 
-    $page = Page::findOrFail($id);
+    $page = Page::where('id', '=', $id);
 
-    if ($req['req-type'] == 'general') {
+    $this->validate($req, [
+      'name' => 'required',
+      'url' => 'required|not_in:cms',
+    ]);
 
-      if (substr($req['url'], 0) == '/' || substr($req['page-url'], 0) == ' ') {
-        ltrim($req['url'], 0);
-      }
+    $page->update([
+      'name' => $req['name'],
+      'url' => $req['url'],
+      'desc' => $req['desc']
+    ]);
 
-      $page['name'] = $req['name'];
-      $page['desc'] = $req['desc'];
-      $page['url'] = $req['url'];
-      $page['type_id'] = $req['type'];
-
-      $this->validate($req, [
-        'name' => 'required',
-        'type' => 'required|integer',
-        'url' => 'required|not_in:cms',
-      ]);
-
-    } else if ($req['req-type'] == 'seo') {
-      $page['seo_title'] = $req['seo-title'];
-      $page['seo_desc'] = $req['seo-desc'];
-      $page['seo_keywords'] = $req['seo-keywords'];
+    if(!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($page);
     }
 
-    $page->update();
+  }
 
-    return back();
+  public function updateSeo (Request $req, $id) {
+    $page = Page::where('id', '=', $id);
+    $page->update([
+      'seo_title' => $req['seo-title'],
+      'seo_keywords' => $req['seo-keywords'],
+      'seo_desc' => $req['seo-desc']
+    ]);
 
+    if(!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($page);
+    }
   }
 
   public function show ($id) {

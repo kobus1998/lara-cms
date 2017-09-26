@@ -11,10 +11,10 @@
     </div>
     <div class="nav-right nav-menu">
       @if (Auth::guest())
-        <a class="nav-item is-tab" href="{{ route('login') }}">Login</a>
-        <a class="nav-item is-tab" href="{{ route('register') }}">Register</a>
+        <a class="nav-item is-tab {{ strpos(Request::path(), 'login') !== false ? "is-active" : "" }}" href="{{ route('login') }}">Login</a>
+        <a class="nav-item is-tab {{ strpos(Request::path(), 'register') !== false ? "is-active" : "" }}" href="{{ route('register') }}">Register</a>
       @else
-        <a class="nav-item is-tab" href="{{ action('DashboardController@index') }}">Dashboard</a>
+        <a class="nav-item is-tab {{ strpos(Request::path(), 'dashboard') !== false ? "is-active" : "" }}" href="{{ action('DashboardController@index') }}">Dashboard</a>
         <a class="nav-item is-tab" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
           Logout
         </a>

@@ -78,6 +78,37 @@ $(document).ready(function () {
     $('.toggle-create-page').toggleClass('is-active')
   })
 
+  $('#update-page-seo-form').submit(function (e) {
+    e.preventDefault()
+    showLoader(true)
+    let content = $(this).serialize()
+    let url = $(this).attr('action')
+
+    window.axios.put(url, content).then(response => {
+      showLoader(false)
+      showNotification('success', 'Seo updated!')
+    }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'Something went wrong')
+    })
+  })
+
+  $('#update-page-form').submit(function (e) {
+    e.preventDefault()
+    showLoader(true)
+    let content = $(this).serialize()
+    let url = $(this).attr('action')
+
+    window.axios.put(url, content).then(response => {
+      showLoader(false)
+      showNotification('success', 'Page updated!')
+    }).catch(err => {
+      showLoader(false)
+      showNotification('error', 'Something went wrong')
+    })
+
+  })
+
   $('#delete-pages-form').submit(function (e) {
     e.preventDefault()
     showLoader(true)

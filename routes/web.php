@@ -40,6 +40,7 @@ Route::prefix('cms')->group(function () {
     Route::resource('page', 'PageController');
     Route::get('/page/{pageId}/content', 'PageController@showContent');
     Route::get('/page/{pageId}/seo', 'PageController@showSeo');
+    Route::put('/page/{pageId}/seo', 'PageController@updateSeo');
 
     Route::post('/multiple/page/set-inactive', 'PageController@setInactiveMultiple');
 
