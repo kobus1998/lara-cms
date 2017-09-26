@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CollectionTable extends Migration
+class CreateCollectionsContentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CollectionTable extends Migration
      */
     public function up()
     {
-      Schema::create('collections', function (Blueprint $table) {
+      Schema::create('collections_contents', function (Blueprint $table) {
         $table->increments('id');
+        $table->integer('collection_id')->unsigned();
         $table->string('name');
-        $table->text('desc')->nullable();
-        $table->boolean('all_pages')->default(false);
-        $table->boolean('is_active')->default(1);
-        $table->timestamps();
+        $table->integer('type_id')->unsigned();
+        $table->boolean('order')->default(0)->nullable();
       });
     }
 
@@ -30,6 +29,6 @@ class CollectionTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('collections');
+      Schema::dropIfExists('collections_contents');
     }
 }

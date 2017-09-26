@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Posts extends Migration
+class CreateCollectionsPagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class Posts extends Migration
      */
     public function up()
     {
-      Schema::create('posts', function (Blueprint $table) {
+      Schema::create('collections_pages', function (Blueprint $table) {
         $table->increments('id');
         $table->integer('collection_id')->unsigned();
-        $table->string('name');
-        $table->boolean('is_active')->default(1);
-        $table->timestamps();
+        $table->integer('page_id')->unsigned();
       });
     }
 
@@ -29,6 +27,6 @@ class Posts extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('posts');
+      Schema::dropIfExists('collections_pages');
     }
 }

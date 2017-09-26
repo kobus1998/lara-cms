@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CollectionsPagesTable extends Migration
+class CreateMediaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CollectionsPagesTable extends Migration
      */
     public function up()
     {
-      Schema::create('collections_pages', function (Blueprint $table) {
+      Schema::create('medias', function (Blueprint $table) {
         $table->increments('id');
-        $table->integer('collection_id')->unsigned();
-        $table->integer('page_id')->unsigned();
+        $table->string('name');
+        $table->string('path');
+        $table->string('slug');
+        $table->boolean('is_active')->default(1);
+        $table->timestamps();
       });
     }
 
@@ -27,6 +30,6 @@ class CollectionsPagesTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('collections_pages');
+      Schema::dropIfExists('medias');
     }
 }

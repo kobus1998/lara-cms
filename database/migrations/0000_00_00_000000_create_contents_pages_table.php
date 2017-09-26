@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CollectionsContentsPostsTable extends Migration
+class CreateContentsPagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CollectionsContentsPostsTable extends Migration
      */
     public function up()
     {
-      Schema::create('collections_contents_posts', function (Blueprint $table) {
+      Schema::create('contents_pages', function (Blueprint $table) {
         $table->increments('id');
-        $table->integer('post_id')->unsigned();
-        $table->integer('collection_content_id')->unsigned();
-        $table->text('content')->nullable();
-        $table->integer('order')->default();
+        $table->integer('page_id')->unsigned();
+        $table->integer('content_id')->unsigned();
+        $table->string('body')->nullable();
+        $table->integer('order')->default(0);
         $table->timestamps();
       });
     }
@@ -30,6 +30,6 @@ class CollectionsContentsPostsTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('collections_contents_posts');
+      Schema::dropIfExists('contents_pages');
     }
 }
