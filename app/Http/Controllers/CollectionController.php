@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use \App\Collection;
 use \App\Page;
+use App\CollectionPost;
 
 class CollectionController extends Controller
 {
@@ -208,6 +209,15 @@ class CollectionController extends Controller
     }
   }
 
+  public function deleteContent (Request $req, $collectionId, $contentId) {
+    $pageContent = \App\CollectionContent::destroy($contentId);
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($pageContent);
+    }
+  }
+
   public function removeContent (Request $req, $id) {
     \App\CollectionContent::where('id', $id)->delete($id);
     \App\CollectionPost::where('collection_content_id', $id)->delete();
@@ -229,6 +239,15 @@ class CollectionController extends Controller
     $content['type_id'] = $req['type-id'];
     $content->save();
 
+    $posts = \App\Post::where('collection_id', '=', $id)->select('id as id')->get();
+
+    foreach ($posts as $post) {
+      $cc = new \App\CollectionPost;
+      $cc->post_id = $post->id;
+      $cc->collection_content_id = $content->id;
+      $cc->save();
+    }
+
     $getContent = \App\CollectionContent::where('id', $content->id)->with('type')->first()->toArray();
 
     if (!$req->ajax()) {
@@ -239,19 +258,19 @@ class CollectionController extends Controller
 
   }
 
-  public function updateOrder (Request $req, $id) {
-    $this->validate($req, [
-      'order' => 'required',
-      'id' => 'required'
-    ]);
+  public function editContent (Request $req, $id) {
 
-    foreach ($req['id'] as $key => $value) {
-      // dd($req['order'][$key]);
-      $collection = \App\CollectionContent::findOrFail($value);
-      $collection->order = $req['order'][$key];
-      $collection->save();
+    foreach ($req->items as $item) {
+      $collection = \App\CollectionContent::where('id', '=', $item['id']);
+      $collection->update([
+        'order' => $item['order'],
+        'name' => $item['name'],
+        'type_id' => $item['type']
+      ]);
+
+      $collection = $collection->first();
       $collectionPost = \App\CollectionPost::where('collection_content_id', '=', $collection->id);
-      $collectionPost->update(['order' => $req['order'][$key]]);
+      $collectionPost->update(['order' => $item['order']]);
     }
 
     if (!$req->ajax()) {
