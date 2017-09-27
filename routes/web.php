@@ -37,23 +37,30 @@ Route::prefix('cms')->group(function () {
 
     Route::get('/dashboard', 'DashboardController@index');
 
+    // page
+
     Route::resource('page', 'PageController');
     Route::get('/page/{pageId}/content', 'PageController@showContent');
     Route::get('/page/{pageId}/seo', 'PageController@showSeo');
     Route::get('/page/{pageId}/settings', 'PageController@showSettings');
     Route::put('/page/{pageId}/seo', 'PageController@updateSeo');
 
+    Route::put('/page/{pageId}/update-content', 'PageController@updateContent');
+    Route::post('/page/{pageId}/add-content', 'PageController@addContent');
+    Route::put('/page/{pageId}/edit-content', 'PageController@editContent');
+    Route::delete('/page/{pageId}/delete-content/{contentId}', 'PageController@deleteContent');
     Route::post('/multiple/page/set-inactive', 'PageController@setInactiveMultiple');
 
-    Route::resource('content', 'ContentController');
+    // collection
 
     Route::resource('collection', 'CollectionController');
-
     Route::get('/collection/{collectionId}/post/{postId}', 'CollectionController@showPost');
     Route::get('/collection/{collectionId}/post/{postId}/content', 'CollectionController@postContent');
+
     Route::post('/collection/{collectionId}/add-content', 'CollectionController@addContent');
-    Route::put('/collection/{collectionId}/update-order', 'CollectionController@updateOrder');
-    Route::delete('/collection-content/{id}/remove-content', 'CollectionController@removeContent');
+    Route::put('/collection/{collectionId}/edit-content', 'CollectionController@editContent');
+    Route::delete('/collection/{collectionId}/delete-content/{contentId}', 'CollectionController@deleteContent');
+    
     Route::get('/collection/{collectionId}/posts', 'CollectionController@collectionPosts');
 
     Route::put('/multiple/collection/set-inactive', 'CollectionController@setInactiveMultiple');

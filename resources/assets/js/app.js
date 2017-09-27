@@ -14,19 +14,32 @@ require('./bootstrap');
  */
  (function ( $ ) {
 
-  $.fn.makeReq = function(method, success, err) {
+  $.fn.toggleField = function (target, cb) {
+    this.click(function (e) {
+      e.preventDefault()
+      $(target).toggleClass('is-active')
+      if (typeof cb !== 'undefined') {
+        cb($(target))
+      }
+    })
+  }
+
+  $.fn.makeReq = function(method, success, err, before) {
     this.submit(function (e) {
       e.preventDefault()
-      showLoader(true)
+
+      if (typeof before !== 'undefined') {
+        before()
+      }
 
       let idName = $(this).attr('id')
 
       if (idName.includes('delete')) {
         let confirm = window.confirm('Are you sure?')
         if (!confirm) return
-        else showLoader(false)
       }
 
+      showLoader(true)
 
       let content = $(this).serialize()
       let url = $(this).attr('action')
@@ -133,6 +146,14 @@ function showNotification (type, message) {
 
 $(document).ready(function () {
 
+  $('.toggle-edit-field').toggleField('#edit-update-page-content-form', function (editField) {
+    if (editField.hasClass('is-active')) {
+      $('#update-page-content-form').hide()
+    } else {
+      $('#update-page-content-form').show()
+    }
+  })
+
   $('.toggle-modal-update-page-content').click(function () {
     $('.toggle-update-page-content').toggleClass('is-active')
   })
@@ -157,6 +178,49 @@ $(document).ready(function () {
     showNotification('success', 'Content updated!')
   }, err => {
     showNotification('error', 'Something went wrong')
+  })
+
+  $('.xy-delete-content').click(function (e) {
+    e.preventDefault()
+
+    let confirm = window.confirm('Are you sure?')
+    if (!confirm) return
+
+    showLoader(true)
+    let action = $(this).attr('data-action')
+    window.axios.delete(action).then(response => {
+      showLoader(false)
+      $(this).closest('.delete-root').remove()
+      showNotification('success', 'Item deleted!')
+    }).catch(err => {
+      console.log(err);
+      showNotification('error', 'Something went wrong')
+      showLoader(false)
+    })
+  })
+
+  $('#edit-update-page-content-form').makeReq('put', response => {
+    showNotification('success', 'Order updated!')
+  }, err => {
+    showNotification('error', 'Something went wrong')
+  }, () => {
+    let start = 0;
+    $('.sortable').find('.order').each(function (index, elem) {
+      $(elem).val(start)
+      start++
+    })
+  })
+
+  $('#update-order-form').makeReq('put', response => {
+    showNotification('success', 'Order is updated!')
+  }, err => {
+    showNotification('error', 'something went horribly wrong.')
+  }, () => {
+    let start = 0;
+    $('.sortable').find('.order').each(function (index, elem) {
+      $(elem).val(start)
+      start++
+    })
   })
 
   $('#add-page-content-form').makeReq('post', response => {
@@ -231,13 +295,6 @@ $(document).ready(function () {
     tableBody.append(html)
   }, err => {
     showNotification('error', 'Something went wrong')
-  })
-
-
-  $('#update-order-form').makeReq('put', response => {
-    showNotification('success', 'Order is updated!')
-  }, err => {
-    showNotification('error', 'something went horribly wrong.')
   })
 
   $('#delete-multiple-collections-form').makeReq('put', response => {
@@ -359,29 +416,29 @@ $(document).ready(function () {
     showNotification('success', 'Content is removed')
   })
 
-  $(document).on('click', '.delete-content', function () {
-
-    showLoader(true)
-
-    var contentItem = $(this).closest('.content-item')
-    var contentId = contentItem.find('input[name="page-content-id"]').val()
-    var pageId = contentItem.closest('.page').find('input[name="page-id"]').val()
-    var url = contentItem.closest('.pages-manager').find('input[name="delete-url"]').val()
-    window.axios.delete(url + '/' + pageId + '/' + contentId)
-      .then(function (response) {
-        contentItem.remove()
-        showNotification('success', 'Content is removed')
-        showLoader(false)
-      }).then(function (err) {
-        showLoader(false)
-        if (err) showNotification('error', 'Something went wrong')
-      })
-  })
+  // $(document).on('click', '.delete-content', function () {
+  //
+  //   showLoader(true)
+  //
+  //   var contentItem = $(this).closest('.content-item')
+  //   var contentId = contentItem.find('input[name="page-content-id"]').val()
+  //   var pageId = contentItem.closest('.page').find('input[name="page-id"]').val()
+  //   var url = contentItem.closest('.pages-manager').find('input[name="delete-url"]').val()
+  //   window.axios.delete(url + '/' + pageId + '/' + contentId)
+  //     .then(function (response) {
+  //       contentItem.remove()
+  //       showNotification('success', 'Content is removed')
+  //       showLoader(false)
+  //     }).then(function (err) {
+  //       showLoader(false)
+  //       if (err) showNotification('error', 'Something went wrong')
+  //     })
+  // })
 
   $('.draggable').draggable({
     connectToSortable: '.sortable',
     greedy: true,
-    helper: 'clone',
+    // helper: 'clone',
     stop: function (ev, ui) {
 
     }
@@ -407,14 +464,18 @@ $(document).ready(function () {
 
   $('.sortable').sortable({
     stop: function (ev, ui) {
-      var page = $(ui.item).closest('.page')
-      var pageId = page.find('input[name="page-id"]').val()
-      var contentItems = page.find('.content-item')
 
-      var startOrder = 0
+      // $(ui.item)
+      //
+      // var page = $(ui.item).closest('.page')
+      // var pageId = page.find('input[name="page-id"]').val()
+      // var contentItems = page.find('.content-item')
 
-      contentItems.each(function () {
-        $(this).find('input[name="order"]').val(startOrder)
+      let startOrder = 0
+      let items = $(ui.item).closest('.sortable').find('.draggable')
+      console.log(items);
+      items.each(function () {
+        $(this).find('.order').val(startOrder)
         startOrder++
       })
     },

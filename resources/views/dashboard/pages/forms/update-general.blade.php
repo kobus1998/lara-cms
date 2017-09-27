@@ -1,4 +1,4 @@
-<form id="update-page-form" class="has-padding is-white" action="{{ action('PageController@updateSeo', $page->id) }}" method="post">
+<form id="update-page-form" class="has-padding is-white" action="{{ action('PageController@update', $page->id) }}" method="post">
   {{ csrf_field() }}
   <input type="hidden" name="_method" value="put">
 
@@ -44,7 +44,7 @@
       </div>
     </div>
   </div>
-
+  
   <div class="field is-horizontal">
     <div class="field-label">
       <label></label>

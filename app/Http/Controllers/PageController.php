@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Page;
 use Carbon\Carbon;
+use App\PageContent;
 use App\RepeatingContent;
 
 class PageController extends Controller
@@ -35,12 +36,12 @@ class PageController extends Controller
 
     $this->validate($req, [
       'name' => 'required',
-      'url' => 'required|unique:pages,url|not_in:cms,/cms',
+      'url' => 'required|not_in:cms,/cms',
     ]);
 
     $page = new Page();
     $page['name'] = $req['name'];
-    $page['desc'] = $req['page-desc'];
+    $page['desc'] = $req['desc'];
     $page['url'] = $req['url'];
 
     $page->save();
@@ -60,12 +61,12 @@ class PageController extends Controller
 
   public function update (Request $req, $id) {
 
-    $page = Page::where('id', '=', $id);
-
     $this->validate($req, [
       'name' => 'required',
       'url' => 'required|not_in:cms',
     ]);
+
+    $page = Page::where('id', '=', $id);
 
     $page->update([
       'name' => $req['name'],
@@ -109,10 +110,13 @@ class PageController extends Controller
   }
 
   public function showContent ($id) {
-    $page = Page::where('id', '=', $id)->with('content')->first();
-
+    $page = Page::where('id', '=', $id)->with(['content' => function ($q) {
+      $q->with('type');
+    }])->first();
+    $types = \App\Type::get();
     return view('dashboard/pages/content', [
       'page' => $page,
+      'types' => $types,
       'navs' => [
         ['name' => 'Pages', 'action' => action('PageController@index'), 'active' => false],
         ['name' => $page->name, 'action' => action('PageController@show', $page->id), 'active' => false],
@@ -147,17 +151,76 @@ class PageController extends Controller
     ]);
   }
 
-  public function edit () {
-    // form update
+  public function updateContent (Request $req, $id) {
+    $page = Page::where('id', '=', $id);
+
+    $response = [];
+
+    foreach ($req->content as $content) {
+      $id = reset($content['id']);
+      $body = reset($content['body']);
+      $pageContent = \App\PageContent::where('id', '=', $id);
+      $pageContent->update([
+        'content' => $body
+      ]);
+      array_push($response, $pageContent->get());
+    }
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($response);
+    }
+
   }
 
-  public function destroy () {
-    // back-end remove
+  public function addContent(Request $req, $id) {
+    $this->validate($req, [
+      'name' => 'required',
+      'type-id' => 'required'
+    ]);
+
+    $pageContent = new \App\PageContent();
+    $pageContent->name = $req->name;
+    $pageContent->type_id = $req['type-id'];
+    $pageContent->page_id = $id;
+    $pageContent->save();
+
+    $contentId = $pageContent['id'];
+    $content = \App\PageContent::where('id', '=', $contentId)->with('type')->first();
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($content);
+    }
   }
 
-  public function addContent(Request $req, $pageId) {
+  public function editContent (Request $req, $id) {
+    foreach ($req->items as $item) {
+      $pageContent = \App\PageContent::where('id', '=', $item['id']);
+      $pageContent->update([
+        'order' => $item['order'],
+        'name' => $item['name'],
+        'type_id' => $item['type']
+      ]);
+    }
 
-    return back();
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json(1);
+    }
+
+  }
+
+  public function deleteContent(Request $req, $pageId, $contentId) {
+    $pageContent = \App\PageContent::destroy($contentId);
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($pageContent);
+    }
   }
 
   public function setInactiveMultiple (Request $req) {

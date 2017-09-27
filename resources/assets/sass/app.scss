@@ -86,7 +86,27 @@ $shadow: rgba(205,210,214,.8);
   }
 }
 
+.field {
+  &.has-addons {
+    .control.has-input {
+      flex-grow: 1;
+      input {
+        width: 100%;
+      }
+    }
+  }
+}
 
+.sortable .box {
+  border: 1px solid transparent;
+  padding: 0.75rem;
+  .field {
+    margin: 0;
+  }
+  &:hover {
+    border: 1px solid $primary;
+  }
+}
 
 .sidebar {
   background-color: white;
@@ -154,6 +174,13 @@ $shadow: rgba(205,210,214,.8);
     &.is-right {
       justify-content: flex-end;
     }
+  }
+}
+
+#edit-update-page-content-form {
+  display: none;
+  &.is-active {
+    display: block;
   }
 }
 
