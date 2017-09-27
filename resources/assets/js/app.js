@@ -12,6 +12,77 @@ require('./bootstrap');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+ (function ( $ ) {
+
+  $.fn.makeReq = function(method, success, err) {
+    this.submit(function (e) {
+      e.preventDefault()
+      showLoader(true)
+
+      let idName = $(this).attr('id')
+
+      if (idName.includes('delete')) {
+        let confirm = window.confirm('Are you sure?')
+        if (!confirm) return
+        else showLoader(false)
+      }
+
+
+      let content = $(this).serialize()
+      let url = $(this).attr('action')
+
+      let formMethod = window.axios.get
+
+      switch (method) {
+        case 'post':
+          formMethod = window.axios.post
+          break;
+        case 'put':
+          formMethod = window.axios.put
+          break;
+        case 'delete':
+          formMethod = window.axios.delete
+          break;
+        case 'patch':
+          formMethod = window.axios.patch
+          break;
+        default:
+          formMethod = window.axios.get
+      }
+
+      formMethod(url, content).then(response => {
+        showLoader(false)
+        success(response)
+      }).catch(err => {
+        showLoader(false)
+        err(response)
+      })
+    })
+    return this;
+  }
+
+ }( jQuery ));
+
+
+function inputSwitcher (type, meta) {
+  if (typeof meta.value === 'undefined') {
+    meta.value = ''
+  }
+
+  switch (type) {
+    case 'textfield':
+      return `<input type="text" class="input" name="${meta.name}" value="${meta.value}">`
+      break;
+    case 'textarea':
+      return `<textarea class="textarea" name="${meta.name}" rows="8" cols="80">${meta.value}</textarea>`
+      break;
+    case 'media':
+      return `<input type="text" class="input" name="${meta.name}" value="${meta.value}">`
+      break;
+    default:
+      return `<input type="text" class="input" name="${meta.name}" value="${meta.value}">`
+  }
+}
 
 function updateContentManager (pages) {
   $('.page').each(function (pageIndex) {
@@ -62,6 +133,10 @@ function showNotification (type, message) {
 
 $(document).ready(function () {
 
+  $('.toggle-modal-update-page-content').click(function () {
+    $('.toggle-update-page-content').toggleClass('is-active')
+  })
+
   $('.toggle-modal-create-collection').click(function () {
     $('.toggle-create-collection').toggleClass('is-active')
   })
@@ -78,204 +153,147 @@ $(document).ready(function () {
     $('.toggle-create-page').toggleClass('is-active')
   })
 
-  $('#update-page-seo-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
-
-    window.axios.put(url, content).then(response => {
-      showLoader(false)
-      showNotification('success', 'Seo updated!')
-    }).catch(err => {
-      showLoader(false)
-      showNotification('error', 'Something went wrong')
-    })
+  $('#update-page-content-form').makeReq('put', response => {
+    showNotification('success', 'Content updated!')
+  }, err => {
+    showNotification('error', 'Something went wrong')
   })
 
-  $('#update-page-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
-
-    window.axios.put(url, content).then(response => {
-      showLoader(false)
-      showNotification('success', 'Page updated!')
-    }).catch(err => {
-      showLoader(false)
-      showNotification('error', 'Something went wrong')
+  $('#add-page-content-form').makeReq('post', response => {
+    showNotification('success', 'Content added!')
+    console.log(response.data);
+    let root = $(this).closest('.page-content')
+    let id = response.data.id
+    let name = response.data.name
+    let input = inputSwitcher(response.data.type.name, {
+      name: `content[${id}][body][]`,
     })
-
+    root.find('.fields').prepend(`
+      <input type="hidden" name="content[${id}][id][]" value="${id}">
+      <div class="field is-horizontal">
+        <div class="field-label"><label for="content">${name}</label></div>
+        <div class="field-body">
+          <div class="field"><div class="control">${input}</div></div>
+        </div>
+      </div>`)
+  }, err => {
+    showNotification('error', 'Something went wrong')
   })
 
-  $('#delete-pages-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
+  $('#update-page-seo-form').makeReq('put', response => {
+    showNotification('success', 'Seo updated!')
+  }, err => {
+    showNotification('error', 'Something went wrong')
+  })
 
-    window.axios.post(url, content).then(response => {
-      showLoader(false)
-      showNotification('success', 'Pages(s) removed')
+  $('#update-page-form').makeReq('put', response => {
+    showNotification('success', 'Page updated!')
+  }, err => {
+    showNotification('error', 'Something went wrong')
+  })
 
-      $(this).find('input[name="ids[]"]').each(function () {
-        if ($(this).is(':checked')) {
-          $(this).closest('tr').remove()
-        }
-      })
+  $('#delete-pages-form').makeReq('post', response => {
+    showNotification('success', 'Pages(s) removed')
 
-      let trs = $(this).find('tbody tr')
-
-      if (trs.length === 0) {
-        window.location.reload()
+    $(this).find('input[name="ids[]"]').each(function () {
+      if ($(this).is(':checked')) {
+        $(this).closest('tr').remove()
       }
-
-    }).catch(err => {
-      showLoader(false)
-      showNotification('error', 'Something went wrong')
     })
+
+    let trs = $(this).find('tbody tr')
+
+    if (trs.length === 0) {
+      window.location.reload()
+    }
+  }, err => {
+    showNotification('error', 'Something went wrong')
   })
 
-  $('#create-page-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
+  $('#create-page-form').makeReq('post', response => {
+    if ($('.no-result').length > 0) {
+      window.location.reload()
+    }
 
-    window.axios.post(url, content).then(response => {
-      showLoader(false)
+    showNotification('success', 'Page is created!')
 
-      if ($('.no-result').length > 0) {
-        window.location.reload()
+    let html = `
+      <tr>
+        <td><span class="checkbox"><input class="form-checkboxes" type="checkbox" name="ids[]" value="${response.data.id}"></span></td>
+        <td><a href="/cms/page/${response.data.id}">${response.data.name}</a></td>
+        <td><a target="_blank" href="/${response.data.url}">${response.data.url}</a></td>
+        <td>${response.data.created_at}</td>
+        <td></td>
+      </tr>`
+
+    let root = $(this).closest('.page-content')
+    let tableBody = root.find('table tbody')
+    tableBody.append(html)
+  }, err => {
+    showNotification('error', 'Something went wrong')
+  })
+
+
+  $('#update-order-form').makeReq('put', response => {
+    showNotification('success', 'Order is updated!')
+  }, err => {
+    showNotification('error', 'something went horribly wrong.')
+  })
+
+  $('#delete-multiple-collections-form').makeReq('put', response => {
+    showNotification('success', 'Collection(s) removed')
+
+    $(this).find('input[name="ids[]"]').each(function () {
+      if ($(this).is(':checked')) {
+        $(this).closest('tr').remove()
       }
-
-      showNotification('success', 'Page is created!')
-
-      let html = `
-        <tr>
-          <td><span class="checkbox"><input class="form-checkboxes" type="checkbox" name="ids[]" value="${response.data.id}"></span></td>
-          <td><a href="/cms/page/${response.data.id}">${response.data.name}</a></td>
-          <td><a target="_blank" href="/${response.data.url}">${response.data.url}</a></td>
-          <td>${response.data.created_at}</td>
-          <td></td>
-        </tr>
-      `
-
-      let root = $(this).closest('.page-content')
-      let tableBody = root.find('table tbody')
-      tableBody.append(html)
-
-    }).catch(err => {
-      showLoader(false)
-      showNotification('error', 'Something went wrong')
     })
 
+    let trs = $(this).find('tbody tr')
+
+    if (trs.length === 0) {
+      window.location.reload()
+    }
+  }, err => {
+    showNotification('error', 'Something went wrong')
   })
 
-  $('#update-order-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
-    window.axios.put(url, content).then(response => {
-      showLoader(false)
-      showNotification('success', 'Order is updated!')
-    }).catch(err => {
-      showLoader(false)
-      showNotification('error', 'something went horribly wrong.')
-    })
-  })
-
-  $('#delete-multiple-collections-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
-
-    let confirm = window.confirm('Are you sure?')
-    if (!confirm) return
-    else showLoader(false)
-
-    window.axios.put(url, content).then(response => {
-      showLoader(false)
-      showNotification('success', 'Collection(s) removed')
-
-      $(this).find('input[name="ids[]"]').each(function () {
-        if ($(this).is(':checked')) {
-          $(this).closest('tr').remove()
-        }
-      })
-
-      let trs = $(this).find('tbody tr')
-
-      if (trs.length === 0) {
-        window.location.reload()
+  $('#delete-multiple-posts-form').makeReq('post', response => {
+    $(this).find('input[name="ids[]"]').each(function () {
+      if ($(this).is(':checked')) {
+        $(this).closest('tr').remove()
       }
-
-    }).catch(err => {
-      showNotification('error', 'Something went wrong')
-      showLoader(false)
     })
+
+    let trs = $(this).find('tbody tr')
+
+    if (trs.length === 0) {
+      window.location.reload()
+    }
+  }, err => {
+
   })
 
-  $('#delete-multiple-posts-form').submit(function (e) {
-    e.preventDefault()
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
+  $('#create-post-form').makeReq('post', response => {
+    showNotification('success', 'Collection is created')
+    let pageContent = $(this).closest('.page-content')
 
-    let confirm = window.confirm('Are you sure?')
-    if (!confirm) return
-    else showLoader(false)
+    if ($('.no-result').length > 0) {
+      window.location.reload()
+    }
 
-    window.axios.post(url, content).then(response => {
-      $(this).find('input[name="ids[]"]').each(function () {
-        if ($(this).is(':checked')) {
-          $(this).closest('tr').remove()
-        }
-      })
-
-      let trs = $(this).find('tbody tr')
-
-      if (trs.length === 0) {
-        window.location.reload()
-      }
-
-    }).catch(err => {
-      console.log(err);
-    })
-  })
-
-  $('#create-post-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
-
-    window.axios.post(url, content).then(response => {
-      showLoader(false)
-      showNotification('success', 'Collection is created')
-      let pageContent = $(this).closest('.page-content')
-
-      if ($('.no-result').length > 0) {
-        window.location.reload()
-      }
-
-      let table = pageContent.find('#delete-multiple-posts-form')
-      let htmlContent = `
-        <tr>
-          <td><input class="form-checkboxes" type="checkbox" name="ids[]" value="${response.data.id}"></td>
-          <td><a href="/cms/collection/${$(this).find('input[name="collection-id"]').val()}/post/${response.data.id}">${response.data.name}</a></td>
-          <td>${response.data.created_at}</td>
-          <td></td>
-        </tr>
-      `
-      table.find('tbody').append(htmlContent)
-
-    }).catch(err => {
-      showLoader(false)
-      showNotification('error', 'Something went wrong')
-    })
+    let table = pageContent.find('#delete-multiple-posts-form')
+    let htmlContent = `
+      <tr>
+        <td><input class="form-checkboxes" type="checkbox" name="ids[]" value="${response.data.id}"></td>
+        <td><a href="/cms/collection/${$(this).find('input[name="collection-id"]').val()}/post/${response.data.id}">${response.data.name}</a></td>
+        <td>${response.data.created_at}</td>
+        <td></td>
+      </tr>
+    `
+    table.find('tbody').append(htmlContent)
+  }, err => {
+    showNotification('error', 'Something went wrong')
   })
 
   $(document).on('click', '.delete-content-field', function (e) {
@@ -300,74 +318,40 @@ $(document).ready(function () {
     })
   })
 
-  $('#update-collection-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let url = $(this).attr('action')
-    let content = $(this).serialize()
-
-    window.axios.put(url, content).then(function () {
-      showLoader(false)
-      showNotification('success', 'Collection is updated!')
-    }).catch(function () {
-      showLoader(false)
-      showNotification('error', 'Something went wrong')
-    })
+  $('#update-collection-form').makeReq('put', response => {
+    showNotification('success', 'Collection is updated!')
+  }, err => {
+    showNotification('error', 'Something went wrong')
   })
 
-  $('#add-content-field-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let collectionId = $(this).find('input[name="collection-id"]').val();
+  $('#add-content-field-form').makeReq('post', response => {
+    showNotification('success', 'Field is created')
 
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
-    window.axios.post(url, content).then(response => {
-      showLoader(false)
-      showNotification('success', 'Field is created')
-
-      $('.sortable-field').append(`
-        <div class="box draggable-field has-pointer">
-          <input type="hidden" name="collection-id" value="${response.data.collection_id}">
-          <input type="hidden" name="order[]" value="${response.data.order}">
-          <input type="hidden" name="name" value="${response.data.name}">
-          <input type="hidden" name="id[]" value="${response.data.id}">
-          <p>
-            ${response.data.name} |
-            ${response.data.type.name}
-            <button class="delete-content-field button is-danger is-pulled-right is-small"><span class="icon is-small"><i class="fa fa-times"></i></span></button>
-          </p>
-        </div>
-      `)
-
-    }).catch(err => {
-      showLoader(false)
-      showNotification('error', 'Something went wrong')
-    })
+    $('.sortable-field').append(`
+      <div class="box draggable-field has-pointer">
+        <input type="hidden" name="collection-id" value="${response.data.collection_id}">
+        <input type="hidden" name="order[]" value="${response.data.order}">
+        <input type="hidden" name="name" value="${response.data.name}">
+        <input type="hidden" name="id[]" value="${response.data.id}">
+        <p>
+          ${response.data.name} |
+          ${response.data.type.name}
+          <button class="delete-content-field button is-danger is-pulled-right is-small"><span class="icon is-small"><i class="fa fa-times"></i></span></button>
+        </p>
+      </div>
+    `)
+  }, err => {
+    showNotification('error', 'Something went wrong')
   })
 
-  $('#create-collection-form').submit(function (e) {
-    e.preventDefault()
-    showLoader(true)
-    let content = $(this).serialize()
-    let url = $(this).attr('action')
+  $('#create-collection-form').makeReq('post', response => {
+    if ($('.no-result').length > 0) {
+      window.location.reload()
+    }
 
-    let pageContent = $(this).closest('.page-content')
-
-    window.axios.post(url, content).then(response => {
-
-      if ($('.no-result').length > 0) {
-        window.location.reload()
-      }
-
-      showLoader(false)
-      showNotification('success', 'Collection is created')
-    }).catch(err => {
-      console.log(err);
-      showLoader(false)
-      showNotification('error', 'Something went wrong')
-    })
-
+    showNotification('success', 'Collection is created')
+  }, err => {
+    showNotification('error', 'Something went wrong')
   })
 
   $(document).on('click', '.content-item.is-new .delete', function () {
@@ -392,57 +376,6 @@ $(document).ready(function () {
         showLoader(false)
         if (err) showNotification('error', 'Something went wrong')
       })
-  })
-
-  $('.save-content-manager').click(function () {
-    showLoader(true)
-    var pages = []
-
-    $('.page').each(function () {
-      var newPage = {
-        'id': $(this).find('input[name="page-id"]').val(),
-        'content': []
-      }
-
-      $(this).find('.content-item').each(function () {
-        var contentId = $(this).find('input[name="content-id"]').val()
-        var order = $(this).find('input[name="order"]').val()
-        var repeating = $(this).find('input[name="repeating"]')
-        var repeatVal = 0
-        var isNew = false
-
-        if (repeating.is(':checked')) repeatVal = 1
-        else repeatVal = 0
-
-        if ($(this).hasClass('is-new')) { isNew = true }
-
-        newPage.content.push({
-          'id': contentId,
-          'order': order,
-          'repeating': repeatVal,
-          'isNew': isNew
-        })
-
-        $(this).removeClass('is-new')
-        $(this).find('.delete').addClass('delete-content')
-      })
-      pages.push(newPage)
-
-    })
-
-    var url = $('.pages-manager').find('input[name="save-url"]').val()
-
-    window.axios.post(url, {
-      pages: pages,
-    }).then(function (response) {
-      updateContentManager(response.data)
-      showNotification('success', 'Pages are saved')
-      showLoader(false)
-    }).catch(function (err) {
-      showLoader(false)
-      if (err) showNotification('error', 'Something went wrong')
-    })
-
   })
 
   $('.draggable').draggable({
