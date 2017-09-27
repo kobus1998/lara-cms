@@ -1,4 +1,4 @@
-<form id="create-page-form" class="form container is-fluid is-white has-padding" action="{{ action('PageController@store') }}" method="post">
+<form id="create-page-form" class="is-white has-padding" action="{{ action('PageController@store') }}" method="post">
   <h1 class="title is-4">Create Page</h1>
   <hr>
   {{ csrf_field() }}

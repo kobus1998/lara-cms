@@ -141,7 +141,7 @@ class CollectionController extends Controller
 
     $collection->save();
 
-    DB::table('collections_contents')->insert([
+    DB::table('collections_content')->insert([
       [
         'collection_id' => $collection->id,
         'name' => 'Title',
@@ -154,6 +154,8 @@ class CollectionController extends Controller
         'order' => 1
       ],
     ]);
+
+    // dd($Collection);
 
     if (!$req->ajax()) {
       return back();

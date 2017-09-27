@@ -66,9 +66,9 @@ require('./bootstrap');
       formMethod(url, content).then(response => {
         showLoader(false)
         success(response)
-      }).catch(err => {
+      }).catch(error => {
         showLoader(false)
-        err(response)
+        err(error)
       })
     })
     return this;
@@ -76,6 +76,15 @@ require('./bootstrap');
 
  }( jQuery ));
 
+Array.prototype.submitArray = function() {
+  this.forEach(elem => {
+    $(`${elem}`).submit()
+  })
+}
+
+String.prototype.submitString = function () {
+  $(`${this}`).submit()
+};
 
 function inputSwitcher (type, meta) {
   if (typeof meta.value === 'undefined') {
@@ -193,7 +202,6 @@ $(document).ready(function () {
       $(this).closest('.delete-root').remove()
       showNotification('success', 'Item deleted!')
     }).catch(err => {
-      console.log(err);
       showNotification('error', 'Something went wrong')
       showLoader(false)
     })
@@ -225,21 +233,9 @@ $(document).ready(function () {
 
   $('#add-page-content-form').makeReq('post', response => {
     showNotification('success', 'Content added!')
-    console.log(response.data);
-    let root = $(this).closest('.page-content')
-    let id = response.data.id
-    let name = response.data.name
-    let input = inputSwitcher(response.data.type.name, {
-      name: `content[${id}][body][]`,
-    })
-    root.find('.fields').prepend(`
-      <input type="hidden" name="content[${id}][id][]" value="${id}">
-      <div class="field is-horizontal">
-        <div class="field-label"><label for="content">${name}</label></div>
-        <div class="field-body">
-          <div class="field"><div class="control">${input}</div></div>
-        </div>
-      </div>`)
+    $('#update-page-content-form').submit()
+    $('#edit-update-page-content-form').submit()
+    window.location.reload()
   }, err => {
     showNotification('error', 'Something went wrong')
   })
@@ -290,7 +286,7 @@ $(document).ready(function () {
         <td></td>
       </tr>`
 
-    let root = $(this).closest('.page-content')
+    let root = $('#create-page-form').closest('.page-content')
     let tableBody = root.find('table tbody')
     tableBody.append(html)
   }, err => {
@@ -383,20 +379,8 @@ $(document).ready(function () {
 
   $('#add-content-field-form').makeReq('post', response => {
     showNotification('success', 'Field is created')
-
-    $('.sortable-field').append(`
-      <div class="box draggable-field has-pointer">
-        <input type="hidden" name="collection-id" value="${response.data.collection_id}">
-        <input type="hidden" name="order[]" value="${response.data.order}">
-        <input type="hidden" name="name" value="${response.data.name}">
-        <input type="hidden" name="id[]" value="${response.data.id}">
-        <p>
-          ${response.data.name} |
-          ${response.data.type.name}
-          <button class="delete-content-field button is-danger is-pulled-right is-small"><span class="icon is-small"><i class="fa fa-times"></i></span></button>
-        </p>
-      </div>
-    `)
+    $('#update-order-form').submit()
+    window.location.reload()
   }, err => {
     showNotification('error', 'Something went wrong')
   })
@@ -405,6 +389,18 @@ $(document).ready(function () {
     if ($('.no-result').length > 0) {
       window.location.reload()
     }
+
+    let html = `
+      <tr class="has-pointer show-box-data">
+        <td><input class="form-checkboxes" type="checkbox" name="ids[]" value="${response.data.id}"></td>
+        <td><a href="/collection/${response.data.id}">${response.data.name}</a></td>
+        <td>${response.data.created_at}</td>
+        <td></td>
+      </tr>
+    `
+    let root = $('#create-collection-form').closest('.page-content')
+    let tbody = root.find('table tbody')
+    tbody.append(html)
 
     showNotification('success', 'Collection is created')
   }, err => {
@@ -464,16 +460,8 @@ $(document).ready(function () {
 
   $('.sortable').sortable({
     stop: function (ev, ui) {
-
-      // $(ui.item)
-      //
-      // var page = $(ui.item).closest('.page')
-      // var pageId = page.find('input[name="page-id"]').val()
-      // var contentItems = page.find('.content-item')
-
       let startOrder = 0
       let items = $(ui.item).closest('.sortable').find('.draggable')
-      console.log(items);
       items.each(function () {
         $(this).find('.order').val(startOrder)
         startOrder++
