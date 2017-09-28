@@ -4,6 +4,17 @@ A cms build using the PHP framework Laravel.
 ## Documentation
 W.I.P.
 
+## Todo's
+- Repeating content for Collections and Pages
+- Finding a better place for add content buttons and search fields
+- The whole theme thing
+- The whole managing users things
+- Authentication security by ip
+- Settings
+- Custom dashboard
+- Custom cms themes i.e. dark theme
+- More field types
+
 ## Setup / contributing.
 - Fork the repository
 - Clone the just forked repository
