@@ -18,6 +18,7 @@ class CreateCollectionsContentTable extends Migration
         $table->integer('collection_id')->unsigned();
         $table->string('name');
         $table->integer('type_id')->unsigned();
+        $table->boolean('repeatable')->default(0);
         $table->boolean('order')->default(0)->nullable();
       });
     }
@@ -29,6 +30,6 @@ class CreateCollectionsContentTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('collections_contents');
+      Schema::dropIfExists('collections_content');
     }
 }
