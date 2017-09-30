@@ -14,6 +14,7 @@ class CollectionContentSeeder extends Seeder
     {
       DB::table('collections_content')->insert([
         ['collection_id' => 1, 'type_id' => 1, 'name' => 'title'],
+        ['collection_id' => 1, 'type_id' => 1, 'name' => 'gallery'],
         ['collection_id' => 1, 'type_id' => 2, 'name' => 'content'],
         ['collection_id' => 2, 'type_id' => 1, 'name' => 'title'],
         ['collection_id' => 2, 'type_id' => 2, 'name' => 'content'],

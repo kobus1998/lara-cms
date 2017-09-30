@@ -13,11 +13,13 @@ class CollectionContentPostSeeder extends Seeder
     public function run()
     {
       DB::table('collections_content_posts')->insert([
-        ['post_id' => 1, 'collection_content_id' => 1],
-        ['post_id' => 1, 'collection_content_id' => 2],
+        ['post_id' => 1, 'collection_content_id' => 1, 'repeatable' => 1],
+        ['post_id' => 1, 'collection_content_id' => 2, 'repeatable' => 1],
+        ['post_id' => 1, 'collection_content_id' => 3, 'repeatable' => 1],
 
         ['post_id' => 2, 'collection_content_id' => 1],
         ['post_id' => 2, 'collection_content_id' => 2],
+        ['post_id' => 2, 'collection_content_id' => 3],
 
         ['post_id' => 3, 'collection_content_id' => 3],
         ['post_id' => 3, 'collection_content_id' => 4],

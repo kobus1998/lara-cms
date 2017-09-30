@@ -21,6 +21,6 @@ class DatabaseSeeder extends Seeder
       $this->call(CollectionPageSeeder::class);
       $this->call(CollectionContentSeeder::class);
       $this->call(CollectionContentPostSeeder::class);
-
+      $this->call(RepeatableContentSeeder::class);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePagesContentTable extends Migration
+class CreateRepeatingContentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreatePagesContentTable extends Migration
      */
     public function up()
     {
-      Schema::create('pages_content', function (Blueprint $table) {
+      Schema::create('repeatable_content', function (Blueprint $table) {
         $table->increments('id');
-        $table->integer('page_id')->unsigned();
-        $table->string('name');
-        $table->integer('type_id')->unsigned();
-        $table->boolean('order')->default(0)->nullable();
-        $table->boolean('repeatable')->default(0);
+        $table->integer('repeatable_id')->unsigned();
+        $table->string('repeatable_type');
         $table->text('content')->nullable();
+        $table->boolean('order')->default(0);
       });
     }
 
@@ -31,6 +29,6 @@ class CreatePagesContentTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('pages_content');
+      Schema::dropIfExists('repeatable_content');
     }
 }

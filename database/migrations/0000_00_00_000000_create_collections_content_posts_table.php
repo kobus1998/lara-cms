@@ -17,6 +17,7 @@ class CreateCollectionsContentPostsTable extends Migration
         $table->increments('id');
         $table->integer('post_id')->unsigned();
         $table->integer('collection_content_id')->unsigned();
+        $table->boolean('repeatable')->default(0);
         $table->text('content')->nullable();
         $table->integer('order')->default();
         $table->timestamps();
@@ -30,6 +31,6 @@ class CreateCollectionsContentPostsTable extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('collections_contents_posts');
+      Schema::dropIfExists('collections_content_posts');
     }
 }

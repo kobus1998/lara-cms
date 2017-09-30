@@ -102,6 +102,7 @@ class CollectionController extends Controller
     $posts = \App\Post::where('collection_id', $collectionId)->where('is_active', '=', 1)->paginate(15);
 
     $post = \App\Post::where('id', $postId)->where('is_active', '=', 1)->with(['content' => function ($q) {
+      $q->with('repeatingContent');
       $q->with('type');
     }])->first();
 
@@ -154,8 +155,6 @@ class CollectionController extends Controller
         'order' => 1
       ],
     ]);
-
-    // dd($Collection);
 
     if (!$req->ajax()) {
       return back();

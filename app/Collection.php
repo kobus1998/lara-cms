@@ -18,8 +18,17 @@ class Collection extends Model
     return $this->hasMany('\App\CollectionContent')->orderBy('order');
   }
 
+  public function repeatingContent () {
+    return $this->morphMany('\App\RepeatingContent', 'refers');
+  }
+
+  static function getPosts ($id) {
+    return Post::where('collection_id', '=', $id)->where('is_active', '=', 1);
+  }
+
   static function withContent () {
     return Collection::where('is_active', '=', 1)->with(['posts' => function ($q) {
+
       $q->with(['content' => function ($q) {
         $q->with('type');
       }]);
@@ -33,35 +42,35 @@ class Collection extends Model
   }
 
   static function getAllCollections () {
-    $result = Collection::where('is_active', '=', 1)->with('posts')->paginate(15);
-    return $result;
+    return Collection::where('is_active', '=', 1)->with('posts')->paginate(15);
   }
 
   static function getAllWithContent () {
-    $result = Collection::where('is_active', '=', 1)->with(['posts' => function ($q) {
+    return Collection::where('is_active', '=', 1)->with(['posts' => function ($q) {
       $q->with(['content' => function ($q) {
         $q->with('type');
       }]);
     }])->paginate(15);
-
-    return $result;
   }
 
   static function getCollection ($id) {
-    $result = Collection::findOrFail($id)->where('is_active', '=', 1)->first();
-    return $result;
+    return Collection::findOrFail($id)->where('is_active', '=', 1)->first();
   }
 
   static function getCollectionWithContent ($id) {
-    $result = Collection::withContent()->where('is_active', '=', 1)->with(['contents' => function ($q) {
+    return Collection::withContent()->where('is_active', '=', 1)->with(['contents' => function ($q) {
       $q->with('type');
     }])->where('id', $id)->first();
-    return $result;
   }
 
   static function searchCollection ($q) {
-    $result = Collection::with('posts')->where('name', 'LIKE', '%'.$q.'%')->where('is_active', '=', 1)->paginate(15);
-    return $result;
+    return Collection::with('posts')->where('name', 'LIKE', '%'.$q.'%')->where('is_active', '=', 1)->paginate(15);
+  }
+
+  static function getPostWithContent ($id) {
+    return \App\Post::where('id', $id)->where('is_active', '=', 1)->with(['content' => function ($q) {
+      $q->with('type');
+    }])->first();
   }
 
 
