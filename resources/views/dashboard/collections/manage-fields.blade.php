@@ -34,6 +34,10 @@
                   <p class="control has-input has-margin-right has-margin-left">
                     <input type="text" name="items[{{$content->id}}][name]" value="{{ $content->name }}" class="input">
                   </p>
+                  <p class="control has-margin-left tooltip left">
+                    <span><input {{ ($content->repeatable == 1) ? 'checked' : '' }} type="checkbox" name="items[{{$content->id}}][repeatable]" value="{{ $content->repeatable }}"></span>
+                    <span class="tooltip-content">Repeating content.</span>
+                  </p>
                   <p class="control ">
                     <div class="select has-margin-left">
                       <select name="items[{{$content->id}}][type]">

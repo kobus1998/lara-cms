@@ -155,6 +155,23 @@ function showNotification (type, message) {
 
 $(document).ready(function () {
 
+  $('.add-repeating-content').click(function (e) {
+    e.preventDefault()
+
+    let url = $(this).attr('data-action')
+
+    window.axios.post(url, {}).then(response => {
+      showNotification('success', 'Content is added!')
+      $('#update-post-content-form').submit()
+      setTimeout(function () {
+        window.location.reload()
+      }, 100);
+    }).catch(err => {
+      showNotification('error', 'Something went wrong')
+    })
+
+  })
+
   $('.toggle-edit-field').toggleField('#edit-update-page-content-form', function (editField) {
     if (editField.hasClass('is-active')) {
       $('#update-page-content-form').hide()
@@ -207,8 +224,18 @@ $(document).ready(function () {
     })
   })
 
+  $('#update-post-content-form').makeReq('put', response => {
+    showNotification('success', 'Content is updated!')
+  }, err => {
+    showNotification('error', 'something went wrong')
+  })
+
   $('#edit-update-page-content-form').makeReq('put', response => {
     showNotification('success', 'Order updated!')
+    $('#update-page-content-form').submit()
+    setTimeout(function () {
+      window.location.reload()
+    }, 100);
   }, err => {
     showNotification('error', 'Something went wrong')
   }, () => {
@@ -438,24 +465,6 @@ $(document).ready(function () {
     stop: function (ev, ui) {
 
     }
-  })
-
-  $('.draggable-field').draggable({
-    connectToSortable: '.sortable-field',
-    greedy: true,
-  })
-
-  $('.sortable-field').sortable({
-    stop: function (ev, ui) {
-      var wrapper = $(ui.item).closest('.sortable-field')
-      var contentItems = wrapper.find('.draggable-field')
-      var startOrder = 0
-
-      contentItems.each(function () {
-        $(this).find('input[name="order[]"]').val(startOrder)
-        startOrder++
-      })
-    },
   })
 
   $('.sortable').sortable({

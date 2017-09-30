@@ -56,20 +56,52 @@ class PostController extends Controller
     }
   }
 
-  public function updateContent (Request $req, $id) {
-    $result = [];
-    foreach ($req['content-id'] as $key => $value) {
-      $collectionPost = \App\CollectionPost::find($value);
-      $collectionPost->content = $req['content'][$key];
-      $collectionPost->save();
-      $result[][$value] = $collectionPost;
-    }
+  public function addRepeatingContent (Request $req, $id) {
+    $repeatingContent = new \App\RepeatingContent;
+    $repeatingContent->repeatable_id = $id;
+    $repeatingContent->repeatable_type = 'App\CollectionPost';
+    $repeatingContent->save();
 
     if (!$req->ajax()) {
       return back();
     } else {
-      return response()->json($result);
+      return response()->json($repeatingContent);
     }
+  }
+
+  public function deleteRepeatingContent (Request $req, $id) {
+    $repeatingContent = \App\RepeatingContent::destroy($id);
+    // $repeatingContent->remove();
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($repeatingContent);
+    }
+  }
+
+  public function updateContent (Request $req, $id) {
+
+    // dd($req->request);
+
+    foreach ($req->items as $item) {
+      if ($item['is-repeatable'] == 1) {
+        foreach ($item['repeatable'] as $repeatable) {
+          $rep = \App\RepeatingContent::where('id', '=', $repeatable['id']);
+          $rep->update([
+            'order' => $repeatable['order'],
+            'content' => $repeatable['content']
+          ]);
+        }
+      } else {
+        $content = \App\CollectionPost::where('id', '=', $item['id']);
+        $content->update([
+          'content' => $item['content']
+        ]);
+      }
+    }
+
+    return back();
   }
 
   public function setInactiveMultiple (Request $req) {

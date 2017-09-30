@@ -14,4 +14,8 @@ class PageContent extends Model
     return $this->belongsTo('\App\Type');
   }
 
+  public function repeatingContent () {
+    return $this->morphMany('\App\RepeatingContent', 'repeatable')->orderBy('order');
+  }
+
 }

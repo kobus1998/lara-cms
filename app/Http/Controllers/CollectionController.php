@@ -260,18 +260,27 @@ class CollectionController extends Controller
   }
 
   public function editContent (Request $req, $id) {
-
     foreach ($req->items as $item) {
+      $repeatable = 0;
+      if (isset($item['repeatable'])) {
+        $repeatable = 1;
+      }
+
       $collection = \App\CollectionContent::where('id', '=', $item['id']);
       $collection->update([
         'order' => $item['order'],
         'name' => $item['name'],
-        'type_id' => $item['type']
+        'type_id' => $item['type'],
+        'repeatable' => $repeatable
       ]);
 
       $collection = $collection->first();
+
       $collectionPost = \App\CollectionPost::where('collection_content_id', '=', $collection->id);
-      $collectionPost->update(['order' => $item['order']]);
+      $collectionPost->update([
+        'order' => $item['order'],
+        'repeatable' => $repeatable
+      ]);
     }
 
     if (!$req->ajax()) {

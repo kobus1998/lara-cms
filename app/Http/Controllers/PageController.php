@@ -111,9 +111,12 @@ class PageController extends Controller
 
   public function showContent ($id) {
     $page = Page::where('id', '=', $id)->with(['content' => function ($q) {
+      $q->with('repeatingContent');
       $q->with('type');
     }])->first();
+
     $types = \App\Type::get();
+
     return view('dashboard/pages/content', [
       'page' => $page,
       'types' => $types,
@@ -152,24 +155,28 @@ class PageController extends Controller
   }
 
   public function updateContent (Request $req, $id) {
-    $page = Page::where('id', '=', $id);
-
-    $response = [];
-
-    foreach ($req->content as $content) {
-      $id = reset($content['id']);
-      $body = reset($content['body']);
-      $pageContent = \App\PageContent::where('id', '=', $id);
-      $pageContent->update([
-        'content' => $body
-      ]);
-      array_push($response, $pageContent->get());
+    // dd($req->request);
+    foreach ($req->items as $item) {
+      if ($item['is-repeatable'] == 1) {
+        foreach ($item['repeatable'] as $repeatable) {
+          $rep = \App\RepeatingContent::where('id', '=', $repeatable['id']);
+          $rep->update([
+            'order' => $repeatable['order'],
+            'content' => $repeatable['content']
+          ]);
+        }
+      } else {
+        $content = \App\PageContent::where('id', '=', $item['id']);
+        $content->update([
+          'content' => $item['content']
+        ]);
+      }
     }
 
     if (!$req->ajax()) {
       return back();
     } else {
-      return response()->json($response);
+      return response()->json($content);
     }
 
   }
@@ -198,11 +205,17 @@ class PageController extends Controller
 
   public function editContent (Request $req, $id) {
     foreach ($req->items as $item) {
+      $repeatable = 0;
+      if (isset($item['repeatable'])) {
+        $repeatable = 1;
+      }
+
       $pageContent = \App\PageContent::where('id', '=', $item['id']);
       $pageContent->update([
         'order' => $item['order'],
         'name' => $item['name'],
-        'type_id' => $item['type']
+        'type_id' => $item['type'],
+        'repeatable' => $repeatable
       ]);
     }
 
@@ -212,6 +225,29 @@ class PageController extends Controller
       return response()->json(1);
     }
 
+  }
+
+  public function addRepeatingContent (Request $req, $id) {
+    $repeatingContent = new \App\RepeatingContent;
+    $repeatingContent->repeatable_id = $id;
+    $repeatingContent->repeatable_type = 'App\PageContent';
+    $repeatingContent->save();
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($repeatingContent);
+    }
+  }
+
+  public function deleteRepeatingContent (Request $req, $id) {
+    $repeatingContent = \App\RepeatingContent::destroy($id);
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($repeatingContent);
+    }
   }
 
   public function deleteContent(Request $req, $pageId, $contentId) {
@@ -241,29 +277,15 @@ class PageController extends Controller
   }
 
   public function route ($url, $id = null) {
-    $data = [];
 
-    $modules = \App\Module::get();
+    $page = Page::where('url', '=', $url)->where('is_active', '=', 1)->with('content')->first();
 
-    if ($id == null) {
-      $page = Page::where('url', $url)->with('content')->first();
-      $data['page'] = $page;
-    } else {
-      $page = Page::where('url', $url)->with('content')->first();
 
-      $data['page'] = $page;
 
-      $data['content'] = $content;
-
-    }
-
-    dd([
-      'data' => $data,
-      'modules' => $modules
-    ]);
+    dd($page);
 
     if ($page->layout == 'index') {
-      return view('themes/theme-name/index', $data);
+      return view('themes/theme-name/index', compact('page'));
     }
 
 

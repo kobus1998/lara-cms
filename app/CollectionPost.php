@@ -14,7 +14,7 @@ class CollectionPost extends Model
   }
 
   public function repeatingContent () {
-    return $this->morphMany('\App\RepeatingContent', 'repeatable');
+    return $this->morphMany('\App\RepeatingContent', 'repeatable')->orderBy('order');
   }
 
 }

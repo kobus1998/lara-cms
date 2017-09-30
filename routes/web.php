@@ -51,6 +51,9 @@ Route::prefix('cms')->group(function () {
     Route::delete('/page/{pageId}/delete-content/{contentId}', 'PageController@deleteContent');
     Route::post('/multiple/page/set-inactive', 'PageController@setInactiveMultiple');
 
+    Route::post('/page/{id}/add-repeating-content', 'PageController@addRepeatingContent');
+    Route::delete('/page/{id}/delete-repeating-content', 'PageController@deleteRepeatingContent');
+
     // collection
 
     Route::resource('collection', 'CollectionController');
@@ -60,15 +63,19 @@ Route::prefix('cms')->group(function () {
     Route::post('/collection/{collectionId}/add-content', 'CollectionController@addContent');
     Route::put('/collection/{collectionId}/edit-content', 'CollectionController@editContent');
     Route::delete('/collection/{collectionId}/delete-content/{contentId}', 'CollectionController@deleteContent');
-    
+
     Route::get('/collection/{collectionId}/posts', 'CollectionController@collectionPosts');
 
     Route::put('/multiple/collection/set-inactive', 'CollectionController@setInactiveMultiple');
     Route::post('/multiple/collection/delete', 'CollectionController@deleteMultiple');
 
+    // pot
+
     Route::resource('post', 'PostController');
 
-    Route::put('/post/{postId}/update-content', 'PostController@updateContent');
+    Route::put('/post/{id}/update-content', 'PostController@updateContent');
+    Route::post('/post/{id}/add-repeating-content', 'PostController@addRepeatingContent');
+    Route::delete('/post/{id}/delete-repeating-content', 'PostController@deleteRepeatingContent');
 
     Route::put('/multiple/post/set-inactive', 'PostController@setInactiveMultiple');
     Route::post('/multiple/post/delete', 'PostController@deleteMultiple');
