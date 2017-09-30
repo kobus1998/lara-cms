@@ -5,7 +5,8 @@ A cms build using the PHP framework Laravel.
 W.I.P.
 
 ## Todo's
-- Repeating content for Collections and Pages
+- Repeating content for Collections and Pages // almost done
+- Content sortable with buttons instead of draggable (for mobile)
 - Finding a better place for add content buttons and search fields
 - The whole theme thing
 - The whole managing users things
