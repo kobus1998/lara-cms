@@ -11,9 +11,15 @@ W.I.P.
 - The whole managing users things
 - Authentication security by ip
 - Settings
+- WRITING TESTS!!!!!
 - Custom dashboard
 - Custom cms themes i.e. dark theme
 - More field types
+- Build in social media API i.e. Facebook pages like, Twitter feed etc.
+- More SEO stuff
+- Enable/disable ajax requests
+- Emails
+- More consistency
 
 ## Setup / contributing.
 - Fork the repository
