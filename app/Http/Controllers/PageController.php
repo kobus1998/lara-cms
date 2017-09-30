@@ -128,6 +128,25 @@ class PageController extends Controller
     ]);
   }
 
+  public function showManageFields ($id) {
+    $page = Page::where('id', '=', $id)->with(['content' => function ($q) {
+      $q->with('repeatingContent');
+      $q->with('type');
+    }])->first();
+
+    $types = \App\Type::get();
+
+    return view('dashboard/pages/manage-fields', [
+      'page' => $page,
+      'types' => $types,
+      'navs' => [
+        ['name' => 'Pages', 'action' => action('PageController@index'), 'active' => false],
+        ['name' => $page->name, 'action' => action('PageController@show', $page->id), 'active' => false],
+        ['name' => 'Manage Fields', 'action' => action('PageController@showManageFields', $page->id), 'active' => true]
+      ],
+    ]);
+  }
+
   public function showSeo ($id) {
     $page = Page::where('id', '=', $id)->first();
 

@@ -177,13 +177,6 @@ $shadow: rgba(205,210,214,.8);
   }
 }
 
-#edit-update-page-content-form {
-  display: none;
-  &.is-active {
-    display: block;
-  }
-}
-
 a.no-link {
   text-decoration: none;
   &:hover, &:active, &:focus {

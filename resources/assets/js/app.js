@@ -162,7 +162,11 @@ $(document).ready(function () {
 
     window.axios.post(url, {}).then(response => {
       showNotification('success', 'Content is added!')
-      $('#update-post-content-form').submit()
+      if (url.includes('page')) {
+        $('#update-page-content-form').submit()
+      } else if (url.includes('collection')) {
+        $('#update-post-content-form').submit()
+      }
       setTimeout(function () {
         window.location.reload()
       }, 100);
@@ -170,14 +174,6 @@ $(document).ready(function () {
       showNotification('error', 'Something went wrong')
     })
 
-  })
-
-  $('.toggle-edit-field').toggleField('#edit-update-page-content-form', function (editField) {
-    if (editField.hasClass('is-active')) {
-      $('#update-page-content-form').hide()
-    } else {
-      $('#update-page-content-form').show()
-    }
   })
 
   $('.toggle-modal-update-page-content').click(function () {
@@ -232,10 +228,6 @@ $(document).ready(function () {
 
   $('#edit-update-page-content-form').makeReq('put', response => {
     showNotification('success', 'Order updated!')
-    $('#update-page-content-form').submit()
-    setTimeout(function () {
-      window.location.reload()
-    }, 100);
   }, err => {
     showNotification('error', 'Something went wrong')
   }, () => {
@@ -260,9 +252,10 @@ $(document).ready(function () {
 
   $('#add-page-content-form').makeReq('post', response => {
     showNotification('success', 'Content added!')
-    $('#update-page-content-form').submit()
     $('#edit-update-page-content-form').submit()
-    window.location.reload()
+    setTimeout(function () {
+      window.location.reload()
+    }, 100);
   }, err => {
     showNotification('error', 'Something went wrong')
   })
