@@ -18,11 +18,18 @@ class CreateMediaTable extends Migration
         $table->string('name');
         $table->string('path');
         $table->string('slug');
+
+        $table->string('original_file_name');
+        $table->string('original')->nullable();
+        $table->string('thumbnail')->nullable();
+        $table->string('small')->nullable();
+        $table->string('medium')->nullable();
+
         $table->string('file_type');
         $table->integer('file_size');
-        $table->string('file_width');
-        $table->string('file_height');
-        $table->string('original_file_name');
+        $table->string('file_width')->nullable();
+        $table->string('file_height')->nullable();
+
         $table->string('title')->nullable();
         $table->text('desc')->nullable();
         $table->string('alt')->nullable();

@@ -40,8 +40,11 @@ class MediaController extends Controller
 
   public function show ($id) {
     $media = Media::find($id);
-    $image = Storage::disk('local')->url($media['path']);
-    $media['url'] = '/public/'.$image;
+    $media->original = Storage::disk('image')->url($media->original);
+    $media->thumbnail = Storage::disk('image')->url($media->thumbnail);
+    $media->small = Storage::disk('image')->url($media->small);
+    $media->medium = Storage::disk('image')->url($media->medium);
+
     return view('dashboard/media/show', [
       'media' => $media,
       'navs' => [
@@ -52,63 +55,84 @@ class MediaController extends Controller
   }
 
   public function store (Request $req) {
-
-    // dd($req);
-
     $files = $req['media'];
-    // dd($files);
+
     foreach ($files as $file) {
 
       $originalName = $file->getClientOriginalName();
-
       $fileType = $file->getMimeType();
-
-      $slug = str_replace('.', '-', $originalName);
-      $slug = str_replace(' ', '-', $slug);
-
       $size = $file->getSize();
 
       $indexType = strripos($originalName, '.');
       $nameWithoutExtension = substr_replace($originalName, '', $indexType);
       $extensionType = substr_replace($originalName, '', 0, $indexType + 1);
+
       $name = $nameWithoutExtension;
+      $slug = str_replace(' ', '-', $nameWithoutExtension);
+      $slug = str_replace('.', '-', $slug);
 
       if (strpos($fileType, 'image') !== false) {
 
         $uploadedFile = Storage::disk('image')->put('', $file);
         $recentFile = Storage::disk('image')->url($uploadedFile);
-        dd($recentFile);
-        // $thumbnailName = str_replace('public/', 'thumbnail-', $uploadedFile);
-        //
-        // $thumbnail = Media::makeThumbnail($recentFile, $extensionType);
-        // $uploadedThumbnail = Storage::disk('local')->put('public/'.$thumbnailName, $thumbnail->getContent());
+        $meta = Media::getMetaData($recentFile);
 
-        // $small = Media::makeSmall($recentFile, $extensionType);
-        // dd($small);
+        $thumbnailName = 'thumbnail-'.$uploadedFile;
+        $thumbnail = Media::makeThumbnail($recentFile, $extensionType);
+        $uploadedThumbnail = Storage::disk('image')->put($thumbnailName, $thumbnail->getContent());
+
+        $smallName = 'small-'.$uploadedFile;
+        $small = Media::makeSmall($recentFile, $extensionType);
+        $uploadedSmall = Storage::disk('image')->put($smallName, $small->getContent());
+
+        $mediumName = 'medium-'.$uploadedFile;
+        $medium = Media::makeMedium($recentFile, $extensionType);
+        $uploadedMedium = Storage::disk('image')->put($mediumName, $medium->getContent());
+
+        $dbOptions = [
+          'original' => $originalName,
+          'type' => $fileType,
+          'name' => $name,
+          'slug' => $slug,
+          'size' => $size,
+          'width' => $meta['width'],
+          'height' => $meta['height']
+        ];
+
+        $media = new Media;
+        $media->name = $name;
+        $media->path = $uploadedFile;
+        $media->slug = $slug;
+
+        $media->original_file_name = $originalName;
+        $media->original = $uploadedFile;
+        $media->thumbnail = $thumbnailName;
+        $media->small = $smallName;
+        $media->medium = $mediumName;
+
+        $media->file_type = $fileType;
+        $media->file_size = $size;
+        $media->file_width = $meta['width'];
+        $media->file_height = $meta['height'];
+
+        $media->save();
 
       } else {
-        echo 'no image';
+        $uploadedFile = Storage::disk('files')->put('', $file);
+        $media = new Media;
+        $media->name = $name;
+        $media->path = $uploadedFile;
+        $media->slug = $slug;
+
+        $media->original_file_name = $originalName;
+
+        $media->file_type = $fileType;
+        $media->file_size = $size;
+
+        $media->save();
       }
 
-      dd($uploadedFile);
 
-
-
-      dd($file, [
-        'original' => $originalName,
-        'type' => $fileType,
-        'name' => $name,
-        'slug' => $slug,
-        'size' => $size
-      ]);
-
-
-
-      // $media = new Media;
-      // $media['name'] =
-      // $media['path'] = $currentFile;
-      // $media['slug'] = $file->hashName();
-      // $media->save();
     }
 
     return back();
