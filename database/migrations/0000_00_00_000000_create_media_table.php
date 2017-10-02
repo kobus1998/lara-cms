@@ -18,7 +18,14 @@ class CreateMediaTable extends Migration
         $table->string('name');
         $table->string('path');
         $table->string('slug');
-        $table->boolean('is_active')->default(1);
+        $table->string('file_type');
+        $table->integer('file_size');
+        $table->string('file_width');
+        $table->string('file_height');
+        $table->string('original_file_name');
+        $table->string('title')->nullable();
+        $table->text('desc')->nullable();
+        $table->string('alt')->nullable();
         $table->timestamps();
       });
     }
