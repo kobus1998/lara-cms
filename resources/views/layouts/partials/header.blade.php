@@ -1,7 +1,7 @@
 <nav class="nav has-shadow">
 
     <div class="nav-left">
-      <a href="/cms" class="brand">Brand</a>
+      <a href="/cms" class="brand">{{ config('app.name') }}</a>
       <span class="nav-item">
         @isset($navs)
           @component('dashboard/components/_bread-crumb', ['navs' => $navs])
