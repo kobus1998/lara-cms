@@ -24,10 +24,14 @@
                   </div>
                   <div class="field-body">
                     <div class="field has-addons">
-                      <div class="control has-input">
+                      <div class="control has-input img-manager-root">
+                        @if ($content->type->name === 'media')
+                          <a data-btn-id="{{ $repeatable->id }}" class="button is-small is-primary toggle-modal-add-media"><span class="icon is-small"><i class="fa fa-image"></i></span></a>
+                        @endif
                         @component('dashboard/pages/forms/minis/_input-type-switcher', [
                           'classes' => '',
                           'value' => $repeatable->content,
+                          'src' => $medias[0]->getImg($repeatable->content, 'small'),
                           'name' => 'items['.$content->id.'][repeatable]['.$repeatable->id.'][content]',
                           'type' => $content->type->name
                           ])@endcomponent
@@ -51,9 +55,13 @@
           <div class="field-body">
             <div class="field">
               <div class="control">
+                @if ($content->type->name === 'media')
+                  <a data-btn-id="{{ $content->id }}" class="button is-small is-primary toggle-modal-add-media"><span class="icon is-small"><i class="fa fa-image"></i></span></a>
+                @endif
                 @component('dashboard/pages/forms/minis/_input-type-switcher', [
                   'classes' => '',
                   'value' => $content->content,
+                  'src' => $medias[0]->getImg($content->content, 'small'),
                   'name' => 'items['.$content->id.'][content]',
                   'type' => $content->type->name
                   ])@endcomponent
@@ -78,5 +86,10 @@
       </div>
     </div>
   </div>
+
+  @component('dashboard/components/minis/_modal', ['position' => 'top', 'switchClass' => 'toggle-add-media'])
+    @component('dashboard/components/_add-media', ['medias' => $medias])
+    @endcomponent
+  @endcomponent
 
 </form>

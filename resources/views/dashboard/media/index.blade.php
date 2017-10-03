@@ -58,7 +58,7 @@
                   </thead>
                   <tbody>
                     @foreach ($images as $image)
-                      <tr class="has-pointer show-image-sidebar" url="{{ action('MediaController@show', $image['id']) }}" src="{{ $image['url'] }}" name="{{ $image['name'] }}" img-id="{{ $image['id'] }}">
+                      <tr class="has-pointer show-image-sidebar" url="{{ action('MediaController@show', $image['id']) }}" src="{{ $image->small }}" name="{{ $image['name'] }}" img-id="{{ $image['id'] }}">
                         <td><input type="checkbox" class="form-checkboxes has-pointer" name="images[]" value="{{ $image->id }}"></td>
                         <td class=""><a href="{{ action('MediaController@show', $image['id']) }}">{{ $image['name'] }}</a></td>
                         <td class="is-hidden-mobile">{{ $image['created_at'] }}</td>

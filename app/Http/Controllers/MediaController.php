@@ -19,11 +19,14 @@ class MediaController extends Controller
     } else {
       $medias = $medias::orderBy('created_at', 'desc');
     }
+
     $medias = $medias->paginate(15);
     // dd($medias);
     foreach ($medias as $media) {
-      $image = '/public'.Storage::disk('local')->url($media->path);
-      $media->url = $image;
+      $media->original = Storage::disk('image')->url($media->original);
+      $media->thumbnail = Storage::disk('image')->url($media->thumbnail);
+      $media->small = Storage::disk('image')->url($media->small);
+      $media->medium = Storage::disk('image')->url($media->medium);
     }
 
     return view('dashboard/media/index', [
@@ -40,6 +43,7 @@ class MediaController extends Controller
 
   public function show ($id) {
     $media = Media::find($id);
+
     $media->original = Storage::disk('image')->url($media->original);
     $media->thumbnail = Storage::disk('image')->url($media->thumbnail);
     $media->small = Storage::disk('image')->url($media->small);
@@ -77,17 +81,19 @@ class MediaController extends Controller
         $recentFile = Storage::disk('image')->url($uploadedFile);
         $meta = Media::getMetaData($recentFile);
 
-        $thumbnailName = 'thumbnail-'.$uploadedFile;
-        $thumbnail = Media::makeThumbnail($recentFile, $extensionType);
-        $uploadedThumbnail = Storage::disk('image')->put($thumbnailName, $thumbnail->getContent());
+        if ($extensionType !== 'gif') {
+          $thumbnailName = 'thumbnail-'.$uploadedFile;
+          $thumbnail = Media::makeThumbnail($recentFile, $extensionType);
+          $uploadedThumbnail = Storage::disk('image')->put($thumbnailName, $thumbnail->getContent());
 
-        $smallName = 'small-'.$uploadedFile;
-        $small = Media::makeSmall($recentFile, $extensionType);
-        $uploadedSmall = Storage::disk('image')->put($smallName, $small->getContent());
+          $smallName = 'small-'.$uploadedFile;
+          $small = Media::makeSmall($recentFile, $extensionType);
+          $uploadedSmall = Storage::disk('image')->put($smallName, $small->getContent());
 
-        $mediumName = 'medium-'.$uploadedFile;
-        $medium = Media::makeMedium($recentFile, $extensionType);
-        $uploadedMedium = Storage::disk('image')->put($mediumName, $medium->getContent());
+          $mediumName = 'medium-'.$uploadedFile;
+          $medium = Media::makeMedium($recentFile, $extensionType);
+          $uploadedMedium = Storage::disk('image')->put($mediumName, $medium->getContent());
+        }
 
         $dbOptions = [
           'original' => $originalName,
@@ -106,9 +112,16 @@ class MediaController extends Controller
 
         $media->original_file_name = $originalName;
         $media->original = $uploadedFile;
-        $media->thumbnail = $thumbnailName;
-        $media->small = $smallName;
-        $media->medium = $mediumName;
+
+        if ($extensionType !== 'gif') {
+          $media->thumbnail = $thumbnailName;
+          $media->small = $smallName;
+          $media->medium = $mediumName;
+        } else {
+          $media->thumbnail = $uploadedFile;
+          $media->small = $uploadedFile;
+          $media->medium = $uploadedFile;
+        }
 
         $media->file_type = $fileType;
         $media->file_size = $size;
@@ -145,13 +158,19 @@ class MediaController extends Controller
     ]);
 
     $medias = Media::find($req->images);
-    // dd($media);
+
     foreach ($medias as $image) {
-      Storage::disk('local')->delete($image->path);
+      if (strpos($image->file_type, 'image') !== false) {
+        Storage::disk('image')->delete($image->path);
+        if (strpos($image->file_type, 'gif') === false) {
+          Storage::disk('image')->delete($image->thumbnail);
+          Storage::disk('image')->delete($image->small);
+          Storage::disk('image')->delete($image->medium);
+        }
+      }
     }
 
     Media::destroy($req->images);
-
     return back();
 
   }

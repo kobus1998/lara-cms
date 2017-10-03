@@ -8,6 +8,7 @@ use App\Page;
 use Carbon\Carbon;
 use App\PageContent;
 use App\RepeatingContent;
+use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
@@ -121,11 +122,18 @@ class PageController extends Controller
       $q->with('type');
     }])->first();
 
+    $medias = \App\Media::all();
+
+    foreach ($medias as $media) {
+      $media->small = Storage::disk('image')->url($media->small);
+    }
+
     $types = \App\Type::get();
 
     return view('dashboard/pages/content', [
       'page' => $page,
       'types' => $types,
+      'medias' => $medias,
       'navs' => [
         ['name' => 'Pages', 'action' => action('PageController@index'), 'active' => false],
         ['name' => $page->name, 'action' => action('PageController@show', $page->id), 'active' => false],

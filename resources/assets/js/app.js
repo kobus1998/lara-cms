@@ -176,6 +176,21 @@ $(document).ready(function () {
 
   })
 
+  $(document).on('click', '.toggle-modal-add-media', function () {
+    $('.toggle-add-media').toggleClass('is-active')
+    let imgManager = $('.toggle-add-media').find('.img-manager')
+    imgManager.attr('data-toggled-btn', $(this).attr('data-btn-id'))
+  })
+
+  $(document).on('click', '.img-manager-item', function () {
+    let imgSrc = $(this).find('img').attr('src')
+    let toggleId = $(this).closest('.img-manager').attr('data-toggled-btn')
+    let imgId = $(this).attr('data-img-id')
+    let root = $('body').find('[data-btn-id="'+toggleId+'"]').closest('.img-manager-root')
+    root.find('.img-manager-target').val(imgId)
+    root.find('.media-img').attr('src', imgSrc)
+  })
+
   $('.toggle-modal-update-page-content').click(function () {
     $('.toggle-update-page-content').toggleClass('is-active')
   })

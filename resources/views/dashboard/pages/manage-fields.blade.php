@@ -12,7 +12,7 @@
     </h3>
     <hr>
     @component('dashboard/components/minis/_no-results', ['items' => $page->content, 'name' => 'content'])
-      @include('dashboard/pages/forms/edit-update-form')
+      @include('dashboard/pages/forms/manage-fields-form')
     @endcomponent
   </div>
 

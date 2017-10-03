@@ -7,7 +7,7 @@
       <div class="box draggable has-pointer delete-root">
         <input type="hidden" class="order" name="items[{{ $content->id }}][order]" value="{{ $content->order }}">
         <input type="hidden" name="items[{{ $content->id }}][id]" value="{{ $content->id }}">
-        <div class="field has-addons">
+        <div class="field has-addons manage-fields">
           <p class="control"><span class="icon is-medium"><i class="fa fa-sort"></i></span></p>
           <p class="control has-input has-margin-right has-margin-left">
             <input type="text" name="items[{{$content->id}}][name]" value="{{ $content->name }}" class="input">

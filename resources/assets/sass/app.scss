@@ -15,6 +15,37 @@ $shadow: rgba(205,210,214,.8);
 // Bulma
 @import "~bulma/bulma";
 
+.img-manager {
+  .img-manager-item {
+    border-bottom: 1px solid transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+      border-bottom: 1px solid $primary;
+    }
+  }
+}
+
+.img-block {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  &.is-auto {
+    width: 100%;
+    height: auto;
+  }
+  &.is-small {
+    width: 128px;
+    height: 128px;
+  }
+  &.is-medium {
+    width: 275px;
+    height: 275px;
+  }
+}
 
 .is-white {
   background-color: $white;
@@ -87,6 +118,11 @@ $shadow: rgba(205,210,214,.8);
 }
 
 .field {
+  &.manage-fields {
+    @include mobile {
+      // flex-direction: column;
+    }
+  }
   &.has-addons {
     .control.has-input {
       flex-grow: 1;
