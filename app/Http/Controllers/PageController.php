@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Page;
 use Carbon\Carbon;
 use App\PageContent;
@@ -45,6 +46,11 @@ class PageController extends Controller
     $page['url'] = $req['url'];
 
     $page->save();
+
+    DB::table('pages_content')->insert([
+      ['page_id' => $page->id, 'type_id' => 1, 'name' => 'Title', 'order' => 0],
+      ['page_id' => $page->id, 'type_id' => 2, 'name' => 'Content', 'order' => 1],
+    ]);
 
     if (!$req->ajax()) {
       return back();
@@ -158,6 +164,10 @@ class PageController extends Controller
         ['name' => 'SEO', 'action' => action('PageController@showSeo', $page->id), 'active' => true]
       ],
     ]);
+  }
+
+  public function showCollections ($id) {
+
   }
 
   public function showSettings ($id) {
@@ -297,11 +307,12 @@ class PageController extends Controller
 
   public function route ($url, $id = null) {
 
-    $page = Page::where('url', '=', $url)->where('is_active', '=', 1)->with('content')->first();
+    $page = Page::where('url', '=', $url)->with(['content' => function ($q) {
+      $q->with('repeatingContent');
+    }])->where('is_active', '=', 1)->first();
 
+    $collections = \App\Collection::where('all_pages', '=', 1)->where('is_active', '=', 1)->get();
 
-
-    dd($page);
 
     if ($page->layout == 'index') {
       return view('themes/theme-name/index', compact('page'));
