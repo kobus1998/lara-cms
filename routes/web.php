@@ -44,6 +44,7 @@ Route::prefix('cms')->group(function () {
     Route::get('/page/{pageId}/seo', 'PageController@showSeo');
     Route::get('/page/{pageId}/manage-fields', 'PageController@showManageFields');
     Route::get('/page/{pageId}/settings', 'PageController@showSettings');
+    Route::get('/page/{pageId}/collections', 'PageController@showCollections');
     Route::put('/page/{pageId}/seo', 'PageController@updateSeo');
 
     Route::put('/page/{pageId}/update-content', 'PageController@updateContent');
