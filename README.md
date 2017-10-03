@@ -1,3 +1,6 @@
+[![Waffle.io - Issues in progress](https://badge.waffle.io/kobus1998/lara-cms.svg?label=in%20progress&title=In%20Progress)](http://waffle.io/kobus1998/lara-cms)
+
+
 # lara-cms.
 A cms build using the PHP framework Laravel.
 
