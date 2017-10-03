@@ -42,7 +42,11 @@ class Collection extends Model
   }
 
   static function getAllCollections () {
-    return Collection::where('is_active', '=', 1)->with('posts')->paginate(15);
+    return Collection::where('is_active', '=', 1)->with(['posts' => function ($q) {
+      $q->with(['content' => function ($q) {
+        $q->with('repeatingContent');
+      }]);
+    }])->paginate(15);
   }
 
   static function getAllWithContent () {
