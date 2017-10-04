@@ -28,10 +28,10 @@
                         @if ($content->type->name === 'media')
                           <a data-btn-id="{{ $repeatable->id }}" class="button is-small is-primary toggle-modal-add-media"><span class="icon is-small"><i class="fa fa-image"></i></span></a>
                         @endif
-                        @component('dashboard/pages/forms/minis/_input-type-switcher', [
+                        @component('dashboard/components/minis/_input-type-switcher', [
                           'classes' => '',
                           'value' => $repeatable->content,
-                          'src' => $medias[0]->getImg($repeatable->content, 'small'),
+                          'src' => $medias[0]->getImg($repeatable->content, 'thumbnail'),
                           'name' => 'items['.$content->id.'][repeatable]['.$repeatable->id.'][content]',
                           'type' => $content->type->name
                           ])@endcomponent
@@ -58,10 +58,10 @@
                 @if ($content->type->name === 'media')
                   <a data-btn-id="{{ $content->id }}" class="button is-small is-primary toggle-modal-add-media"><span class="icon is-small"><i class="fa fa-image"></i></span></a>
                 @endif
-                @component('dashboard/pages/forms/minis/_input-type-switcher', [
+                @component('dashboard/components/minis/_input-type-switcher', [
                   'classes' => '',
                   'value' => $content->content,
-                  'src' => $medias[0]->getImg($content->content, 'small'),
+                  'src' => $medias[0]->getImg($content->content, 'thumbnail'),
                   'name' => 'items['.$content->id.'][content]',
                   'type' => $content->type->name
                   ])@endcomponent

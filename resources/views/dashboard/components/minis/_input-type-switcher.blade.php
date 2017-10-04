@@ -11,7 +11,7 @@
   <textarea class="textarea grow {{ $classes }}" name="{{ $name }}" rows="8" cols="80">{{ $value }}</textarea>
 @elseif ($type == 'media')
   @isset($src)
-    <img class="media-img image is-128x128" src="{{ $src }}" alt="">
+    <img class="media-img image is-64x64" src="{{ $src }}" alt="">
   @endisset
   <input class="img-manager-target {{ $classes }}" type="hidden" name="{{ $name }}" value="{{ $value }}">
 @elseif ($type == 'checkbox')

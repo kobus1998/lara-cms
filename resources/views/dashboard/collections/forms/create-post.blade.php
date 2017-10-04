@@ -34,13 +34,12 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            @if ($content->type->name == 'textfield')
-              <input type="text" name="post-content[]" value="" class="input">
-            @elseif ($content->type->name == 'textarea')
-              <textarea class="textarea" name="post-content[]" rows="8" cols="80"></textarea>
-            @elseif ($content->type->name == 'media')
-              <input type="text" name="post-content[]" value="">
-            @endif
+            @component('dashboard/components/minis/_input-type-switcher', [
+              'classes' => '',
+              'value' => '',
+              'name' => 'post-content[]',
+              'type' => $content->type->name
+              ])@endcomponent
           </div>
         </div>
       </div>

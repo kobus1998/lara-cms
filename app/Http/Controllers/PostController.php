@@ -101,7 +101,12 @@ class PostController extends Controller
       }
     }
 
-    return back();
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json();
+    }
+
   }
 
   public function setInactiveMultiple (Request $req) {

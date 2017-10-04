@@ -9,10 +9,10 @@ class Media extends Model
 {
   protected $table = 'medias';
 
-  public static function getImg($name, $size = 'original') {
+  public static function getImg($name, $size) {
     $result = '';
 
-    if (strpos($name, '.gif') !== null) {
+    if (strpos($name, '.gif') !== false) {
       $size = 'original';
     }
 

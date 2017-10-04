@@ -110,6 +110,7 @@ class CollectionController extends Controller
       'collection' => $collection,
       'currentPost' => $post,
       'posts' => $posts,
+      'media' => \App\Media::all(),
       'navs' => [
         ['name' => 'Collections', 'action' => action('CollectionController@index'), 'active' => false],
         ['name' => $collection->name, 'action' => action('CollectionController@show', $collection->id), 'active' => false],
@@ -184,6 +185,8 @@ class CollectionController extends Controller
 
     if (!$req->ajax()) {
       return back();
+    } else {
+      return response()->json($collection);
     }
   }
 
@@ -225,6 +228,8 @@ class CollectionController extends Controller
 
     if (!$req->ajax()) {
       return back();
+    } else {
+      return response()->json();
     }
   }
 
@@ -285,6 +290,8 @@ class CollectionController extends Controller
 
     if (!$req->ajax()) {
       return back();
+    } else {
+      return response()->json($collectionPost);
     }
   }
 }

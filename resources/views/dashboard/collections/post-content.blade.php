@@ -52,14 +52,17 @@
                         </div>
                         <div class="field-body">
                           <div class="field has-addons">
-                            <div class="control has-input">
-                              @if ($type == 'textfield')
-                                <input class="input" type="text" name="items[{{ $content->id }}][repeatable][{{$repeatable->id}}][content]" value="{{ $repeatable->content }}">
-                              @elseif ($type == 'textarea')
-                                <textarea class="textarea" name="items[{{ $content->id }}][repeatable][{{$repeatable->id}}][content]" rows="8" cols="80">{{ $repeatable->content }}</textarea>
-                              @elseif ($type == 'media')
-                                <input class="input" type="text" name="items[{{ $content->id }}][repeatable][{{$repeatable->id}}][content]" value="{{ $repeatable->content }}">
+                            <div class="control has-input img-manager-root">
+                              @if ($content->type->type->name == 'media')
+                                <a data-btn-id="{{ $repeatable->id }}" class="button is-small is-primary toggle-modal-add-media"><span class="icon is-small"><i class="fa fa-image"></i></span></a>
                               @endif
+                              @component('dashboard/components/minis/_input-type-switcher', [
+                                'classes' => '',
+                                'src' => $media[0]->getImg($repeatable->content, 'thumbnail'),
+                                'value' => $repeatable->content,
+                                'name' => 'items['.$content->id.'][repeatable]['.$repeatable->id.'][content]',
+                                'type' => $content->type->type->name
+                                ])@endcomponent
                             </div>
                             <div class="control">
                               <a data-action="{{ action('PostController@deleteRepeatingContent', $repeatable->id) }}" class=" xy-delete-content button is-danger"><span class="icon"><i class="fa fa-trash"></i></span></a>
@@ -79,14 +82,17 @@
                 </div>
                 <div class="field-body">
                   <div class="field">
-                    <div class="control">
-                      @if ($type == 'textfield')
-                        <input class="input" type="text" name="items[{{ $content->id }}][content]" value="{{ $content->content }}">
-                      @elseif ($type == 'textarea')
-                        <textarea class="textarea" name="items[{{ $content->id }}][content]" rows="8" cols="80">{{ $content->content }}</textarea>
-                      @elseif ($type == 'media')
-                        <input class="input" type="text" name="items[{{ $content->id }}][content]" value="{{ $content->content }}">
+                    <div class="control img-manager-root">
+                      @if ($content->type->type->name == 'media')
+                        <a data-btn-id="{{ $content->id }}" class="button is-small is-primary toggle-modal-add-media"><span class="icon is-small"><i class="fa fa-image"></i></span></a>
                       @endif
+                      @component('dashboard/components/minis/_input-type-switcher', [
+                        'classes' => '',
+                        'src' => $media[0]->getImg($content->content, 'thumbnail'),
+                        'value' => $content->content,
+                        'name' => 'items['.$content->id.'][content]',
+                        'type' => $content->type->type->name
+                        ])@endcomponent
                     </div>
                   </div>
                 </div>
@@ -106,6 +112,11 @@
               </div>
             </div>
           </div>
+
+          @component('dashboard/components/minis/_modal', ['position' => 'top', 'switchClass' => 'toggle-add-media'])
+            @component('dashboard/components/_add-media', ['medias' => $media])
+            @endcomponent
+          @endcomponent
 
         </form>
       </div>
