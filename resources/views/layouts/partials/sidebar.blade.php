@@ -22,7 +22,7 @@
   </ul>
   <p class="menu-label">Developer</p>
   <ul class="menu-list">
-    <li><a class="{{ strpos(Request::path(), 'cms/theme') !== false ? "is-active" : "" }}" disabled href="#"><span class="icon is-small"><i class="fa fa-columns"></i></span> Themes</a></li>
+    <li><a class="{{ strpos(Request::path(), 'cms/theme') !== false ? "is-active" : "" }}" href="{{ action('ThemeController@index') }}"><span class="icon is-small"><i class="fa fa-columns"></i></span> Themes</a></li>
     <li><a class="{{ strpos(Request::path(), 'cms/type') !== false ? "is-active" : "" }}" disabled href="#"><span class="icon is-small"><i class="fa fa-tag"></i></span> Types</a></li>
     <li><a class="{{ strpos(Request::path(), 'cms/user') !== false ? "is-active" : "" }}" disabled href="#"><span class="icon is-small"><i class="fa fa-user"></i></span> Users</a></li>
     <li><a class="{{ strpos(Request::path(), 'cms/settings') !== false ? "is-active" : "" }}" disabled href="#"><span class="icon is-small"><i class="fa fa-cog"></i></span> Settings</a></li>

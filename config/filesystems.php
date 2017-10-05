@@ -69,6 +69,11 @@ return [
           'visibility' => 'public',
         ],
 
+        'themes' => [
+          'driver' => 'local',
+          'root' => resource_path('views\themes'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_KEY'),

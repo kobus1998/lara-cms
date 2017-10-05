@@ -72,7 +72,7 @@ Route::prefix('cms')->group(function () {
     Route::put('/multiple/collection/set-inactive', 'CollectionController@setInactiveMultiple');
     Route::post('/multiple/collection/delete', 'CollectionController@deleteMultiple');
 
-    // pot
+    // post
 
     Route::resource('post', 'PostController');
 
@@ -83,6 +83,9 @@ Route::prefix('cms')->group(function () {
     Route::put('/multiple/post/set-inactive', 'PostController@setInactiveMultiple');
     Route::post('/multiple/post/delete', 'PostController@deleteMultiple');
 
+    // Themes
+
+    Route::resource('theme', 'ThemeController');
 
   });
 
