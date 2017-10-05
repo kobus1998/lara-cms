@@ -55,6 +55,11 @@ return [
             'visibility' => 'public',
         ],
 
+        'config' => [
+          'driver' => 'local',
+          'root' => config_path(),
+        ],
+
         'image' => [
           'driver' => 'local',
           'root' => storage_path('app/public/img/'),
