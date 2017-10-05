@@ -25,6 +25,7 @@ Route::prefix('cms')->group(function () {
     Route::group(['middleware' => 'auth'], function () {
       Route::get('/', 'MediaController@index');
       Route::post('/store', 'MediaController@store');
+      Route::put('/{id}', 'MediaController@update');
       Route::get('/upload', 'MediaController@upload');
       Route::delete('/delete', 'MediaController@delete');
     });

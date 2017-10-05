@@ -17,7 +17,7 @@
       <div class="column is-3" style="flex-grow: 1;">
         <div>
           <ul>
-            <li><b>Original Name:</b> {{$media->name}}</li>
+            <li><b>Name:</b> {{$media->name}}</li>
             <li><b>File Type:</b> {{$media->file_type}}</li>
             <li><b>Uploaded at:</b> {{$media->created_at}}</li>
             <li><b>Size:</b> {{number_format($media->file_size / 1024 / 1024, 2)}} MB</li>

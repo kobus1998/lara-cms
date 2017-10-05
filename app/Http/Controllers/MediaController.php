@@ -20,7 +20,7 @@ class MediaController extends Controller
       $medias = $medias::orderBy('created_at', 'desc');
     }
 
-    $medias = $medias->paginate(15);
+    $medias = $medias->paginate(10);
     // dd($medias);
     foreach ($medias as $media) {
       $media->original = Storage::disk('image')->url($media->original);
@@ -149,6 +149,22 @@ class MediaController extends Controller
     }
 
     return back();
+  }
+
+  public function update (Request $req, $id) {
+
+    $media = Media::where('id', '=', $id);
+    $media->update([
+      'name' => $req->name,
+      'desc' => $req->desc,
+      'alt' => $req->alt
+    ]);
+
+    if (!$req->ajax()) {
+      return back();
+    } else {
+      return response()->json($media);
+    }
   }
 
   public function delete (Request $req) {
