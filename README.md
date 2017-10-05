@@ -20,5 +20,5 @@ https://waffle.io/kobus1998/lara-cms
 - Run composer install
 - run php artisan migrate --seed
 - run npm run watch for client side
-- Simply serve the back-end with apache, either make a virtual host or go to the path of index.php in the base folder
+- Simply serve the back-end with apache by making a virtual host to the root folder
 - You're done with the setup! :tada: :rocket:
