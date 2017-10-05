@@ -6,7 +6,7 @@
     <div class="tabs">
       <ul class="is-right">
         <li>
-          <a class="button toggle-modal-create-collection">New Collection</a>
+          <a class="toggle-modal-create-collection">New Collection</a>
         </li>
         <li>
           <a class="no-link">

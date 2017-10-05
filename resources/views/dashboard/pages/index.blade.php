@@ -5,7 +5,7 @@
   <div class="has-margin-bottom">
     <div class="tabs">
       <ul class="is-right">
-        <li><a class="button toggle-modal-create-page">New page</a></li>
+        <li><a class="toggle-modal-create-page">New page</a></li>
         <li>
           <a class="no-link">@component('dashboard/components/_search', [
             'model' => $pages,
