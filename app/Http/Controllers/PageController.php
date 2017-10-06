@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Page;
+use \App\Page;
+use \App\Theme;
 use Carbon\Carbon;
-use App\PageContent;
-use App\RepeatingContent;
+use \App\PageContent;
+use \App\RepeatingContent;
 use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
@@ -45,6 +46,7 @@ class PageController extends Controller
     $page['name'] = $req['name'];
     $page['desc'] = $req['desc'];
     $page['url'] = $req['url'];
+    $page['layout'] = 'index';
 
     $page->save();
 
@@ -321,9 +323,16 @@ class PageController extends Controller
 
     $collections = \App\Collection::where('all_pages', '=', 1)->where('is_active', '=', 1)->get();
 
+    $themeName = \App\Cms::getThemeName();
 
-    if ($page->layout == 'index') {
-      return view('themes/theme-name/index', compact('page'));
+    $serve = [
+      'page' => $page
+    ];
+
+    if ($page->layout === 'index' || $page->layout === '') {
+      return view('themes/' . $themeName . '/index', $serve);
+    } else {
+      return view('themes/' . $themeName . '/layouts/' . $page->layout, $serve);
     }
 
 

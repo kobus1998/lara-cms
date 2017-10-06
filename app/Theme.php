@@ -5,8 +5,17 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
+use \App\Theme;
+use \App\Page;
+use \App\Cms;
+
 class Theme extends Model
 {
+
+  static public function getThemeDirectory () {
+    $themeName = Cms::getThemeName();
+    return Storage::driver('themes')->directory($themeName);
+  }
 
   static public function getAllThemes () {
     $storage = Storage::disk('themes')->directories();

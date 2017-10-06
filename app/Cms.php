@@ -19,7 +19,7 @@ class Cms extends Model
   static public function getThemeName () {
     $settings = Storage::disk('themes')->get('settings.json');
     $settings = json_decode($settings, true);
-    return $settings;
+    return $settings['theme'];
   }
 
 }
