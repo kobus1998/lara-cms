@@ -31,7 +31,7 @@
                         @component('dashboard/components/minis/_input-type-switcher', [
                           'classes' => '',
                           'value' => $repeatable->content,
-                          'src' => $medias[0]->getImg($repeatable->content, 'thumbnail'),
+                          'src' => \App\Media::getImg($repeatable->content, 'thumbnail'),
                           'name' => 'items['.$content->id.'][repeatable]['.$repeatable->id.'][content]',
                           'type' => $content->type->name
                           ])@endcomponent
@@ -61,7 +61,7 @@
                 @component('dashboard/components/minis/_input-type-switcher', [
                   'classes' => '',
                   'value' => $content->content,
-                  'src' => $medias[0]->getImg($content->content, 'thumbnail'),
+                  'src' => \App\Media::getImg($content->content, 'thumbnail'),
                   'name' => 'items['.$content->id.'][content]',
                   'type' => $content->type->name
                   ])@endcomponent
