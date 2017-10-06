@@ -35,8 +35,7 @@ class ThemeController extends Controller
 
     $theme = new Theme;
     $theme::create([
-      'name' => $req->name,
-      'desc' => $req->desc,
+      'name' => $req->name
     ]);
 
     return back();

@@ -10,18 +10,22 @@
 
     <form class="" action="{{ action('ThemeController@store') }}" method="post">
       {{ csrf_field() }}
-
-      <input type="text" name="name" value="">
-      <textarea name="desc" rows="8" cols="80"></textarea>
-      <button type="submit" name="button">s</button>
-
+      <div class="field has-addons">
+        <label class="has-margin-right">New Theme</label>
+        <div class="control has-input">
+          <input type="text" name="name" value="" class="input">
+        </div>
+        <div class="control">
+          <button type="submit" class="button is-primary">Create</button>
+        </div>
+      </div>
     </form>
 
-    {{-- <table class="table is-striped">
+    <hr>
+
+    <table class="table is-striped">
       <thead>
         <th>Name</th>
-        <th>Author</th>
-        <th>Description</th>
       </thead>
       <tbody>
         @foreach ($themes as $theme)
@@ -30,12 +34,10 @@
           @endphp
           <tr>
             <td><a href="{{ action('ThemeController@show', $slug) }}">{{ $theme['name'] }}</a></td>
-            <td>{{ $theme['author'] }}</td>
-            <td>{{ $theme['desc'] }}</td>
           </tr>
         @endforeach
       </tbody>
-    </table> --}}
+    </table>
 
   </div>
 
