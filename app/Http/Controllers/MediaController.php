@@ -77,10 +77,10 @@ class MediaController extends Controller
 
       if (strpos($fileType, 'image') !== false) {
 
-        $uploadedFile = Storage::disk('image')->put('', $file);
-        $recentFile = Storage::disk('image')->url($uploadedFile);
-        $meta = Media::getMetaData($recentFile);
 
+        $uploadedFile = Storage::disk('image')->put('', $file);
+        $recentFile = Storage::disk('image')->get($uploadedFile);
+        $meta = Media::getMetaData($recentFile);
         if ($extensionType !== 'gif') {
           $thumbnailName = 'thumbnail-'.$uploadedFile;
           $thumbnail = Media::makeThumbnail($recentFile, $extensionType);
@@ -127,9 +127,6 @@ class MediaController extends Controller
         $media->file_size = $size;
         $media->file_width = $meta['width'];
         $media->file_height = $meta['height'];
-
-        $media->save();
-
       } else {
         $uploadedFile = Storage::disk('files')->put('', $file);
         $media = new Media;
@@ -141,9 +138,9 @@ class MediaController extends Controller
 
         $media->file_type = $fileType;
         $media->file_size = $size;
-
-        $media->save();
       }
+
+      $media->save();
 
 
     }
