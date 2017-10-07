@@ -63,7 +63,7 @@ return [
         'image' => [
           'driver' => 'local',
           'root' => storage_path('app/public/img/'),
-          'url' => env('APP_URL').'/public/storage/img',
+          'url' => env('APP_URL').'/storage/img',
           'visibility' => 'public',
         ],
 
@@ -76,7 +76,7 @@ return [
 
         'themes' => [
           'driver' => 'local',
-          'root' => resource_path('views\themes'),
+          'root' => resource_path('views/themes'),
         ],
 
         's3' => [
