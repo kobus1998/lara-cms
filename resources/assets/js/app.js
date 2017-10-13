@@ -43,6 +43,7 @@ require('./bootstrap');
 
       let content = $(this).serialize()
       let url = $(this).attr('action')
+      let self = $(this)
 
       let formMethod = window.axios.get
 
@@ -51,13 +52,13 @@ require('./bootstrap');
           formMethod = window.axios.post
           break;
         case 'put':
-          formMethod = window.axios.put
+          formMethod = window.axios.post
           break;
         case 'delete':
-          formMethod = window.axios.delete
+          formMethod = window.axios.post
           break;
         case 'patch':
-          formMethod = window.axios.patch
+          formMethod = window.axios.post
           break;
         default:
           formMethod = window.axios.get
@@ -66,9 +67,28 @@ require('./bootstrap');
       formMethod(url, content).then(response => {
         showLoader(false)
         success(response)
+
+        self.find('.help.is-danger').remove()
+
       }).catch(error => {
         showLoader(false)
         err(error)
+
+        if (error.response.status !== 422) return
+
+        let errors = error.response.data
+        Object.keys(errors).forEach(function (key) {
+          let element = key
+          let first = errors[key][0]
+          let htmlElement = self.find('[name="' + element + '"]')
+          let next = htmlElement.next()
+          
+          if (next.hasClass('help')) {
+            next.remove()
+          }
+
+          htmlElement.after('<span class="help is-danger">' + first + '</span>')
+        });
       })
     })
     return this;
